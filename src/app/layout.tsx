@@ -8,7 +8,10 @@ const geistSans = Geist({
   subsets: ['latin'],
 });
 
-const geistMono = GeistMono;
+const geistMono = GeistMono({
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
+});
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -18,7 +21,7 @@ export const metadata: Metadata = {
 const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono}`}>{children}</body>
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>{children}</body>
     </html>
   );
 };
