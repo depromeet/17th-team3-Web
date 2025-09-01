@@ -1,0 +1,59 @@
+name: PR Notification to Slack
+
+on:
+  pull_request:
+    types: [opened, reopened]
+    branches: [main]
+
+jobs:
+  notify-slack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Slack notification
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              "text": "🔔 새로운 PR이 main 브랜치로 들어왔습니다!",
+              "attachments": [
+                {
+                  "color": "#36a64f",
+                  "fields": [
+                    {
+                      "title": "PR 제목",
+                      "value": "${{ github.event.pull_request.title }}",
+                      "short": false
+                    },
+                    {
+                      "title": "작성자",
+                      "value": "${{ github.event.pull_request.user.login }}",
+                      "short": true
+                    },
+                    {
+                      "title": "브랜치",
+                      "value": "${{ github.event.pull_request.head.ref }} → main",
+                      "short": true
+                    },
+                    {
+                      "title": "PR 링크",
+                      "value": "<${{ github.event.pull_request.html_url }}|여기서 확인하기>",
+                      "short": false
+                    }
+                  ],
+                  "footer": "GitHub",
+                  "ts": ${{ github.event.pull_request.created_at }}
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify on failure
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+          text: "❌ PR 알림 전송에 실패했습니다."
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

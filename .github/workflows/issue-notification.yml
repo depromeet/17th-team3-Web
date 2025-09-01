@@ -1,0 +1,95 @@
+name: Issue Notification to Slack
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  notify-slack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get issue label emoji
+        id: label-emoji
+        run: |
+          labels="${{ join(github.event.issue.labels.*.name, ',') }}"
+          echo "labels=$labels" >> $GITHUB_OUTPUT
+          
+          if [[ "$labels" == *"🔧 Fix"* ]]; then
+            echo "emoji=🔧" >> $GITHUB_OUTPUT
+            echo "color=#ff6b6b" >> $GITHUB_OUTPUT
+            echo "type=수정" >> $GITHUB_OUTPUT
+          elif [[ "$labels" == *"✨ Feature"* ]]; then
+            echo "emoji=✨" >> $GITHUB_OUTPUT
+            echo "color=#4ecdc4" >> $GITHUB_OUTPUT
+            echo "type=기능" >> $GITHUB_OUTPUT
+          elif [[ "$labels" == *"📖 Docs"* ]]; then
+            echo "emoji=📖" >> $GITHUB_OUTPUT
+            echo "color=#95a5a6" >> $GITHUB_OUTPUT
+            echo "type=문서" >> $GITHUB_OUTPUT
+          elif [[ "$labels" == *"🎨 Design"* ]]; then
+            echo "emoji=🎨" >> $GITHUB_OUTPUT
+            echo "color=#e67e22" >> $GITHUB_OUTPUT
+            echo "type=디자인" >> $GITHUB_OUTPUT
+          elif [[ "$labels" == *"⚙️ Setting"* ]]; then
+            echo "emoji=⚙️" >> $GITHUB_OUTPUT
+            echo "color=#9b59b6" >> $GITHUB_OUTPUT
+            echo "type=설정" >> $GITHUB_OUTPUT
+          else
+            echo "emoji=📝" >> $GITHUB_OUTPUT
+            echo "color=#3498db" >> $GITHUB_OUTPUT
+            echo "type=일반" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Send Slack notification
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              "text": "${{ steps.label-emoji.outputs.emoji }} 새로운 이슈가 등록되었습니다!",
+              "attachments": [
+                {
+                  "color": "${{ steps.label-emoji.outputs.color }}",
+                  "fields": [
+                    {
+                      "title": "이슈 제목",
+                      "value": "${{ github.event.issue.title }}",
+                      "short": false
+                    },
+                    {
+                      "title": "작성자",
+                      "value": "${{ github.event.issue.user.login }}",
+                      "short": true
+                    },
+                    {
+                      "title": "타입",
+                      "value": "${{ steps.label-emoji.outputs.type }}",
+                      "short": true
+                    },
+                    {
+                      "title": "라벨",
+                      "value": "${{ join(github.event.issue.labels.*.name, ', ') }}",
+                      "short": false
+                    },
+                    {
+                      "title": "이슈 링크",
+                      "value": "<${{ github.event.issue.html_url }}|#${{ github.event.issue.number }}에서 확인하기>",
+                      "short": false
+                    }
+                  ],
+                  "footer": "GitHub Issues",
+                  "ts": ${{ github.event.issue.created_at }}
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify on failure
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+          text: "❌ 이슈 알림 전송에 실패했습니다."
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
