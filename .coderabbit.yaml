@@ -1,0 +1,52 @@
+# 코드레빗 설정 파일 - AI가 PR 리뷰할 때 사용하는 설정들
+language: ko  # 리뷰 언어를 한국어로 설정
+
+reviews:
+  profile: chill  # 리뷰 스타일: chill(관대함) | assertive(엄격함) | pythonic(Python스타일)
+  request_changes_workflow: false  # PR에 변경 요청을 자동으로 하지 않음 (제안만)
+  high_level_summary: true  # PR 전체 요약 제공
+  poem: false  # 리뷰를 시로 작성하지 않음 (재미 기능)
+  review_status: true  # 리뷰 상태를 PR에 표시
+  collapse_empty_files: true  # 변경사항 없는 파일은 접어서 표시
+  # 특정 경로별로 리뷰 가이드라인 설정
+  path_instructions:
+    # React/TypeScript 파일들에 대한 리뷰 가이드라인
+    - path: "src/**/*.{ts,tsx,js,jsx}"
+      instructions: |
+        Next.js 15 + React 19 + TypeScript 프로젝트입니다.
+        다음 사항들을 중점적으로 리뷰해주세요:
+        
+        **핵심 검토사항:**
+        1. 비즈니스 로직 정확성 및 예외처리
+        2. React 성능 최적화 (useMemo, useCallback, 불필요한 리렌더링)
+        3. 보안 취약점 (XSS, 인증/인가)
+        4. TypeScript 타입 안전성
+        5. 메모리 누수 가능성 (cleanup, 이벤트 리스너)
+        
+        **스킵해도 되는 것:**
+        - 코드 포맷팅 (Prettier로 자동화됨)
+        - ESLint 규칙 및 코드 컨벤션 (pre-commit으로 자동화됨)
+        - 간단한 네이밍 컨벤션
+    
+    # Next.js App Router 관련 파일들
+    - path: "src/app/**/*"
+      instructions: "Next.js 15 App Router 구조입니다. 라우팅, 레이아웃, 페이지 컴포넌트 관련 리뷰"
+    
+    # CSS 파일들 
+    - path: "**/*.css"
+      instructions: "Tailwind CSS 4 사용 중. 커스텀 CSS는 필요시에만 추가"
+
+  # 리뷰하지 않을 파일들 (문서, 설정 파일 등)
+  ignored_files:
+    - "*.md"        # 마크다운 문서
+    - "*.json"      # JSON 설정 파일들 
+    - "*.lock"      # 패키지 락 파일들
+    - ".gitignore"  # Git 무시 파일
+    - "lefthook.yml"  # Git hook 설정
+    - "next.config.ts"    # Next.js 설정
+    - "tailwind.config.ts" # Tailwind 설정
+    - ".github/**/*"      # GitHub 템플릿들
+
+# 채팅 기능 설정
+chat:
+  auto_reply: false  # PR에 댓글 달았을 때 자동 응답 안함
