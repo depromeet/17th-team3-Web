@@ -36,15 +36,15 @@ reviews:
       instructions: 'Tailwind CSS 4 사용 중. 커스텀 CSS는 필요시에만 추가'
 
   # 리뷰하지 않을 파일들 (문서, 설정 파일 등)
-  ignored_files:
-    - '*.md' # 마크다운 문서
-    - '*.json' # JSON 설정 파일들
-    - '*.lock' # 패키지 락 파일들
-    - '.gitignore' # Git 무시 파일
-    - 'lefthook.yml' # Git hook 설정
-    - 'next.config.ts' # Next.js 설정
-    - 'tailwind.config.ts' # Tailwind 설정
-    - '.github/**/*' # GitHub 템플릿들
+  path_filters:
+    - '!**/*.md' # 마크다운 문서 제외
+    - '!**/*.json' # JSON 설정 파일 제외
+    - '!**/*.lock' # 락 파일 제외
+    - '!.gitignore' # Git 무시 파일 제외
+    - '!lefthook.yml' # Git hook 설정 제외
+    - '!next.config.ts' # Next.js 설정 제외
+    - '!tailwind.config.ts' # Tailwind 설정 제외
+    - '!.github/**' # GitHub 템플릿 제외
 
 # 채팅 기능 설정
 chat:
