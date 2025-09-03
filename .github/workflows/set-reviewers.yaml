@@ -1,0 +1,77 @@
+name: Auto Assign Random Reviewers
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  assign-reviewers:
+    # Draft PR은 제외
+    if: ${{ github.event.pull_request.draft == false }}
+    runs-on: ubuntu-latest
+    env:
+      # 리뷰어 후보
+      REVIEWERS: '["jinhyuek","red-dev-Mark","rhctmxk","gmlwlsdl"]'
+      PICK_COUNT: '2'
+    steps:
+      - name: Select & Request Reviewers
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            if (!pr) {
+              core.setFailed("This workflow must be triggered by a pull_request event.");
+              return;
+            }
+
+            // 후보자 목록 파싱
+            let reviewers;
+            try {
+              reviewers = JSON.parse(process.env.REVIEWERS ?? "[]");
+              if (!Array.isArray(reviewers)) throw new Error("REVIEWERS must be a JSON array.");
+            } catch (e) {
+              core.setFailed(`Invalid REVIEWERS env: ${e.message}`);
+              return;
+            }
+            const pickCount = Math.max(1, parseInt(process.env.PICK_COUNT || "2", 10));
+
+            // PR 작성자 제외
+            const author = pr.user.login.toLowerCase();
+            const candidates = reviewers
+              .map((u) => String(u).trim())
+              .filter(Boolean)
+              .filter((u) => u.toLowerCase() !== author);
+
+            if (candidates.length === 0) {
+              core.notice("No candidates after excluding PR author. Skipping assignment.");
+              return;
+            }
+
+            // Fisher–Yates shuffle
+            for (let i = candidates.length - 1; i > 0; i--) {
+              const j = Math.floor(Math.random() * (i + 1));
+              [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
+            }
+
+            // 중복 방지 & 개수 제한
+            const unique = [...new Set(candidates)];
+            const selected = unique.slice(0, Math.min(pickCount, unique.length));
+
+            core.info(`Selected reviewers: ${selected.join(", ")}`);
+
+            // 리뷰어 요청
+            await github.rest.pulls.requestReviewers({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number,
+              reviewers: selected,
+            });
+
+            core.summary
+              .addHeading("Random Reviewers Assigned")
+              .addRaw(`**PR #${pr.number}**: ${selected.join(", ")}`)
+              .write();
