@@ -2,11 +2,15 @@ pre-commit:
   parallel: true
   commands:
     prettier:
-      glob: '*.{js,jsx,ts,tsx,css,md,json}'
-      run: pnpm run format:check {staged_files}
+      glob: "*.{js,jsx,ts,tsx,css,md,mdx,json}"
+      run: pnpm prettier --check {staged_files}
     eslint:
-      glob: '*.{js,jsx,ts,tsx}'
-      run: pnpm run lint {staged_files}
+      run: pnpm eslint {staged_files}
     types:
-      glob: '*.{ts,tsx}'
-      run: pnpm run typecheck
+      # TS/TSX가 하나라도 stage됐을 때만 타입체크 실행
+      run: |
+        if echo "{staged_files}" | grep -E '\.(ts|tsx)$' >/dev/null; then
+          pnpm tsc --noEmit
+        else
+          echo "No staged TS files → skip typecheck"
+        fi
