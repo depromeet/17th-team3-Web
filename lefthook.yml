@@ -3,10 +3,10 @@ pre-commit:
   commands:
     prettier:
       glob: '*.{js,jsx,ts,tsx,css,md,json}'
-      run: pnpm run format:check
+      run: pnpm run format:check {staged_files}
     eslint:
       glob: '*.{js,jsx,ts,tsx}'
-      run: pnpm run lint
+      run: pnpm run lint {staged_files}
     types:
       glob: '*.{ts,tsx}'
       run: pnpm run typecheck
