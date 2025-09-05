@@ -1,13 +1,21 @@
 pre-commit:
   parallel: true
   commands:
-    prettier:
+    # 1) 먼저 포맷을 "수정"한다
+    prettier_write:
+      glob: "*.{js,jsx,ts,tsx,css,md,mdx,json}"
+      run: pnpm prettier --write {staged_files}
+
+    # 2) 수정된 결과를 다시 stage 시킨 뒤(Prettier가 자동으로 함),
+    #    체크도 통과하는지 한 번 더 확인하고 싶으면 아래 유지
+    prettier_check:
       glob: "*.{js,jsx,ts,tsx,css,md,mdx,json}"
       run: pnpm prettier --check {staged_files}
+
     eslint:
       run: pnpm eslint {staged_files}
+
     types:
-      # TS/TSX가 하나라도 stage됐을 때만 타입체크 실행
       run: |
         if echo "{staged_files}" | grep -E '\.(ts|tsx)$' >/dev/null; then
           pnpm tsc --noEmit
