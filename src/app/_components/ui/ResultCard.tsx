@@ -1,5 +1,7 @@
 import Image from 'next/image';
 
+import ConfettiComponent from '@/app/_lib/confetti';
+
 interface ResultCardProps {
   title: string;
   subtitle: string;
@@ -15,6 +17,7 @@ const ResultCard = ({ title, subtitle, showConfetti = false }: ResultCardProps) 
         {/* todo: 스타일 검토 필요*/}
         <p className="font-medium text-gray-600">{subtitle}</p>
       </div>
+      {showConfetti && <ConfettiComponent />}
     </>
   );
 };
