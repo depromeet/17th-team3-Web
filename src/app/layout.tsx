@@ -1,4 +1,6 @@
 import './globals.css';
+import Image from 'next/image';
+
 import ScaledStage from '@/app/_components/layout/ScaledStage';
 
 import type { Viewport, Metadata } from 'next';
@@ -28,10 +30,13 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           maxScalePx={1000} // 높이 완전 매칭
           minScalePx={0.5}
           backdrop={
-            <img
-              src="/public/images/backgroundImage.png"
-              alt="background-image"
-              className="h-full w-full object-cover"
+            <Image
+              src="/images/backgroundImage.png"
+              alt="background"
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover"
             />
           }
         >
