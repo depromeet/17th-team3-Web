@@ -5,7 +5,7 @@ import type { Metadata, Viewport } from 'next';
 
 export const metadata: Metadata = {
   title: 'App',
-  description: 'Fixed 357x668 viewport',
+  description: 'Fixed 375x668 viewport',
 };
 export const viewport: Viewport = {
   width: 'device-width',

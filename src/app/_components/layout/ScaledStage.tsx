@@ -5,7 +5,7 @@ import { useLayoutEffect, useRef, useState, type PropsWithChildren, type ReactNo
 import clsx from 'clsx';
 
 type Props = PropsWithChildren<{
-  /** 스테이지(357x668) 내부가 넘칠 때 내부 스크롤 허용 */
+  /** 스테이지(375x668) 내부가 넘칠 때 내부 스크롤 허용 */
   allowScroll?: boolean;
   /** 스테이지 밖 화면을 꾸밀 배경/이미지 레이어(선택) */
   backdrop?: ReactNode;
@@ -13,14 +13,14 @@ type Props = PropsWithChildren<{
   debugOutline?: boolean;
 }>;
 
-const BASE_W = 357;
+const BASE_W = 375;
 const BASE_H = 668;
 
 /**
- * 화면(브라우저) 크기에 맞춰 357x668 스테이지를 비율 유지로 스케일.
+ * 화면(브라우저) 크기에 맞춰 375x668 스테이지를 비율 유지로 스케일.
  * - 가운데 정렬
  * - 밖 영역(backdrop) 위에 스테이지가 얹힘
- * - 내부 좌표계는 언제나 357x668(px)
+ * - 내부 좌표계는 언제나 375x668(px)
  */
 const ScaledStage = ({ allowScroll = true, backdrop, debugOutline = false, children }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -63,11 +63,11 @@ const ScaledStage = ({ allowScroll = true, backdrop, debugOutline = false, child
         style={{ width: stageBoxW, height: stageBoxH }}
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
       >
-        {/* 실제 스테이지(357x668, 좌표계 고정) */}
+        {/* 실제 스테이지(375x668, 좌표계 고정) */}
         <div
           data-fixed-stage
           className={clsx(
-            'relative h-[668px] w-[357px] bg-white shadow-xl',
+            'relative h-[668px] w-[375px] bg-white shadow-xl',
             allowScroll ? 'overflow-auto' : 'overflow-hidden',
             debugOutline && 'outline outline-1 outline-blue-300'
           )}
