@@ -32,9 +32,10 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           backdrop={
             <Image
               src="/images/backgroundImage.png"
-              alt="background"
+              alt=""
+              aria-hidden
+              role="presentation"
               fill
-              priority
               sizes="100vw"
               className="object-cover"
             />
