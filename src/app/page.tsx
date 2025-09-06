@@ -6,6 +6,7 @@ const HomePage = () => {
         Call to Action
       </button>
       <p className="text-sm text-neutral-600">357×668 해상도</p>
+      <span className="text-lg text-purple-400">hello</span>
     </main>
   );
 };
