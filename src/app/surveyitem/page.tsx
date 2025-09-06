@@ -1,4 +1,4 @@
-import SurveyItem from '@/app/survey/_components/SurveyItem';
+import { SurveyItem } from '@/app/survey';
 
 const page = () => {
   return (
