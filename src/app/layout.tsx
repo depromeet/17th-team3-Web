@@ -1,12 +1,13 @@
 import './globals.css';
 import ScaledStage from '@/app/_components/layout/ScaledStage';
 
-import type { Metadata, Viewport } from 'next';
+import type { Viewport, Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'App',
-  description: 'Fixed 375x668 viewport',
+  description: 'Height-fit 375×668 (CSS-only)',
 };
+
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
@@ -19,10 +20,19 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
       <body className="antialiased">
         <ScaledStage
           allowScroll
-          debugOutline
+          showFrame
+          frameClassName="ring-2 ring-purple-500"
+          showLabel
+          baseWidth={375}
+          baseHeight={668}
+          maxScalePx={1000} // 높이 완전 매칭
+          minScalePx={0.5}
           backdrop={
-            /* 예시 배경: 그라디언트/이미지/패턴 등 자유롭게 */
-            <div className="h-full w-full bg-gradient-to-br from-neutral-100 to-neutral-200" />
+            <img
+              src="/public/images/backgroundImage.png"
+              alt="background-image"
+              className="h-full w-full object-cover"
+            />
           }
         >
           {children}

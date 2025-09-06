@@ -24,3 +24,25 @@ video {
   padding-bottom: env(safe-area-inset-bottom);
   padding-top: env(safe-area-inset-top);
 }
+
+@layer utilities {
+  /* 1em = 배율(px) 컨텍스트 */
+  .stage-scale-context {
+    /* 기본값 (props로 덮어씀) */
+    --stage-base-w: 375;
+    --stage-base-h: 668;
+
+    /* 배율 제한: 1em = 1px (상한을 크게 잡아 높이 완전 맞춤) */
+    --stage-min-scale: 0.5px;  /* 너무 작아지는 것 방지 (원하면 조정/0px) */
+    --stage-max-scale: 1000px; /* 상한 크게: tall 화면에서도 height=100dvh 보장 */
+
+    /* ✅ 높이 기준 스케일:  font-size = 100dvh / baseH  (px 단위가 아님, '비율') */
+    font-size: clamp(
+            var(--stage-min-scale),
+            calc(100dvh / var(--stage-base-h)),
+            var(--stage-max-scale)
+    );
+  }
+}
+
+/* 그 외 전역 리셋/유틸은 기존 그대로 두면 됩니다 */

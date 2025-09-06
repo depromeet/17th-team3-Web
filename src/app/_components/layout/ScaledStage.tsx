@@ -1,83 +1,67 @@
-'use client';
-
-import { useLayoutEffect, useRef, useState, type PropsWithChildren, type ReactNode } from 'react';
+import type { PropsWithChildren, ReactNode, CSSProperties } from 'react';
 
 import clsx from 'clsx';
 
 type Props = PropsWithChildren<{
-  /** 스테이지(375x668) 내부가 넘칠 때 내부 스크롤 허용 */
   allowScroll?: boolean;
-  /** 스테이지 밖 화면을 꾸밀 배경/이미지 레이어(선택) */
   backdrop?: ReactNode;
-  /** 디버그용 외곽선 표시 */
+  showFrame?: boolean;
+  frameClassName?: string; // ex) 'ring-1 ring-purple-500'
+  showLabel?: boolean;
   debugOutline?: boolean;
+
+  baseWidth?: number; // default 375
+  baseHeight?: number; // default 668
+  maxScalePx?: number; // default 1000 (높이 완전 매칭 위해 크게)
+  minScalePx?: number; // default 0.5
 }>;
 
-const BASE_W = 375;
-const BASE_H = 668;
-
-/**
- * 화면(브라우저) 크기에 맞춰 375x668 스테이지를 비율 유지로 스케일.
- * - 가운데 정렬
- * - 밖 영역(backdrop) 위에 스테이지가 얹힘
- * - 내부 좌표계는 언제나 375x668(px)
- */
-const ScaledStage = ({ allowScroll = true, backdrop, debugOutline = false, children }: Props) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(1);
-
-  useLayoutEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-
-    const update = () => {
-      // 컨테이너(= 화면) 실측
-      const cw = el.clientWidth;
-      const ch = el.clientHeight;
-      // 양축을 넘지 않게 하는 스케일값
-      const next = Math.min(cw / BASE_W, ch / BASE_H);
-      setScale(next);
-    };
-
-    // 첫 계산 + 리사이즈 대응
-    update();
-    const ro = new ResizeObserver(update);
-    ro.observe(el);
-    window.addEventListener('orientationchange', update);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener('orientationchange', update);
-    };
-  }, []);
-
-  const stageBoxW = BASE_W * scale;
-  const stageBoxH = BASE_H * scale;
+const ScaledStage = ({
+  allowScroll = true,
+  backdrop,
+  showFrame = true,
+  frameClassName = 'ring-1 ring-purple-500',
+  showLabel = true,
+  debugOutline = false,
+  baseWidth = 375,
+  baseHeight = 668,
+  maxScalePx = 1000, // ✅ 상한 크게: tall 화면에서도 height=100dvh 유지
+  minScalePx = 0.5,
+  children,
+}: Props) => {
+  const vars: CSSProperties = {
+    ['--stage-base-w' as any]: baseWidth,
+    ['--stage-base-h' as any]: baseHeight,
+    ['--stage-max-scale' as any]: `${maxScalePx}px`,
+    ['--stage-min-scale' as any]: `${minScalePx}px`,
+  };
 
   return (
-    <div ref={containerRef} className="relative min-h-dvh w-full overflow-hidden">
-      {/* 배경(스테이지 바깥 꾸미기) */}
+    <div className="relative min-h-dvh w-full overflow-hidden">
+      {/* 375×668 밖 전체 배경 */}
       {backdrop && <div className="pointer-events-none absolute inset-0 -z-10">{backdrop}</div>}
 
-      {/* 스케일된 스테이지 박스(중앙 정렬) */}
-      <div
-        style={{ width: stageBoxW, height: stageBoxH }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-      >
-        {/* 실제 스테이지(375x668, 좌표계 고정) */}
-        <div
-          data-fixed-stage
-          className={clsx(
-            'relative h-[668px] w-[375px] bg-white shadow-xl',
-            allowScroll ? 'overflow-auto' : 'overflow-hidden',
-            debugOutline && 'outline outline-1 outline-blue-300'
-          )}
-          style={{
-            transform: `scale(${scale})`,
-            transformOrigin: 'top left',
-            willChange: 'transform',
-          }}
-        >
-          {children}
+      <div className="flex h-dvh w-full items-center justify-center">
+        {/* 1em = 배율(px) 컨텍스트 */}
+        <div className="stage-scale-context" style={vars}>
+          {/* 고정 좌표계: 375×668 em (= height가 항상 100dvh) */}
+          <div
+            data-fixed-stage
+            className={clsx(
+              'relative h-[668em] w-[375em] bg-white shadow-xl',
+              allowScroll ? 'overflow-auto' : 'overflow-hidden',
+              showFrame && frameClassName, // ring/outline 프레임
+              debugOutline && 'outline outline-1 outline-blue-300'
+            )}
+          >
+            {children}
+
+            {showLabel && (
+              <span className="pointer-events-none absolute right-1 bottom-1 rounded bg-black/70 px-1.5 py-0.5 text-[10px] font-medium text-white">
+                {baseWidth}×{baseHeight}
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </div>
