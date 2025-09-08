@@ -14,7 +14,11 @@
     "prepare": "lefthook install"
   },
   "dependencies": {
+    "@use-funnel/browser": "^0.0.15",
+    "@use-funnel/core": "^0.0.12",
+    "@use-funnel/next": "^0.0.21",
     "clsx": "^2.1.1",
+    "lucide-react": "^0.542.0",
     "next": "15.5.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
