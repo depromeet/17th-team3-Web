@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-import ConfettiComponent from '@/app/_lib/confetti';
+import ConfettiComponent from '@/app/_components/ui/Confetti';
 
 interface ResultCardProps {
   title: string;
