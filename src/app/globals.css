@@ -26,6 +26,37 @@ video {
 }
 
 @layer utilities {
+  /* dvh 안전 유틸: 지원되면 dvh, 아니면 svh → vh 폴백 */
+  .min-h-screen-safe {
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+
+  @supports (height: 100dvh) {
+    .min-h-screen-safe {
+      min-height: 100dvh;
+    }
+  }
+
+  .h-screen-safe {
+    height: 100vh;
+    height: 100svh;
+  }
+
+  @supports (height: 100dvh) {
+    .h-screen-safe {
+      height: 100dvh;
+    }
+  }
+
+  /* 내부 스크롤 영역 제스처 안정화 */
+  .scroll-smooth-mobile {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+  }
+
+  /* 기존 stage-scale-context는 유지하되, dvh 유틸과 함께 사용 가능 */
   /* 1em = 배율(px) 컨텍스트 */
   .stage-scale-context {
     /* 기본값 (props로 덮어씀) */

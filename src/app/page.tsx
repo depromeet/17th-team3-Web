@@ -17,7 +17,7 @@ const HomePage = () => {
   );
 
   return (
-    <main className="flex h-full flex-col items-center justify-center gap-4 p-4">
+    <main className="min-h-screen-safe flex flex-col items-center justify-center gap-4 p-4">
       <div className="rounded-md bg-black px-3 py-1 text-xs text-white">Tailwind OK</div>
       <button className={buttonClass}>Dynamic Button</button>
       <p className="text-sm text-neutral-600">375×668 해상도</p>
