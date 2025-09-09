@@ -13,7 +13,7 @@ pre-commit:
       run: pnpm prettier --check {staged_files}
 
     eslint:
-      glob: "*.{js,jsx,ts,tsx}"
+      glob: '*.{js,jsx,ts,tsx}'
       run: pnpm eslint {staged_files}
 
     types:
@@ -23,5 +23,3 @@ pre-commit:
         else
           echo "No staged TS files → skip typecheck"
         fi
-
-
