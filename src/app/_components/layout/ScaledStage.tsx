@@ -39,9 +39,9 @@ const ScaledStage = ({
   const productionStage = () => (
     <div className="min-h-screen-safe w-full">
       <Backdrop backdrop={backdrop} />
-      <div className={clsx('relative mx-auto w-full max-w-[375px]', showFrame && frameClassName)}>
+      <div className={clsx('relative mx-auto w-full max-w-[500px]', showFrame && frameClassName)}>
         {children}
-        {showLabel && <StageLabel text="max-w 375" />}
+        {showLabel && <StageLabel text="max-w 500" />}
       </div>
     </div>
   );
