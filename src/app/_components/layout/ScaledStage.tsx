@@ -9,12 +9,12 @@ import clsx from 'clsx';
  * */
 type Mode = 'preview' | 'production';
 
-type Props = PropsWithChildren<{
-  mode?: Mode; // 추가
+interface Props extends PropsWithChildren {
+  mode?: Mode;
   allowScroll?: boolean;
   backdrop?: ReactNode;
   showFrame?: boolean;
-  frameClassName?: string; // ex) 'ring-1 ring-purple-500'
+  frameClassName?: string;
   showLabel?: boolean;
   debugOutline?: boolean;
 
@@ -22,7 +22,7 @@ type Props = PropsWithChildren<{
   baseHeight?: number; // default 668
   maxScalePx?: number; // default 1000 (높이 완전 매칭 위해 크게)
   minScalePx?: number; // default 0.5
-}>;
+}
 
 const ScaledStage = ({
   mode = 'production', // 'preview' | 'production'
