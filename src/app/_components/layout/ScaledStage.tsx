@@ -4,7 +4,7 @@ import { twMerge } from 'tailwind-merge';
 import type { ScaledStageProps, StageVars } from '@/app/_components/layout/type';
 
 const Backdrop = ({ backdrop }: { backdrop?: React.ReactNode }) =>
-  backdrop ? <div className="pointer-events-none absolute inset-0 -z-10">{backdrop}</div> : null;
+  backdrop ? <div className="pointer-events-none fixed inset-0 -z-10">{backdrop}</div> : null;
 
 const StageLabel = ({ text }: { text: string }) => (
   <span
@@ -55,7 +55,7 @@ const ScaledStage = ({
             data-fixed-stage
             className={twMerge(
               clsx(
-                'relative h-[668em] w-[375em] bg-white shadow-xl',
+                'relative h-full w-full bg-white shadow-xl',
                 allowScroll ? 'scroll-smooth-mobile overflow-auto' : 'overflow-hidden',
                 showFrame && frameClassName,
                 debugOutline && 'outline outline-1 outline-blue-300'
