@@ -38,10 +38,13 @@ video {
   }
 
   .h-screen-safe {
-    height: 100vh;
     height: 100svh;
   }
-
+  @supports not (height: 100svh) {
+    .h-screen-safe {
+      height: 100vh;
+    }
+  }
   @supports (height: 100dvh) {
     .h-screen-safe {
       height: 100dvh;
@@ -66,12 +69,23 @@ video {
     --stage-min-scale: 0.5px; /* 너무 작아지는 것 방지 (원하면 조정/0px) */
     --stage-max-scale: 1000px; /* 상한 크게: tall 화면에서도 height=100dvh 보장 */
 
-    /* ✅ 높이 기준 스케일:  font-size = 100dvh / baseH  (px 단위가 아님, '비율') */
+    /* 높이 기준 스케일:  font-size = 100dvh / baseH  (px 단위가 아님, '비율') */
     font-size: clamp(
       var(--stage-min-scale),
       calc(100dvh / var(--stage-base-h)),
       var(--stage-max-scale)
     );
+  }
+
+  /* dvh 미지원 브라우저 폴백 */
+  @supports not (height: 100dvh) {
+    .stage-scale-context {
+      font-size: clamp(
+        var(--stage-min-scale),
+        calc(100vh / var(--stage-base-h)),
+        var(--stage-max-scale)
+      );
+    }
   }
 }
 

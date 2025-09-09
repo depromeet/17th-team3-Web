@@ -30,8 +30,8 @@ const AnyPage = () => {
           <h1 className="text-lg font-bold">프로덕션 레이아웃 검증</h1>
           <p className="mt-1 text-sm text-neutral-600">
             이 페이지는 <span className="font-medium">단일 문서 스크롤</span>을 유지하면서 max-width
-            max-width 센터링, dvh 폴백, 폰트 확대, 가로/세로 스크롤 제스처를 한 번에 테스트할 수
-            테스트할 수 있게 구성되었습니다.
+            센터링, dvh 폴백, 폰트 확대, 가로/세로 스크롤 제스처를 한 번에 테스트할 수 있게
+            구성되었습니다.
           </p>
           <ul className="mt-3 list-inside list-disc text-sm text-neutral-600">
             <li>모바일 주소창 등장/사라짐(dvh) 시 레이아웃 점프 확인</li>
@@ -68,8 +68,8 @@ const AnyPage = () => {
                 </p>
                 <div className="mt-3 overflow-hidden rounded-xl">
                   <Image
-                    src={`/images/backgroundImage.png`}
-                    alt=""
+                    src="/images/backgroundImage.png"
+                    alt={`카드 ${i} 배경 이미지`}
                     width={800}
                     height={480}
                     className="h-32 w-full object-cover"
@@ -105,6 +105,8 @@ const AnyPage = () => {
               <input
                 type="email"
                 placeholder="you@example.com"
+                autoComplete="email"
+                required
                 className="mt-1 w-full rounded-xl border px-3 py-2 text-sm ring-blue-500 outline-none focus:ring-2"
               />
             </label>
@@ -113,6 +115,7 @@ const AnyPage = () => {
               <textarea
                 rows={4}
                 placeholder="내용을 입력하세요"
+                required
                 className="mt-1 w-full rounded-xl border px-3 py-2 text-sm ring-blue-500 outline-none focus:ring-2"
               />
             </label>
