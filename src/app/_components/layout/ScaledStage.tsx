@@ -1,5 +1,4 @@
-import clsx from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '@/app/_lib/cn';
 
 import type { ScaledStageProps, StageVars } from '@/app/_components/layout/type';
 
@@ -40,7 +39,7 @@ const ScaledStage = ({
     <div className="min-h-screen w-full">
       <Backdrop backdrop={backdrop} />
       <div
-        className={clsx(
+        className={cn(
           'relative mx-auto flex min-h-dvh w-full max-w-[500px] flex-col overflow-hidden bg-white',
           showFrame && frameClassName
         )}
@@ -59,13 +58,11 @@ const ScaledStage = ({
         <div className="stage-scale-context" style={vars}>
           <div
             data-fixed-stage
-            className={twMerge(
-              clsx(
-                'relative h-full w-full bg-white shadow-xl',
-                allowScroll ? 'scroll-smooth-mobile overflow-auto' : 'overflow-hidden',
-                showFrame && frameClassName,
-                debugOutline && 'outline outline-1 outline-blue-300'
-              )
+            className={cn(
+              'relative h-full w-full bg-white shadow-xl',
+              allowScroll ? 'scroll-smooth-mobile overflow-auto' : 'overflow-hidden',
+              showFrame && frameClassName,
+              debugOutline && 'outline outline-1 outline-blue-300'
             )}
           >
             {children}
