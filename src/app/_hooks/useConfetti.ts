@@ -1,11 +1,8 @@
-'use client';
-
-import { useEffect, useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import confetti, { Options as ConfettiOptions } from 'canvas-confetti';
 
-// todo: 레이아웃 결정 후, 폭죽 효과 범위 수정 필요
-const ConfettiComponent = () => {
+export const useConfetti = () => {
   const confettiDuration = 1000;
 
   const colorArray = useMemo(() => ['#3369FF', '#FFB218', '#FF4040'], []);
@@ -24,7 +21,8 @@ const ConfettiComponent = () => {
     return Math.random() * (max - min) + min;
   }, []);
 
-  useEffect(() => {
+  // 기존 useEffect 로직을 함수로 변환
+  const celebrate = useCallback(() => {
     const confettiAnimationEnd = Date.now() + confettiDuration;
 
     const interval = setInterval(() => {
@@ -49,7 +47,5 @@ const ConfettiComponent = () => {
     return () => clearInterval(interval);
   }, [setting, getRandomInRange, confettiDuration]);
 
-  return null;
+  return { celebrate };
 };
-
-export default ConfettiComponent;
