@@ -1,13 +1,12 @@
 import { ComponentPropsWithoutRef, RefObject } from 'react';
 
-import { LucideIcon, Search, X } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 
 import { cn } from '@/app/_lib/cn';
 
 export interface InputProps extends ComponentPropsWithoutRef<'input'> {
   ref?: RefObject<HTMLInputElement>;
   variant?: 'default' | 'search';
-  icon?: LucideIcon;
   hasError?: boolean;
   errorMessage?: string;
   // todo: 유효성 검증 기획에 따라 컴포넌트 내부로 이관 가능
