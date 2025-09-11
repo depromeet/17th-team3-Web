@@ -40,7 +40,7 @@ const Input = ({
   const showClearButton = value && String(value).length > 0;
 
   return (
-    <div className="relative w-full">
+    <>
       <div className="relative flex items-center">
         {variant === 'search' && <Search className="absolute left-3 h-4 w-4 text-gray-400" />}
         <input
@@ -72,13 +72,13 @@ const Input = ({
       </div>
 
       {(hasError && errorMessage) || helperText ? (
-        <div className="mt-1.5 px-1">
+        <div className="mt-2 px-1">
           <p className={cn('text-xs', hasError ? 'text-red-600' : 'text-gray-500')}>
             {hasError && errorMessage ? errorMessage : helperText}
           </p>
         </div>
       ) : null}
-    </div>
+    </>
   );
 };
 
