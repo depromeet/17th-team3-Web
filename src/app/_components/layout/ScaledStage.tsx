@@ -36,11 +36,11 @@ const ScaledStage = ({
   };
 
   const productionStage = () => (
-    <div className="min-h-screen w-full">
+    <div className="min-h-screen-safe w-full">
       <Backdrop backdrop={backdrop} />
       <div
         className={cn(
-          'relative mx-auto flex min-h-dvh w-full max-w-[500px] flex-col overflow-hidden bg-white',
+          'min-h-screen-safe relative mx-auto flex w-full max-w-[475px] flex-col overflow-hidden bg-white',
           showFrame && frameClassName
         )}
       >
