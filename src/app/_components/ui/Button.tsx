@@ -13,7 +13,7 @@ const buttonVariants = cva(
         gray: 'text-black bg-gray-200 active:bg-gray-300',
       },
       status: {
-        normal: 'hover:opacity-90',
+        normal: 'hover:opacity-90 hover:opacity-90 ',
         disabled: 'cursor-not-allowed opacity-50',
       },
     },
