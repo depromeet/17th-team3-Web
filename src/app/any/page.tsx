@@ -1,11 +1,42 @@
+'use client';
+
+import { useState } from 'react';
+
 import Image from 'next/image';
 import Link from 'next/link';
 
+import Input from '@/app/_components/ui/Input';
+
 const AnyPage = () => {
+  const [value, setValue] = useState('');
+  const [email, setEmail] = useState('');
+  const [groupName, setGroupName] = useState('');
+
   return (
     // 페이지 단일 스크롤: 화면 높이 폴백 유틸 사용
-    <main className="min-h-screen-safe bg-gradient-to-b from-white to-neutral-50 text-neutral-900">
+    <main className="min-h-screen-safe bg-gradient-to-b from-white to-neutral-50 p-4 text-neutral-900">
       {/* Sticky 헤더: 주소창 변화(dvh) 상황에서도 안정 */}
+
+      <Input
+        variant="search"
+        value={value}
+        onChange={(event) => setValue(event.target.value)}
+        onClear={() => setValue('')}
+      />
+      <Input
+        placeholder="모임 이름 입력"
+        value={groupName}
+        onChange={(event) => setGroupName(event.target.value)}
+        onClear={() => setGroupName('')}
+        helperText="2-20자 이내로 입력해주세요"
+      />
+      <Input
+        value={email}
+        hasError={true}
+        onChange={(event) => setEmail(event.target.value)}
+        errorMessage="이메일 형식이 올바르지 않습니다"
+        onClear={() => setEmail('')}
+      />
       <header className="sticky top-0 z-10 border-b bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60">
         <div className="safe-padding mx-auto flex w-full max-w-[375px] items-center justify-between px-4 py-3 sm:max-w-[480px] md:max-w-[640px]">
           <span className="text-sm font-semibold">/any · 테스트 페이지</span>
@@ -22,7 +53,6 @@ const AnyPage = () => {
           </nav>
         </div>
       </header>
-
       {/* 컨텐츠 래퍼: ScaledStage(production)와 동일한 max-width 센터링 */}
       <div className="mx-auto w-full max-w-[375px] px-4 py-6 sm:max-w-[480px] md:max-w-[640px]">
         {/* Hero / 안내 배너 */}
@@ -155,7 +185,6 @@ const AnyPage = () => {
         {/* Footer spacer */}
         <div className="h-16" />
       </div>
-
       {/* 고정 푸터(안전영역 패딩 적용 예시) */}
       <footer className="safe-padding fixed inset-x-0 bottom-0 z-10 border-t bg-white/90 backdrop-blur">
         <div className="mx-auto flex w-full max-w-[375px] items-center justify-between px-4 py-3 text-xs text-neutral-600 sm:max-w-[480px] md:max-w-[640px]">
