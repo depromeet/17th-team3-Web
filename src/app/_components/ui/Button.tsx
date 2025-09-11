@@ -5,16 +5,16 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/app/_lib/cn';
 
 const buttonVariants = cva(
-  'flex h-[62px] items-center w-full justify-center gap-1 rounded-[14px] text-[16px] font-[500] hover:cursor-pointer shrink-0 ',
+  'flex h-[62px] items-center w-full justify-center gap-1 rounded-[14px] text-[16px] font-[500] cursor-pointer transition-all duration-200 shrink-0',
   {
     variants: {
       theme: {
-        orange: 'text-white bg-orange-500 active:bg-orange-600',
-        gray: 'text-black bg-gray-200 active:bg-gray-300',
+        orange: 'text-white bg-orange-500 hover:bg-orange-600 active:bg-orange-700',
+        gray: 'text-black bg-gray-200 hover:bg-gray-300 active:bg-gray-400',
       },
       status: {
-        normal: 'hover:opacity-90 hover:opacity-90 ',
-        disabled: 'cursor-not-allowed opacity-50',
+        normal: '',
+        disabled: 'opacity-50 pointer-events-none',
       },
     },
     defaultVariants: {
@@ -44,7 +44,7 @@ interface ButtonProps
  * <Button theme="gray">회색 버튼</Button>
  *
  * // 상태 변경
- * <Button status="disabled">비활성화</Button> * disabled는 테마 적용을 위해 status로 사용
+ * <Button status="disabled">비활성화</Button>
  *
  * // HTML 속성 사용
  * <Button type="submit" onClick={() => {}}>
@@ -61,7 +61,7 @@ interface ButtonProps
  * @param status - 버튼 상태 ('normal' | 'disabled')
  * @param children - 버튼 내부 콘텐츠
  * @param className - 추가 CSS 클래스 (variant 스타일과 병합됨)
- * @param props - 모든 HTML button 속성 지원 (type, onClick, ref 등)
+ * @param props - 모든 HTML button 속성 지원 (type, onClick, disabled 등)
  *
  * @returns JSX.Element
  */
