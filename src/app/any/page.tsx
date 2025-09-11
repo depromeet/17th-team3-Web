@@ -16,13 +16,15 @@ const AnyPage = () => {
     // 페이지 단일 스크롤: 화면 높이 폴백 유틸 사용
     <main className="min-h-screen-safe bg-gradient-to-b from-white to-neutral-50 p-4 text-neutral-900">
       {/* Sticky 헤더: 주소창 변화(dvh) 상황에서도 안정 */}
-
+      <br />
       <Input
         variant="search"
         value={value}
         onChange={(event) => setValue(event.target.value)}
         onClear={() => setValue('')}
       />
+      <br />
+
       <Input
         placeholder="모임 이름 입력"
         value={groupName}
@@ -30,6 +32,8 @@ const AnyPage = () => {
         onClear={() => setGroupName('')}
         helperText="2-20자 이내로 입력해주세요"
       />
+      <br />
+
       <Input
         value={email}
         hasError={true}
@@ -37,6 +41,8 @@ const AnyPage = () => {
         errorMessage="이메일 형식이 올바르지 않습니다"
         onClear={() => setEmail('')}
       />
+      <br />
+
       <header className="sticky top-0 z-10 border-b bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60">
         <div className="safe-padding mx-auto flex w-full max-w-[375px] items-center justify-between px-4 py-3 sm:max-w-[480px] md:max-w-[640px]">
           <span className="text-sm font-semibold">/any · 테스트 페이지</span>

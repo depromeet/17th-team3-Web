@@ -10,6 +10,7 @@ export interface InputProps extends ComponentPropsWithoutRef<'input'> {
   icon?: LucideIcon;
   hasError?: boolean;
   errorMessage?: string;
+  // todo: 유효성 검증 기획에 따라 컴포넌트 내부로 이관 가능
   helperText?: string;
   onClear?: () => void;
   className?: string;
