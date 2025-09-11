@@ -1,25 +1,32 @@
-// src/app/survey/_components/StepMultiSelect.tsx
 'use client';
 
-import { useMemo, useState, type ReactElement } from 'react';
+import { useEffect, useMemo, useState, type ReactElement } from 'react';
 
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { Check } from 'lucide-react';
 
-type Props<T extends string> = {
+export type Option = { id: string; label: string };
+
+type Props = {
   title: string;
   subtitle?: string;
   roleLabel: string;
-  options: readonly T[] | T[];
-  defaultSelected?: T[];
-  onNext: (selected: T[]) => void;
+  options: readonly Option[];
+  /** 초기 선택값(Option 배열) */
+  defaultSelected?: Option[];
+  /** 다음 단계로 넘길 때 선택된 Option 배열을 반환 */
+  onNext: (selected: Option[]) => void;
   onBack?: () => void;
   nextLabel?: string;
   disableNextWhenEmpty?: boolean;
+  /** 배타(단독) 선택 옵션 id 목록 */
+  exclusiveIds?: string[];
+  /** '기타' 옵션 id (옵션 배열에 반드시 존재) */
+  otherId?: string;
+  otherPlaceholder?: string;
 };
 
-// ✅ 제네릭 컴포넌트는 함수 "표현식" + 리턴타입 ReactElement
-const StepMultiSelect = <T extends string>(props: Props<T>): ReactElement => {
+const StepMultiSelect = (props: Props): ReactElement => {
   const {
     title,
     subtitle,
@@ -30,15 +37,58 @@ const StepMultiSelect = <T extends string>(props: Props<T>): ReactElement => {
     onBack,
     nextLabel = '다음',
     disableNextWhenEmpty = true,
+    exclusiveIds = [],
+    otherId,
+    otherPlaceholder,
   } = props;
 
-  const [selected, setSelected] = useState<T[]>(defaultSelected);
-  const selectedSet = useMemo(() => new Set(selected), [selected]);
-  const isEmpty = selected.length === 0;
+  // id 유틸
+  const idOf = (o: Option) => o.id;
+
+  // 내부 상태는 id 기준으로 관리
+  const [selectedIds, setSelectedIds] = useState<string[]>(defaultSelected.map(idOf));
+  // defaultSelected/옵션이 바뀌면 동기화
+  useEffect(() => {
+    setSelectedIds(defaultSelected.map(idOf));
+  }, [defaultSelected, options]);
+
+  const selectedSet = useMemo(() => new Set(selectedIds), [selectedIds]);
+  const isEmpty = selectedIds.length === 0;
   const nextDisabled = disableNextWhenEmpty && isEmpty;
 
-  const toggle = (opt: T) =>
-    setSelected((prev) => (prev.includes(opt) ? prev.filter((v) => v !== opt) : [...prev, opt]));
+  const [otherText, setOtherText] = useState('');
+  const showOther = !!otherId && selectedSet.has(otherId);
+
+  const toggle = (targetId: string) => {
+    setSelectedIds((prev) => {
+      const has = prev.includes(targetId);
+      const isExclusive = exclusiveIds.includes(targetId);
+
+      // 해제
+      if (has) return prev.filter((v) => v !== targetId);
+
+      // 배타 옵션은 단독 선택
+      if (isExclusive) return [targetId];
+
+      // 비배타 선택인데 기존에 배타가 있으면 제거
+      const cleared = prev.filter((v) => !exclusiveIds.includes(v));
+      return [...cleared, targetId];
+    });
+  };
+
+  const handleNext = () => {
+    const out = options
+      .filter((o) => selectedSet.has(idOf(o)))
+      .map((o) => {
+        // 기타에 텍스트가 있으면 라벨을 가공한 새 객체로 반환
+        if (otherId && idOf(o) === otherId && otherText.trim()) {
+          return { ...o, label: `${o.label}: ${otherText.trim()}` };
+        }
+        return o;
+      });
+
+    onNext(out);
+  };
 
   return (
     <div className="mx-auto max-w-[480px] px-4 py-6 md:py-8">
@@ -50,14 +100,14 @@ const StepMultiSelect = <T extends string>(props: Props<T>): ReactElement => {
 
       <ul className="grid grid-cols-1 gap-3">
         {options.map((opt) => {
-          const active = selectedSet.has(opt);
+          const active = selectedSet.has(opt.id);
           return (
-            <li key={opt} className="list-none">
+            <li key={opt.id} className="list-none">
               <button
                 type="button"
                 role="checkbox"
                 aria-checked={active}
-                onClick={() => toggle(opt)}
+                onClick={() => toggle(opt.id)}
                 className={clsx(
                   'w-full rounded-2xl border-2 px-5 py-4 text-left md:px-6 md:py-5',
                   'flex min-h-14 items-center justify-between text-base md:min-h-16 md:text-lg',
@@ -68,7 +118,8 @@ const StepMultiSelect = <T extends string>(props: Props<T>): ReactElement => {
                     : 'border-gray-200 bg-white text-gray-900 hover:bg-gray-50'
                 )}
               >
-                <span className="text-base">{opt}</span>
+                <span className="text-base">{opt.label}</span>
+
                 <span
                   aria-hidden
                   className={clsx(
@@ -80,6 +131,7 @@ const StepMultiSelect = <T extends string>(props: Props<T>): ReactElement => {
                 >
                   선택됨
                 </span>
+
                 {active && (
                   <span
                     aria-hidden
@@ -94,6 +146,18 @@ const StepMultiSelect = <T extends string>(props: Props<T>): ReactElement => {
         })}
       </ul>
 
+      {/* '기타' 텍스트 입력 */}
+      {showOther && (
+        <div className="mt-3">
+          <input
+            value={otherText}
+            onChange={(e) => setOtherText(e.target.value)}
+            placeholder={otherPlaceholder ?? '기타 내용을 입력하세요'}
+            className="w-full rounded-xl border px-3 py-2 text-sm"
+          />
+        </div>
+      )}
+
       <div className="mt-4 flex items-center gap-3">
         <span
           className={clsx(
@@ -101,7 +165,7 @@ const StepMultiSelect = <T extends string>(props: Props<T>): ReactElement => {
             isEmpty ? 'bg-gray-100 text-gray-500' : 'bg-blue-100 text-blue-800'
           )}
         >
-          선택 {selected.length}개
+          선택 {selectedIds.length}개
         </span>
 
         {onBack && (
@@ -117,7 +181,7 @@ const StepMultiSelect = <T extends string>(props: Props<T>): ReactElement => {
         <button
           type="button"
           disabled={nextDisabled}
-          onClick={() => onNext(selected)}
+          onClick={handleNext}
           className={clsx(
             'ml-auto rounded-xl px-4 py-2 text-sm font-medium transition',
             nextDisabled

@@ -1,4 +1,3 @@
-// src/app/survey/_components/SurveyClientShell.tsx
 'use client';
 
 import type { FC } from 'react';

@@ -1,4 +1,3 @@
-// src/app/survey/page.tsx
 import SurveyClientShell from '@/app/survey/_components/SurveyClientShell';
 
 import type { RoleLabel } from '@/app/survey/_models/types';

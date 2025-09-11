@@ -6,7 +6,7 @@ import type { FunnelCtxMap, SurveyResult } from '../_models/types';
 
 export const useSurveyFunnel = (initial?: Partial<SurveyResult>) => {
   return useFunnel<FunnelCtxMap>({
-    id: 'lunch-survey',
+    id: 'survey',
     initial: {
       step: 'Mood',
       context: {

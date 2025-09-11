@@ -1,4 +1,3 @@
-// src/app/survey/complete/page.tsx
 const CompletePage = () => {
   return (
     <div className="mx-auto max-w-[480px] px-4 py-12 text-center">
