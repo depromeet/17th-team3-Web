@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState, type ReactElement } from 'react';
 
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { Check } from 'lucide-react';
 
 export type Option = { id: string; label: string };
