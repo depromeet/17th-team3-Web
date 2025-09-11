@@ -8,14 +8,10 @@ import SurveyFunnel from './SurveyFunnel';
 
 import type { RoleLabel, SurveyResult } from '../_models/types';
 
-type Props = {
-  role: RoleLabel;
-  initial?: Partial<SurveyResult>;
-};
+type Props = { role: RoleLabel; initial?: Partial<SurveyResult> };
 
 const SurveyClient: FC<Props> = ({ role, initial }) => {
   const router = useRouter();
-
   const handleComplete = async (_data: SurveyResult) => {
     // await saveSurveyResult(_data);
     router.push('/survey/complete');

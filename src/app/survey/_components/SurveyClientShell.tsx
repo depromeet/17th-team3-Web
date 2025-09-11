@@ -1,12 +1,11 @@
 'use client';
-
 import type { FC } from 'react';
 
 import dynamic from 'next/dynamic';
 
-import type { RoleLabel } from '../_models/types';
+import type { RoleLabel, SurveyResult } from '../_models/types';
 
-type Props = { role: RoleLabel };
+type Props = { role: RoleLabel; initial?: Partial<SurveyResult> };
 
 const SurveyClient = dynamic<Props>(() => import('./SurveyClient'), { ssr: false });
 

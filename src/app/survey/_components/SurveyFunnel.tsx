@@ -9,8 +9,8 @@ import {
   TASTE_OPTIONS,
   AVOID_INGREDIENT_OPTIONS,
   UNWANTED_MENU_OPTIONS,
-} from '../_models/option'; // ← 파일명 통일
-import { STEP_KEYS, type CommonCtx, type RoleLabel, type SurveyResult } from '../_models/types';
+} from '../_models/option';
+import { STEP_KEYS, type RoleLabel, type SurveyResult } from '../_models/types';
 
 import StepMultiSelect from './StepMultiSelect';
 import StepProgress from './StepProgress';
@@ -36,10 +36,17 @@ const SurveyFunnel: FC<Props> = ({ role, initial, onComplete }) => {
           roleLabel={role}
           title="이번 모임, 어떤 분위기면 좋을까요?"
           options={MOOD_OPTIONS}
-          defaultSelected={context.moods}
+          defaultSelectedIds={context.moodsIds}
           exclusiveIds={['mood:any']}
           otherId="mood:other"
-          onNext={(moods) => history.push('Cuisine', (prev: CommonCtx) => ({ ...prev, moods }))}
+          otherDefault={context.others.Mood}
+          onNext={(moodsIds, other) =>
+            history.push('Cuisine', (prev) => ({
+              ...prev,
+              moodsIds,
+              others: { ...prev.others, Mood: other },
+            }))
+          }
         />
       </>
     );
@@ -54,11 +61,18 @@ const SurveyFunnel: FC<Props> = ({ role, initial, onComplete }) => {
           roleLabel={role}
           title="어떤 종류의 음식을 선호하시나요?"
           options={CUISINE_OPTIONS}
-          defaultSelected={context.cuisines}
+          defaultSelectedIds={context.cuisinesIds}
           exclusiveIds={['cuisine:any']}
           otherId="cuisine:other"
-          onBack={() => history.back()}
-          onNext={(cuisines) => history.push('Taste', (prev) => ({ ...prev, cuisines }))}
+          otherDefault={context.others.Cuisine}
+          onBack={() => history.replace('Mood', (prev) => prev)}
+          onNext={(cuisinesIds, other) =>
+            history.push('Taste', (prev) => ({
+              ...prev,
+              cuisinesIds,
+              others: { ...prev.others, Cuisine: other },
+            }))
+          }
         />
       </>
     );
@@ -73,11 +87,18 @@ const SurveyFunnel: FC<Props> = ({ role, initial, onComplete }) => {
           roleLabel={role}
           title="이번 모임에서 어떤 맛을 즐기고 싶으세요?"
           options={TASTE_OPTIONS}
-          defaultSelected={context.tastes}
+          defaultSelectedIds={context.tastesIds}
           exclusiveIds={['taste:any']}
           otherId="taste:other"
-          onBack={() => history.back()}
-          onNext={(tastes) => history.push('AvoidIngredient', (prev) => ({ ...prev, tastes }))}
+          otherDefault={context.others.Taste}
+          onBack={() => history.replace('Cuisine', (prev) => prev)}
+          onNext={(tastesIds, other) =>
+            history.push('AvoidIngredient', (prev) => ({
+              ...prev,
+              tastesIds,
+              others: { ...prev.others, Taste: other },
+            }))
+          }
         />
       </>
     );
@@ -92,12 +113,17 @@ const SurveyFunnel: FC<Props> = ({ role, initial, onComplete }) => {
           roleLabel={role}
           title="혹시 피해야 하는 재료가 있나요?"
           options={AVOID_INGREDIENT_OPTIONS}
-          defaultSelected={context.avoidIngredients}
+          defaultSelectedIds={context.avoidIngredientsIds}
           exclusiveIds={['avoid:any']}
           otherId="avoid:other"
-          onBack={() => history.back()}
-          onNext={(avoidIngredients) =>
-            history.push('UnwantedMenu', (prev) => ({ ...prev, avoidIngredients }))
+          otherDefault={context.others.AvoidIngredient}
+          onBack={() => history.replace('Taste', (prev) => prev)}
+          onNext={(avoidIngredientsIds, other) =>
+            history.push('UnwantedMenu', (prev) => ({
+              ...prev,
+              avoidIngredientsIds,
+              others: { ...prev.others, AvoidIngredient: other },
+            }))
           }
         />
       </>
@@ -112,13 +138,18 @@ const SurveyFunnel: FC<Props> = ({ role, initial, onComplete }) => {
         roleLabel={role}
         title="이번 모임에서 원하지 않는 메뉴가 있나요?"
         options={UNWANTED_MENU_OPTIONS}
-        defaultSelected={context.unwantedMenus}
+        defaultSelectedIds={context.unwantedMenusIds}
         nextLabel="완료"
         exclusiveIds={['unwanted:any']}
         otherId="unwanted:other"
-        onBack={() => history.back()}
-        onNext={(unwantedMenus) => {
-          const result: SurveyResult = { ...context, unwantedMenus };
+        otherDefault={context.others.UnwantedMenu}
+        onBack={() => history.replace('AvoidIngredient', (prev) => prev)}
+        onNext={(unwantedMenusIds, other) => {
+          const result: SurveyResult = {
+            ...context,
+            unwantedMenusIds,
+            others: { ...context.others, UnwantedMenu: other },
+          };
           onComplete?.(result);
         }}
       />

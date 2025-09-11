@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState, type ReactElement } from 'react';
 
-import { clsx } from 'clsx';
+import clsx from 'clsx';
 import { Check } from 'lucide-react';
 
 export type Option = { id: string; label: string };
@@ -12,18 +12,22 @@ type Props = {
   subtitle?: string;
   roleLabel: string;
   options: readonly Option[];
-  /** 초기 선택값(Option 배열) */
-  defaultSelected?: Option[];
-  /** 다음 단계로 넘길 때 선택된 Option 배열을 반환 */
-  onNext: (selected: Option[]) => void;
+
+  /** 초기 선택 ids */
+  defaultSelectedIds?: string[];
+
+  /** '기타' 옵션 id와 기본값(복원용) */
+  otherId?: string;
+  otherDefault?: string;
+  otherPlaceholder?: string;
+
+  onNext: (selectedIds: string[], otherText?: string) => void;
   onBack?: () => void;
   nextLabel?: string;
   disableNextWhenEmpty?: boolean;
-  /** 배타(단독) 선택 옵션 id 목록 */
+
+  /** 단독(배타) 옵션 ids — 예: ['mood:any'] */
   exclusiveIds?: string[];
-  /** '기타' 옵션 id (옵션 배열에 반드시 존재) */
-  otherId?: string;
-  otherPlaceholder?: string;
 };
 
 const StepMultiSelect = (props: Props): ReactElement => {
@@ -32,62 +36,42 @@ const StepMultiSelect = (props: Props): ReactElement => {
     subtitle,
     roleLabel,
     options,
-    defaultSelected = [],
+    defaultSelectedIds = [],
+    otherId,
+    otherDefault,
+    otherPlaceholder = '기타 내용을 입력하세요',
     onNext,
     onBack,
     nextLabel = '다음',
     disableNextWhenEmpty = true,
     exclusiveIds = [],
-    otherId,
-    otherPlaceholder,
   } = props;
 
-  // id 유틸
-  const idOf = (o: Option) => o.id;
+  const [selectedIds, setSelectedIds] = useState<string[]>(defaultSelectedIds);
+  const [otherText, setOtherText] = useState(otherDefault ?? '');
 
-  // 내부 상태는 id 기준으로 관리
-  const [selectedIds, setSelectedIds] = useState<string[]>(defaultSelected.map(idOf));
-  // defaultSelected/옵션이 바뀌면 동기화
-  useEffect(() => {
-    setSelectedIds(defaultSelected.map(idOf));
-  }, [defaultSelected, options]);
+  useEffect(() => setSelectedIds(defaultSelectedIds), [defaultSelectedIds, options]);
+  useEffect(() => setOtherText(otherDefault ?? ''), [otherDefault]);
 
   const selectedSet = useMemo(() => new Set(selectedIds), [selectedIds]);
   const isEmpty = selectedIds.length === 0;
   const nextDisabled = disableNextWhenEmpty && isEmpty;
-
-  const [otherText, setOtherText] = useState('');
   const showOther = !!otherId && selectedSet.has(otherId);
 
-  const toggle = (targetId: string) => {
+  const toggle = (id: string) => {
     setSelectedIds((prev) => {
-      const has = prev.includes(targetId);
-      const isExclusive = exclusiveIds.includes(targetId);
-
-      // 해제
-      if (has) return prev.filter((v) => v !== targetId);
-
-      // 배타 옵션은 단독 선택
-      if (isExclusive) return [targetId];
-
-      // 비배타 선택인데 기존에 배타가 있으면 제거
+      const has = prev.includes(id);
+      const isExclusive = exclusiveIds.includes(id);
+      if (has) return prev.filter((v) => v !== id);
+      if (isExclusive) return [id];
       const cleared = prev.filter((v) => !exclusiveIds.includes(v));
-      return [...cleared, targetId];
+      return [...cleared, id];
     });
   };
 
   const handleNext = () => {
-    const out = options
-      .filter((o) => selectedSet.has(idOf(o)))
-      .map((o) => {
-        // 기타에 텍스트가 있으면 라벨을 가공한 새 객체로 반환
-        if (otherId && idOf(o) === otherId && otherText.trim()) {
-          return { ...o, label: `${o.label}: ${otherText.trim()}` };
-        }
-        return o;
-      });
-
-    onNext(out);
+    const other = showOther ? otherText.trim() : undefined;
+    onNext(selectedIds, other || undefined);
   };
 
   return (
@@ -119,7 +103,6 @@ const StepMultiSelect = (props: Props): ReactElement => {
                 )}
               >
                 <span className="text-base">{opt.label}</span>
-
                 <span
                   aria-hidden
                   className={clsx(
@@ -131,7 +114,6 @@ const StepMultiSelect = (props: Props): ReactElement => {
                 >
                   선택됨
                 </span>
-
                 {active && (
                   <span
                     aria-hidden
@@ -146,13 +128,12 @@ const StepMultiSelect = (props: Props): ReactElement => {
         })}
       </ul>
 
-      {/* '기타' 텍스트 입력 */}
       {showOther && (
         <div className="mt-3">
           <input
             value={otherText}
             onChange={(e) => setOtherText(e.target.value)}
-            placeholder={otherPlaceholder ?? '기타 내용을 입력하세요'}
+            placeholder={otherPlaceholder}
             className="w-full rounded-xl border px-3 py-2 text-sm"
           />
         </div>
