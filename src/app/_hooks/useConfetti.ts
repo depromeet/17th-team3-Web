@@ -1,29 +1,23 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 
-import confetti, { Options as ConfettiOptions } from 'canvas-confetti';
+import confetti from 'canvas-confetti';
+
+const COLORS = ['#3369FF', '#FFB218', '#FF4040'];
+const DEFAULT_CONFETTI_DURATION = 1500;
+const DEFAULT_CONFETTI_SETTING = {
+  particleCount: 100,
+  spread: 100,
+  origin: { y: 1.5 },
+  colors: COLORS,
+};
 
 export const useConfetti = () => {
-  const confettiDuration = 1000;
-
-  const colorArray = useMemo(() => ['#3369FF', '#FFB218', '#FF4040'], []);
-
-  const setting: ConfettiOptions = useMemo(
-    () => ({
-      particleCount: 100,
-      spread: 100,
-      origin: { y: 1.5 },
-      colors: colorArray,
-    }),
-    [colorArray]
-  );
-
   const getRandomInRange = useCallback((min: number, max: number) => {
     return Math.random() * (max - min) + min;
   }, []);
 
-  // 기존 useEffect 로직을 함수로 변환
   const celebrate = useCallback(() => {
-    const confettiAnimationEnd = Date.now() + confettiDuration;
+    const confettiAnimationEnd = Date.now() + DEFAULT_CONFETTI_DURATION;
 
     const interval = setInterval(() => {
       const timeLeft = confettiAnimationEnd - Date.now();
@@ -33,9 +27,9 @@ export const useConfetti = () => {
         return;
       }
 
-      const particleCount = 50 * (timeLeft / confettiDuration);
+      const particleCount = 50 * (timeLeft / DEFAULT_CONFETTI_DURATION);
       confetti({
-        ...setting,
+        ...DEFAULT_CONFETTI_SETTING,
         particleCount,
         origin: {
           x: getRandomInRange(0.1, 0.9),
@@ -45,7 +39,7 @@ export const useConfetti = () => {
     }, 250);
 
     return () => clearInterval(interval);
-  }, [setting, getRandomInRange, confettiDuration]);
+  }, [getRandomInRange]);
 
   return { celebrate };
 };
