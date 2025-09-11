@@ -1,35 +1,28 @@
 'use client';
 
-import { Button } from '@/app/_components/ui/Button';
+import Button from '@/app/_components/ui/Button';
 
 const ButtonTestPage = () => {
   return (
     <div className="flex w-full flex-col items-center justify-center gap-4 p-4">
-      {/* 기본 (theme: orange, status: normal) */}
+      {/* 기본 사용 */}
       <Button>기본 버튼</Button>
 
-      {/* 오렌지 + disabled */}
-      <Button status="disabled">비활성 버튼</Button>
+      {/* 테마 변경 */}
+      <Button theme="gray">회색 버튼</Button>
 
-      {/* 회색 + normal */}
-      <Button theme="gray">취소</Button>
+      {/* 상태 변경 */}
+      <Button status="disabled">비활성화</Button>
 
-      {/* 회색 + disabled */}
-      <Button theme="gray" status="disabled">
-        불가
+      {/* HTML 속성 사용 */}
+      <Button type="submit" onClick={() => alert('클릭됨!')}>
+        제출
       </Button>
 
-      {/* submit 타입 버튼 */}
-      <Button type="submit">제출</Button>
-
-      {/* reset 타입 버튼 */}
-      <Button type="reset">초기화</Button>
-
-      {/* onClick 이벤트 */}
-      <Button onClick={() => alert('클릭됨!')}>클릭</Button>
-
       {/* 커스텀 스타일 */}
-      <Button className="mt-4 w-3xs bg-blue-500 font-bold text-black shadow-lg">커스텀</Button>
+      <Button className="max-w-32 bg-blue-500 font-bold text-white shadow-lg active:bg-blue-600">
+        커스텀
+      </Button>
     </div>
   );
 };
