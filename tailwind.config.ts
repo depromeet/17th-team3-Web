@@ -1,15 +1,10 @@
-// tailwind.config.ts
 import type { Config } from 'tailwindcss';
 
 export default {
-  content: [
-    './src/app/**/*.{ts,tsx,mdx}',
-    './src/components/**/*.{ts,tsx}',
-    './src/domains/**/*.{ts,tsx}',
-  ],
+  content: ['./src/app/**/*.{ts,tsx,mdx}', './src/components/**/*.{ts,tsx}'],
   theme: {
     extend: {
-      width: { vp: '357px' },
+      width: { vp: '375px' },
       height: { vp: '668px' },
     },
   },
