@@ -13,7 +13,8 @@ const LoginButton = ({ provider = 'kakao' }: LoginButtonProps) => {
       text: '카카오로 시작하기',
       icon: '/icons/kakao-icon.svg',
       className: 'bg-[#fee500] hover:bg-[#fdd835]',
-      oauthUrl: process.env.NEXT_PUBLIC_KAKAO_OAUTH_URL!,
+      // oauthUrl: process.env.NEXT_PUBLIC_KAKAO_OAUTH_URL!,
+      oauthUrl: 'auth/callback', // TODO: 배포 후 수정
     },
   };
 
