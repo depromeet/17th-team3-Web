@@ -24,16 +24,12 @@ const StepperInput = ({
   };
 
   const handleIncrement = () => {
-    console.log('zcxvzxc');
     onChange(value + 1);
   };
 
   const handleDecrement = () => {
-    console.log('1231233');
     onChange(value - 1);
   };
-
-  console.log(value, max, min);
 
   const canIncrement = value < max;
   const canDecrement = value > min;
