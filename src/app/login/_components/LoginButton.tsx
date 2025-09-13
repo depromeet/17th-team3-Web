@@ -25,7 +25,7 @@ const LoginButton = ({ provider = 'kakao', onLogin, disabled }: LoginButtonProps
       onClick={onLogin}
       disabled={disabled}
       className={cn(
-        'relative flex h-[48px] w-full items-center justify-center gap-3 rounded-xl border-0 p-4 text-sm transition-all duration-200',
+        'flex h-[62px] w-full cursor-pointer items-center justify-center gap-3 rounded-[14px] p-[10px] body-3 font-semibold transition-all duration-200',
         config.className,
         disabled && 'cursor-not-allowed opacity-50'
       )}
