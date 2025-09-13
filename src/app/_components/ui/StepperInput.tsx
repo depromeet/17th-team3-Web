@@ -24,12 +24,16 @@ const StepperInput = ({
   };
 
   const handleIncrement = () => {
+    console.log('zcxvzxc');
     onChange(value + 1);
   };
 
   const handleDecrement = () => {
+    console.log('1231233');
     onChange(value - 1);
   };
+
+  console.log(value, max, min);
 
   const canIncrement = value < max;
   const canDecrement = value > min;
@@ -41,7 +45,7 @@ const StepperInput = ({
         onClick={handleDecrement}
         disabled={!canDecrement}
         className={cn(
-          'absolute top-4 left-3 flex h-6 w-6 cursor-pointer items-center justify-center rounded-md transition-colors',
+          'absolute top-4 left-3 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-md transition-colors',
           canDecrement
             ? 'bg-[#FF4F1420] text-[#FF4F14]'
             : 'cursor-not-allowed bg-[#9BA3B020] text-[#9BA3B0]'
@@ -67,7 +71,7 @@ const StepperInput = ({
         onClick={handleIncrement}
         disabled={!canIncrement}
         className={cn(
-          'absolute top-4 right-3 flex h-6 w-6 cursor-pointer items-center justify-center rounded-md transition-colors',
+          'absolute top-4 right-3 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-md transition-colors',
           canIncrement
             ? 'bg-[#FF4F1420] text-[#FF4F14]'
             : 'cursor-not-allowed bg-[#9BA3B020] text-[#9BA3B0]'
