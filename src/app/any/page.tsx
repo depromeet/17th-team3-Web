@@ -9,10 +9,11 @@ import CountInput from '@/app/_components/ui/Input/CountInput';
 import Input from '@/app/_components/ui/Input/Input';
 
 const AnyPage = () => {
+  const MIN = 2;
   const [value, setValue] = useState('');
   const [email, setEmail] = useState('');
   const [groupName, setGroupName] = useState('');
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(MIN);
 
   return (
     // 페이지 단일 스크롤: 화면 높이 폴백 유틸 사용

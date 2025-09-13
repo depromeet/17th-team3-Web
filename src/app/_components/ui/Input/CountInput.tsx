@@ -4,7 +4,6 @@ import { cn } from '@/app/_lib/cn';
 
 import Input, { InputProps } from './Input';
 
-// 기존 Input onChange가 다른 타입이므로
 export interface NumberInputProps extends Omit<InputProps, 'type' | 'onChange'> {
   value: number;
   onChange: (value: number) => void;
@@ -15,71 +14,68 @@ export interface NumberInputProps extends Omit<InputProps, 'type' | 'onChange'> 
 const NumberInput = ({
   value,
   onChange,
-  min = 0,
-  max = 20, // 최대 인원수 20명으로 기본값 설정
+  min = 2,
+  max = 9,
   className,
   ...props
 }: NumberInputProps) => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = Number(event.target.value) || 0;
-    const clampedValue = Math.min(Math.max(newValue, min), max);
-    onChange(clampedValue);
-  };
-
-  const handleDecrement = () => {
-    onChange(Math.max(value, min));
+    const newValue = Number(event.target.value) || min;
+    onChange(newValue);
   };
 
   const handleIncrement = () => {
-    onChange(Math.min(value, max));
+    onChange(value + 1);
   };
 
-  const canDecrement = value > min;
+  const handleDecrement = () => {
+    onChange(value - 1);
+  };
+
   const canIncrement = value < max;
+  const canDecrement = value > min;
 
   return (
     <div className="relative">
+      <button
+        type="button"
+        onClick={handleDecrement}
+        disabled={!canDecrement}
+        className={cn(
+          'flex h-6 w-6 items-center justify-center rounded-md transition-colors',
+          canDecrement
+            ? 'bg-[#FF4F1420] text-[#FF4F14]'
+            : 'cursor-not-allowed bg-[#9BA3B020] text-[#9BA3B0]'
+        )}
+        aria-label="감소"
+      >
+        <Minus size={20} strokeWidth={2} />
+      </button>
       <Input
         type="number"
         value={value}
         onChange={handleInputChange}
+        readOnly
         min={min}
         max={max}
-        className={cn('pr-20 text-center', className)}
+        className={cn('text-center focus:border-b-gray-300', className)}
         {...props}
       />
 
-      <div className="absolute top-1/2 right-3 flex -translate-y-1/2 items-center gap-1">
-        <button
-          type="button"
-          onClick={handleDecrement}
-          disabled={!canDecrement}
-          className={cn(
-            'flex h-8 w-8 items-center justify-center rounded-full transition-colors',
-            canDecrement
-              ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              : 'cursor-not-allowed bg-gray-100 text-gray-400'
-          )}
-          aria-label="감소"
-        >
-          <Minus className="h-4 w-4" />
-        </button>
-
-        <button
-          type="button"
-          onClick={handleIncrement}
-          disabled={!canIncrement}
-          className={cn(
-            'flex h-8 w-8 items-center justify-center rounded-full transition-colors',
-            canIncrement
-              ? 'bg-orange-500 text-white hover:bg-orange-600'
-              : 'cursor-not-allowed bg-gray-100 text-gray-400'
-          )}
-          aria-label="증가"
-        >
-          <Plus className="h-4 w-4" />
-        </button>
-      </div>
+      <button
+        type="button"
+        onClick={handleIncrement}
+        disabled={!canIncrement}
+        className={cn(
+          'flex h-6 w-6 items-center justify-center rounded-md transition-colors',
+          canIncrement
+            ? 'bg-[#FF4F1420] text-[#FF4F14]'
+            : 'cursor-not-allowed bg-[#9BA3B020] text-[#9BA3B0]'
+        )}
+        aria-label="증가"
+      >
+        <Plus size={20} strokeWidth={2} />
+      </button>
     </div>
   );
 };
