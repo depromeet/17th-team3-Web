@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import confetti from 'canvas-confetti';
+// import confetti from 'canvas-confetti';
 
 const COLORS = ['#3369FF', '#FFB218', '#FF4040'];
 const DEFAULT_CONFETTI_DURATION = 1500;
@@ -28,14 +28,14 @@ export const useConfetti = () => {
       }
 
       const particleCount = 50 * (timeLeft / DEFAULT_CONFETTI_DURATION);
-      confetti({
-        ...DEFAULT_CONFETTI_SETTING,
-        particleCount,
-        origin: {
-          x: getRandomInRange(0.1, 0.9),
-          y: Math.random() - 0.2,
-        },
-      });
+      // confetti({
+      //   ...DEFAULT_CONFETTI_SETTING,
+      //   particleCount,
+      //   origin: {
+      //     x: getRandomInRange(0.1, 0.9),
+      //     y: Math.random() - 0.2,
+      //   },
+      // });
     }, 250);
 
     return () => clearInterval(interval);
