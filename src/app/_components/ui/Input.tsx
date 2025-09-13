@@ -21,22 +21,18 @@ const Input = ({
   hasError = false,
   errorMessage,
   helperText,
-  placeholder,
+  placeholder: defaultPlaceholder,
   value,
   onChange,
   onClear,
   className,
   ...props
 }: InputProps) => {
-  const getPlaceholder = () => {
-    if (placeholder) return placeholder;
-    return variant === 'search' ? '강남역' : '모임 이름 입력';
-  };
-
   const handleClear = () => {
     onClear?.();
   };
 
+  const placeholder = defaultPlaceholder ?? (variant === 'search' ? '강남역' : '모임 이름 입력');
   const showClearButton = value && String(value).length > 0;
 
   return (
@@ -47,7 +43,7 @@ const Input = ({
           ref={ref}
           value={value}
           onChange={onChange}
-          placeholder={getPlaceholder()}
+          placeholder={placeholder}
           className={cn(
             'w-full px-3 py-3 text-xl font-semibold transition-all duration-200',
             'placeholder:text-gray-400 focus:outline-none',
