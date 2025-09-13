@@ -5,18 +5,22 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import Input from '@/app/_components/ui/Input';
+import CountInput from '@/app/_components/ui/Input/CountInput';
+import Input from '@/app/_components/ui/Input/Input';
 
 const AnyPage = () => {
   const [value, setValue] = useState('');
   const [email, setEmail] = useState('');
   const [groupName, setGroupName] = useState('');
+  const [count, setCount] = useState(0);
 
   return (
     // 페이지 단일 스크롤: 화면 높이 폴백 유틸 사용
     <main className="min-h-screen-safe bg-gradient-to-b from-white to-neutral-50 p-4 text-neutral-900">
       {/* Sticky 헤더: 주소창 변화(dvh) 상황에서도 안정 */}
       <br />
+
+      <CountInput value={count} onChange={setCount} />
       <Input
         type="search"
         value={value}
