@@ -23,7 +23,6 @@ import { STEP_KEYS, type RoleLabel, type SurveyResult } from '../_models/types';
 
 import StepMultiSelect from './StepMultiSelect';
 import StepProgress from './StepProgress';
-import StepSegments from './StepSegment';
 
 type Props = {
   role: RoleLabel;
@@ -41,7 +40,7 @@ const SurveyFunnel: FC<Props> = ({ role, initial, onComplete }) => {
   if (step === 'Mood') {
     return (
       <>
-        <StepSegments total={STEP_KEYS.length} active={currentIndex} className="mb-2" />
+        <StepProgress total={STEP_KEYS.length} active={currentIndex} className="mb-2" />
         <StepMultiSelect
           key="Mood"
           roleLabel={role}
@@ -66,7 +65,7 @@ const SurveyFunnel: FC<Props> = ({ role, initial, onComplete }) => {
   if (step === 'Cuisine') {
     return (
       <>
-        <StepSegments total={STEP_KEYS.length} active={currentIndex} className="mb-2" />
+        <StepProgress total={STEP_KEYS.length} active={currentIndex} className="mb-2" />
         <StepMultiSelect
           key="Cuisine"
           roleLabel={role}
@@ -92,7 +91,7 @@ const SurveyFunnel: FC<Props> = ({ role, initial, onComplete }) => {
   if (step === 'Taste') {
     return (
       <>
-        <StepSegments total={STEP_KEYS.length} active={currentIndex} className="mb-2" />
+        <StepProgress total={STEP_KEYS.length} active={currentIndex} className="mb-2" />
         <StepMultiSelect
           key="Taste"
           roleLabel={role}
@@ -118,7 +117,7 @@ const SurveyFunnel: FC<Props> = ({ role, initial, onComplete }) => {
   if (step === 'AvoidIngredient') {
     return (
       <>
-        <StepSegments total={STEP_KEYS.length} active={currentIndex} className="mb-2" />
+        <StepProgress total={STEP_KEYS.length} active={currentIndex} className="mb-2" />
         <StepMultiSelect
           key="AvoidIngredient"
           roleLabel={role}
@@ -143,7 +142,7 @@ const SurveyFunnel: FC<Props> = ({ role, initial, onComplete }) => {
 
   return (
     <>
-      <StepSegments total={STEP_KEYS.length} active={currentIndex} className="mb-2" />
+      <StepProgress total={STEP_KEYS.length} active={currentIndex} className="mb-2" />
       <StepMultiSelect
         key="UnwantedMenu"
         roleLabel={role}
