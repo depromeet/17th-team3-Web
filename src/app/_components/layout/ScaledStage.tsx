@@ -62,7 +62,7 @@ const ScaledStage = ({
               'relative h-full w-full bg-white shadow-xl',
               allowScroll ? 'scroll-smooth-mobile overflow-auto' : 'overflow-hidden',
               showFrame && frameClassName,
-              debugOutline && 'outline outline-1 outline-blue-300'
+              debugOutline && 'outline-1 outline-blue-300'
             )}
           >
             {children}
