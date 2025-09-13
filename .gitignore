@@ -32,6 +32,28 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+docker.env
+*.secrets
+*.secret
+
+# 로컬만 쓰는 compose 오버라이드(팀 규칙에 맞게 패턴 선택)
+docker-compose.override.yml
+docker-compose.*.local.yml
+compose.*.local.yml
+
+# 인증/키/자격 증명
+*.pem
+*.key
+*.crt
+*.pfx
+*.p12
+.ssh/
+id_rsa*
+id_ed25519*
+known_hosts
+
+# 혹시 누가 실수로 넣을 수 있는 도커 설정 폴더
+.docker/
 
 # vercel
 .vercel
