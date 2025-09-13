@@ -66,10 +66,11 @@ interface ButtonProps
  * @returns JSX.Element
  */
 const Button = ({ className, theme, status, children, ...props }: ButtonProps) => {
+  const isDisabled = status === 'disabled';
   return (
     <button
       className={cn(buttonVariants({ theme, status }), className)}
-      disabled={status === 'disabled'}
+      disabled={isDisabled}
       {...props}
     >
       {children}
