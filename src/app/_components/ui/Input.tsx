@@ -6,7 +6,6 @@ import { cn } from '@/app/_lib/cn';
 
 export interface InputProps extends ComponentPropsWithoutRef<'input'> {
   ref?: RefObject<HTMLInputElement>;
-  variant?: 'default' | 'search';
   hasError?: boolean;
   errorMessage?: string;
   // todo: 유효성 검증 기획에 따라 컴포넌트 내부로 이관 가능
@@ -17,7 +16,7 @@ export interface InputProps extends ComponentPropsWithoutRef<'input'> {
 
 const Input = ({
   ref,
-  variant = 'default',
+  type = 'text',
   hasError = false,
   errorMessage,
   helperText,
@@ -32,15 +31,17 @@ const Input = ({
     onClear?.();
   };
 
-  const placeholder = defaultPlaceholder ?? (variant === 'search' ? '강남역' : '모임 이름 입력');
+  const isSearchType = type === 'search';
+  const placeholder = defaultPlaceholder ?? (isSearchType ? '강남역' : '모임 이름 입력');
   const showClearButton = value && String(value).length > 0;
 
   return (
     <>
       <div className="relative flex items-center">
-        {variant === 'search' && <Search className="absolute left-3 h-4 w-4 text-gray-400" />}
+        {isSearchType && <Search className="absolute left-3 h-4 w-4 text-gray-400" />}
         <input
           ref={ref}
+          type={type}
           value={value}
           onChange={onChange}
           placeholder={placeholder}
@@ -51,7 +52,7 @@ const Input = ({
             showClearButton && 'pr-10',
             // todo: 에러 상태 스타일
             hasError ? 'border-b-red-500' : 'border-b-gray-300 focus:border-b-gray-600',
-            variant === 'search' && 'pl-10',
+            isSearchType && 'pl-10',
             className
           )}
           {...props}
@@ -59,6 +60,8 @@ const Input = ({
 
         {showClearButton && (
           <button
+            type="button"
+            aria-label="입력 내용 지우기"
             onClick={handleClear}
             className="absolute right-3 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-gray-400 text-white transition-colors hover:bg-gray-500"
           >

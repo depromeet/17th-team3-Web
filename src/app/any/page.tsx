@@ -18,7 +18,7 @@ const AnyPage = () => {
       {/* Sticky 헤더: 주소창 변화(dvh) 상황에서도 안정 */}
       <br />
       <Input
-        variant="search"
+        type="search"
         value={value}
         onChange={(event) => setValue(event.target.value)}
         onClear={() => setValue('')}
