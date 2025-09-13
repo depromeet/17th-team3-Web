@@ -1,104 +1,191 @@
 @import 'tailwindcss';
 
-/* 모바일 터치/하이라이트 보정 */
-html,
-body {
-  -webkit-tap-highlight-color: transparent;
-  -webkit-text-size-adjust: 100%;
-  touch-action: manipulation;
-  font-family: 'Pretendard', sans-serif;
+@layer base {
+  html,
+  body {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    touch-action: manipulation;
+    font-family: 'Pretendard', sans-serif;
+  }
+
+  /* 이미지/비디오 기본 리셋 */
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+  @font-face {
+    font-family: 'Pretendard';
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+    src: url('/font/Pretendard-Thin.woff2') format('woff2');
+  }
+
+  @font-face {
+    font-family: 'Pretendard';
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+    src: url('/font/Pretendard-ExtraLight.woff2') format('woff2');
+  }
+
+  @font-face {
+    font-family: 'Pretendard';
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+    src: url('/font/Pretendard-Light.woff2') format('woff2');
+  }
+
+  @font-face {
+    font-family: 'Pretendard';
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url('/font/Pretendard-Regular.woff2') format('woff2');
+  }
+
+  @font-face {
+    font-family: 'Pretendard';
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+    src: url('/font/Pretendard-Medium.woff2') format('woff2');
+  }
+
+  @font-face {
+    font-family: 'Pretendard';
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+    src: url('/font/Pretendard-SemiBold.woff2') format('woff2');
+  }
+
+  @font-face {
+    font-family: 'Pretendard';
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+    src: url('/font/Pretendard-Bold.woff2') format('woff2');
+  }
+
+  @font-face {
+    font-family: 'Pretendard';
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+    src: url('/font/Pretendard-ExtraBold.woff2') format('woff2');
+  }
+
+  @font-face {
+    font-family: 'Pretendard';
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+    src: url('/font/Pretendard-Black.woff2') format('woff2');
+  }
 }
 
-/* 이미지/비디오 기본 리셋 */
-img,
-video {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
+@theme {
+  --color-white: #ffffff;
 
-/* Pretendard 폰트 정의 */
-@font-face {
-  font-family: 'Pretendard';
-  font-weight: 100;
-  font-style: normal;
-  font-display: swap;
-  src: url('/font/Pretendard-Thin.woff2') format('woff2');
-}
+  /* === Neutral === */
+  --color-neutral-100: #f9fafb;
+  --color-neutral-200: #f4f5f6;
+  --color-neutral-300: #e1e4e8;
+  --color-neutral-400: #d1d5da;
+  --color-neutral-500: #b8bec8;
+  --color-neutral-600: #9ba3b0;
+  --color-neutral-700: #8b929c;
+  --color-neutral-800: #6d7581;
+  --color-neutral-900: #686f7a;
+  --color-neutral-1000: #626872;
+  --color-neutral-1100: #5b626b;
+  --color-neutral-1200: #595e65;
+  --color-neutral-1300: #4f5359;
+  --color-neutral-1400: #3a3d42;
+  --color-neutral-1500: #1d1e20;
+  --color-neutral-1600: #131416;
 
-@font-face {
-  font-family: 'Pretendard';
-  font-weight: 200;
-  font-style: normal;
-  font-display: swap;
-  src: url('/font/Pretendard-ExtraLight.woff2') format('woff2');
-}
+  /* === Saturated / Red === */
+  --color-red-50: #fff5f6;
+  --color-red-100: #feebec;
+  --color-red-200: #fdc4c6;
+  --color-red-300: #fb9397;
+  --color-red-400: #f86267;
+  --color-red-450: #f94842;
+  --color-red-500: #f7433c;
+  --color-red-600: #db0911;
+  --color-red-700: #b1070e;
+  --color-red-800: #89050b;
+  --color-red-900: #580307;
+  --color-red-1000: #272003;
 
-@font-face {
-  font-family: 'Pretendard';
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-  src: url('/font/Pretendard-Light.woff2') format('woff2');
-}
+  /* === Saturated / Orange === */
+  --color-orange-50: #fff7f5;
+  --color-orange-100: #fff0eb;
+  --color-orange-200: #ffd1c2;
+  --color-orange-300: #ffab8f;
+  --color-orange-400: #ff7e52;
+  --color-orange-500: #ff4f14;
+  --color-orange-600: #e03900;
+  --color-orange-700: #b82f00;
+  --color-orange-800: #8f2400;
+  --color-orange-900: #5c1700;
+  --color-orange-1000: #290a00;
 
-@font-face {
-  font-family: 'Pretendard';
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-  src: url('/font/Pretendard-Regular.woff2') format('woff2');
-}
+  /* === Saturated / Yellow === */
+  --color-yellow-50: #fffdd5;
+  --color-yellow-100: #fff6e0;
+  --color-yellow-200: #ffeaad;
+  --color-yellow-300: #ffe47a;
+  --color-yellow-400: #ffd014;
+  --color-yellow-500: #ebb800;
+  --color-yellow-600: #df9600;
+  --color-yellow-700: #b46500;
+  --color-yellow-800: #87500a;
+  --color-yellow-900: #553306;
+  --color-yellow-1000: #261703;
 
-@font-face {
-  font-family: 'Pretendard';
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-  src: url('/font/Pretendard-Medium.woff2') format('woff2');
-}
+  /* === Saturated / Green === */
+  --color-green-50: #f7fdfa;
+  --color-green-100: #efffb5;
+  --color-green-200: #cef3e2;
+  --color-green-300: #a5e9c5;
+  --color-green-400: #7cdea7;
+  --color-green-500: #51d48c;
+  --color-green-600: #2db46c;
+  --color-green-700: #25935e;
+  --color-green-800: #1d724f;
+  --color-green-900: #124932;
+  --color-green-1000: #082115;
 
-@font-face {
-  font-family: 'Pretendard';
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-  src: url('/font/Pretendard-SemiBold.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Pretendard';
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-  src: url('/font/Pretendard-Bold.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Pretendard';
-  font-weight: 800;
-  font-style: normal;
-  font-display: swap;
-  src: url('/font/Pretendard-ExtraBold.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Pretendard';
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-  src: url('/font/Pretendard-Black.woff2') format('woff2');
-}
-
-/* iOS safe-area가 필요한 영역에서 사용 가능 (임의): */
-.safe-padding {
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-top: env(safe-area-inset-top);
+  /* === Saturated / Blue === */
+  --color-blue-50: #f6f8fe;
+  --color-blue-100: #ebeffa;
+  --color-blue-200: #dde3f7;
+  --color-blue-300: #cfdbf4;
+  --color-blue-400: #abbced;
+  --color-blue-500: #6d89f0;
+  --color-blue-600: #3d62eb;
+  --color-blue-700: #153ccb;
+  --color-blue-800: #17308c;
+  --color-blue-900: #091953;
+  --color-blue-1000: #040b25;
 }
 
 @layer utilities {
+  /* iOS safe-area가 필요한 영역에서 사용 가능 (임의): */
+  .safe-padding {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-top: env(safe-area-inset-top);
+  }
+
   /* dvh 안전 유틸: 지원되면 dvh, 아니면 svh → vh 폴백 */
   .min-h-screen-safe {
     min-height: 100vh;
@@ -161,6 +248,80 @@ video {
       );
     }
   }
+  .displays-1 {
+    font-size: 2.875rem;
+    line-height: 3.875rem;
+    letter-spacing: -0.01%;
+  }
 }
 
+/* Typography */
+@utility display-1 {
+  font-size: 2.875rem;
+  line-height: 3.875rem;
+  letter-spacing: -0.01%;
+}
+@utility heading-1 {
+  font-size: 2.125rem;
+  line-height: 3rem;
+  letter-spacing: -0.01%;
+}
+@utility heading-2 {
+  font-size: 1.75rem;
+  line-height: 2.5rem;
+  letter-spacing: -0.01%;
+}
+@utility heading-3 {
+  font-size: 1.5rem;
+  line-height: 2.25rem;
+  letter-spacing: -0.01%;
+}
+
+@utility heading-4 {
+  font-size: 1.25rem;
+  line-height: 2rem;
+  letter-spacing: -0.01%;
+}
+
+@utility subheading-1 {
+  font-size: 1.25rem;
+  line-height: 1.875rem;
+  letter-spacing: -0.01%;
+}
+@utility subheading-2 {
+  font-size: 1.125rem;
+  line-height: 1.625rem;
+  letter-spacing: -0.01%;
+}
+@utility subheading-3 {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  letter-spacing: -0.01%;
+}
+
+@utility body-1 {
+  font-size: 1.25rem;
+  line-height: 1.875rem;
+  letter-spacing: -0.01%;
+}
+@utility body-2 {
+  font-size: 1.125rem;
+  line-height: 1.625rem;
+  letter-spacing: -0.01%;
+}
+@utility body-3 {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  letter-spacing: -0.01%;
+}
+@utility label-1 {
+  font-size: 0.875rem;
+  line-height: 1.375rem;
+  letter-spacing: -0.01%;
+}
+@utility label-2 {
+  font-size: 0.75rem;
+  line-height: 1.25rem;
+  letter-spacing: -0.01%;
+}
 /* 그 외 전역 리셋/유틸은 기존 그대로 두면 됩니다 */
