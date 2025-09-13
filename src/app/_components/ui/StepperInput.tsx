@@ -1,6 +1,7 @@
 import { Minus, Plus } from 'lucide-react';
 
 import Input, { InputProps } from '@/app/_components/ui/Input';
+import { PARTY_SIZE } from '@/app/_constants/party';
 import { cn } from '@/app/_lib/cn';
 
 export interface StepperInputProps extends Omit<InputProps, 'type' | 'onChange'> {
@@ -13,8 +14,8 @@ export interface StepperInputProps extends Omit<InputProps, 'type' | 'onChange'>
 const StepperInput = ({
   value,
   onChange,
-  min = 2,
-  max = 9,
+  min = PARTY_SIZE.MIN,
+  max = PARTY_SIZE.MAX,
   className,
   ...props
 }: StepperInputProps) => {
@@ -50,6 +51,7 @@ const StepperInput = ({
       >
         <Minus size={20} strokeWidth={2} />
       </button>
+
       <Input
         type="number"
         value={value}

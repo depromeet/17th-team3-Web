@@ -7,17 +7,17 @@ import Link from 'next/link';
 
 import Input from '@/app/_components/ui/Input';
 import StepperInput from '@/app/_components/ui/StepperInput';
+import { PARTY_SIZE } from '@/app/_constants/party';
 
 const AnyPage = () => {
-  const MIN = 2;
   const [value, setValue] = useState('');
   const [email, setEmail] = useState('');
   const [groupName, setGroupName] = useState('');
-  const [count, setCount] = useState(MIN);
+  const [count, setCount] = useState(PARTY_SIZE.MIN);
 
   return (
     // 페이지 단일 스크롤: 화면 높이 폴백 유틸 사용
-    <main className="bg-gradient-to-b from-white to-neutral-50 text-neutral-900">
+    <main className="mx-auto bg-gradient-to-b from-white to-neutral-50 text-neutral-900">
       {/* Sticky 헤더: 주소창 변화(dvh) 상황에서도 안정 */}
       <br />
 
