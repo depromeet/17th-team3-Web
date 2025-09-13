@@ -1,3 +1,7 @@
+/**
+ * 설문 완료 페이지
+ * - 후속 추천 페이지로 연결되기 전 간단한 완료 피드백
+ */
 const CompletePage = () => {
   return (
     <div className="mx-auto max-w-[480px] px-4 py-12 text-center">

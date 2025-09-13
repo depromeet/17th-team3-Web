@@ -1,6 +1,13 @@
+/**
+ * 옵션 정의 모듈
+ * - 각 항목은 { id, label }
+ * - id 규칙 예시: `${domain}:${name}` (ex. "mood:any")
+ * - '기타'가 필요한 스텝은 반드시 otherId를 options에 포함
+ */
 export type Option = { id: string; label: string };
 
-// '기타'가 필요한 스텝에는 반드시 포함
+// '기타'가 필요한 스텝에는 포함 필요
+// Mood: 분위기
 export const MOOD_OPTIONS: Option[] = [
   { id: 'mood:any', label: '어떤 분위기든 좋아요!' },
   { id: 'mood:quick', label: '오늘은 간단히, 빨리 먹고 싶어요' },
@@ -9,6 +16,7 @@ export const MOOD_OPTIONS: Option[] = [
   { id: 'mood:other', label: '기타' },
 ];
 
+// Cuisine: 음식 선호
 export const CUISINE_OPTIONS: Option[] = [
   { id: 'cuisine:any', label: '다 괜찮아요!' },
   { id: 'cuisine:korean', label: '한식' },
@@ -22,23 +30,24 @@ export const CUISINE_OPTIONS: Option[] = [
   // { id: 'cuisine:other', label: '기타' }, // 필요 시 추가
 ];
 
+// Taste: 선호하는 맛
 export const TASTE_OPTIONS: Option[] = [
   { id: 'taste:any', label: '다 괜찮아요!' },
   { id: 'taste:spicy', label: '자극적이고 매운 맛' },
   { id: 'taste:clean', label: '담백·깔끔한 맛' },
   { id: 'taste:oily', label: '기름지고 진한 맛' },
-  // { id: 'taste:other', label: '기타' },
 ];
 
+// Avoid: 피하는 음식
 export const AVOID_INGREDIENT_OPTIONS: Option[] = [
   { id: 'avoid:any', label: '없어요!' },
   { id: 'avoid:vegetarian', label: '채식 주의' },
   { id: 'avoid:gluten', label: '글루텐 프리' },
   { id: 'avoid:nuts', label: '견과류 알레르기' },
   { id: 'avoid:seafood', label: '해산물 알레르기' },
-  // { id: 'avoid:other', label: '기타' },
 ];
 
+// Unwanted: 선호하지 않는 음식
 export const UNWANTED_MENU_OPTIONS: Option[] = [
   { id: 'unwanted:any', label: '없어요!' },
   { id: 'unwanted:raw', label: '회, 날 것' },
@@ -46,5 +55,4 @@ export const UNWANTED_MENU_OPTIONS: Option[] = [
   { id: 'unwanted:dairy', label: '치즈 · 유제품' },
   { id: 'unwanted:greasy', label: '너무 기름진 음식' },
   { id: 'unwanted:cilantro', label: '고수' },
-  // { id: 'unwanted:other', label: '기타' },
 ];

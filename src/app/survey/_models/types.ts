@@ -1,3 +1,8 @@
+/**
+ * 타입 정의 모듈
+ * - 스텝 키, 공용 컨텍스트(CommonCtx), 결과 타입
+ * - CommonCtx: 모든 선택은 "id 배열", '기타' 텍스트는 스텝 키로 구분 저장
+ */
 export type RoleLabel = '참여자' | '주최자';
 
 export const STEP_KEYS = ['Mood', 'Cuisine', 'Taste', 'AvoidIngredient', 'UnwantedMenu'] as const;
@@ -18,4 +23,5 @@ export type CommonCtx = {
 /** useFunnel이 기대하는 타입: "스텝키 → 컨텍스트" 매핑 */
 export type FunnelCtxMap = Record<StepKey, CommonCtx>;
 
+/** 설문 종료 시 수집되는 전체 결과 */
 export type SurveyResult = CommonCtx;
