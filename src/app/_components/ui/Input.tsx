@@ -11,6 +11,7 @@ export interface InputProps extends ComponentPropsWithoutRef<'input'> {
   // todo: 유효성 검증 기획에 따라 컴포넌트 내부로 이관 가능
   helperText?: string;
   onClear?: () => void;
+  showClearButton?: boolean;
   className?: string;
 }
 
@@ -24,6 +25,7 @@ const Input = ({
   value,
   onChange,
   onClear,
+  showClearButton = true,
   className,
   ...props
 }: InputProps) => {
@@ -33,7 +35,7 @@ const Input = ({
 
   const isSearchType = type === 'search';
   const placeholder = defaultPlaceholder ?? (isSearchType ? '강남역' : '모임 이름 입력');
-  const showClearButton = value && String(value).length > 0;
+  const shouldClearButton = showClearButton && value && String(value).length > 0;
 
   return (
     <>
@@ -49,7 +51,7 @@ const Input = ({
             'w-full px-3 py-3 text-xl font-semibold transition-all duration-200',
             'placeholder:text-gray-400 focus:outline-none',
             'border-0 border-b-2',
-            showClearButton && 'pr-10',
+            shouldClearButton && 'pr-10',
             // todo: 에러 상태 스타일
             hasError ? 'border-b-red-500' : 'border-b-gray-300 focus:border-b-gray-600',
             isSearchType && 'pl-10',
@@ -58,7 +60,7 @@ const Input = ({
           {...props}
         />
 
-        {showClearButton && (
+        {shouldClearButton && (
           <button
             type="button"
             aria-label="입력 내용 지우기"

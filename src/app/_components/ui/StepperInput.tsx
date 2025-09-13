@@ -1,24 +1,23 @@
 import { Minus, Plus } from 'lucide-react';
 
+import Input, { InputProps } from '@/app/_components/ui/Input';
 import { cn } from '@/app/_lib/cn';
 
-import Input, { InputProps } from './Input';
-
-export interface NumberInputProps extends Omit<InputProps, 'type' | 'onChange'> {
+export interface StepperInputProps extends Omit<InputProps, 'type' | 'onChange'> {
   value: number;
   onChange: (value: number) => void;
   min?: number;
   max?: number;
 }
 
-const NumberInput = ({
+const StepperInput = ({
   value,
   onChange,
   min = 2,
   max = 9,
   className,
   ...props
-}: NumberInputProps) => {
+}: StepperInputProps) => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = Number(event.target.value) || min;
     onChange(newValue);
@@ -42,7 +41,7 @@ const NumberInput = ({
         onClick={handleDecrement}
         disabled={!canDecrement}
         className={cn(
-          'flex h-6 w-6 items-center justify-center rounded-md transition-colors',
+          'absolute top-4 left-3 flex h-6 w-6 cursor-pointer items-center justify-center rounded-md transition-colors',
           canDecrement
             ? 'bg-[#FF4F1420] text-[#FF4F14]'
             : 'cursor-not-allowed bg-[#9BA3B020] text-[#9BA3B0]'
@@ -58,7 +57,8 @@ const NumberInput = ({
         readOnly
         min={min}
         max={max}
-        className={cn('text-center focus:border-b-gray-300', className)}
+        showClearButton={false}
+        className={cn('p-3 text-center focus:border-b-gray-300', className)}
         {...props}
       />
 
@@ -67,7 +67,7 @@ const NumberInput = ({
         onClick={handleIncrement}
         disabled={!canIncrement}
         className={cn(
-          'flex h-6 w-6 items-center justify-center rounded-md transition-colors',
+          'absolute top-4 right-3 flex h-6 w-6 cursor-pointer items-center justify-center rounded-md transition-colors',
           canIncrement
             ? 'bg-[#FF4F1420] text-[#FF4F14]'
             : 'cursor-not-allowed bg-[#9BA3B020] text-[#9BA3B0]'
@@ -80,4 +80,4 @@ const NumberInput = ({
   );
 };
 
-export default NumberInput;
+export default StepperInput;

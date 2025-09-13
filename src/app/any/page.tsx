@@ -5,8 +5,8 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import CountInput from '@/app/_components/ui/Input/CountInput';
-import Input from '@/app/_components/ui/Input/Input';
+import Input from '@/app/_components/ui/Input';
+import StepperInput from '@/app/_components/ui/StepperInput';
 
 const AnyPage = () => {
   const MIN = 2;
@@ -21,7 +21,7 @@ const AnyPage = () => {
       {/* Sticky 헤더: 주소창 변화(dvh) 상황에서도 안정 */}
       <br />
 
-      <CountInput value={count} onChange={setCount} />
+      <StepperInput value={count} onChange={setCount} />
       <Input
         type="search"
         value={value}
