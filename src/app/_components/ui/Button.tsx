@@ -5,20 +5,22 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/app/_lib/cn';
 
 const buttonVariants = cva(
-  'flex h-[62px] items-center w-full justify-center gap-1 rounded-[14px] text-[16px] font-[500] cursor-pointer transition-all duration-200 shrink-0',
+  'flex w-full shrink-0 cursor-pointer items-center justify-center rounded-[0.875rem] py-5 body-3 font-semibold transition-all duration-200 active:opacity-80',
   {
     variants: {
       theme: {
-        orange: 'text-white bg-orange-500 hover:bg-orange-600 active:bg-orange-700',
-        gray: 'text-black bg-gray-200 hover:bg-gray-300 active:bg-gray-400',
+        'cta-gradient': 'cta-gradient text-white',
+        orange: 'bg-orange-500 text-white',
+        'orange-light': 'bg-orange-100 text-orange-600 ',
+        gray: 'text-gray-1400 bg-neutral-300 ',
       },
       status: {
         normal: '',
-        disabled: 'opacity-50 pointer-events-none',
+        disabled: 'opacity-30 cursor-not-allowed pointer-events-none',
       },
     },
     defaultVariants: {
-      theme: 'orange',
+      theme: 'cta-gradient',
       status: 'normal',
     },
   }

@@ -324,4 +324,15 @@
   line-height: 1.25rem;
   letter-spacing: -0.01%;
 }
+
+/* gradient */
+@utility cta-gradient {
+  background: linear-gradient(
+    92deg,
+    var(--Saturated-Orange-Orange400, #ff7e52) -8.76%,
+    var(--Saturated-Orange-Orange500, #ff4f14) 51.95%,
+    var(--Saturated-Orange-Orange400, #ff7e52) 109.25%
+  );
+}
+
 /* 그 외 전역 리셋/유틸은 기존 그대로 두면 됩니다 */
