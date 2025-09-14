@@ -12,7 +12,7 @@ const buttonVariants = cva(
         'cta-gradient': 'cta-gradient text-white',
         orange: 'bg-orange-500 text-white',
         'orange-light': 'bg-orange-100 text-orange-600 ',
-        gray: 'text-gray-1400 bg-neutral-300 ',
+        gray: 'text-neutral-1400 bg-neutral-300',
       },
       status: {
         normal: '',
