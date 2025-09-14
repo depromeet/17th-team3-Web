@@ -59,7 +59,7 @@ interface ButtonProps
  * </Button>
  * ```
  *
- * @param theme - 버튼 색상 테마 ('orange' | 'gray')
+ * @param theme - 버튼 색상 테마 ('cta-gradient'| 'orange' | 'orange-light' | 'gray')
  * @param status - 버튼 상태 ('normal' | 'disabled')
  * @param children - 버튼 내부 콘텐츠
  * @param className - 추가 CSS 클래스 (variant 스타일과 병합됨)
