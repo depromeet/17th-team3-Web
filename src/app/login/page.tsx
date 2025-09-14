@@ -2,7 +2,7 @@
 
 import LoginButton from '@/app/login/_components/LoginButton';
 
-const HomePage = () => {
+const LoginPage = () => {
   return (
     <main className="mx-auto flex w-full flex-col items-center justify-center p-4">
       <LoginButton />
@@ -10,4 +10,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default LoginPage;

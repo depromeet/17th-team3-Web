@@ -21,6 +21,7 @@ const CallbackPage = () => {
       }
 
       if (!code) {
+        console.error('code 파라미터 없음');
         router.push('/login');
         return;
       }
@@ -37,7 +38,7 @@ const CallbackPage = () => {
     processAuth();
   }, [code, error, router]);
 
-  return <div className="flex items-center justify-center">로그인 처리중..</div>;
+  return <div className="mx-auto flex items-center justify-center">로그인 처리중...</div>;
 };
 
 export default CallbackPage;
