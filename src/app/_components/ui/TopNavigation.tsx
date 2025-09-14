@@ -107,9 +107,3 @@ const TopNavigation = ({
 };
 
 export default TopNavigation;
-
-/**
- * @description TopNavigation과 함께 사용할 수 있는 스페이서 컴포넌트
- * 네비게이션 높이만큼 공간을 확보합니다
- */
-export const TopNavigationSpacer = () => <div className="h-14" />;
