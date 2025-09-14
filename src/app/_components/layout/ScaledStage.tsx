@@ -38,16 +38,12 @@ const ScaledStage = ({
   const productionStage = () => (
     <div className="min-h-screen-safe w-full">
       <Backdrop backdrop={backdrop} />
-      <div
-        className={cn(
-          'min-h-screen-safe relative mx-auto flex w-full max-w-[475px] flex-col overflow-hidden bg-white',
-          showFrame && frameClassName
-        )}
-      >
-        <main className="flex flex-1">{children}</main>
 
-        {showLabel && <StageLabel text="max-w 500" />}
-      </div>
+      {/* 모바일 프레임 */}
+      <main className="min-h-screen-safe mx-auto flex max-w-[475px] flex-1 flex-col bg-white">
+        {/* iOS safe-area 여백(필요하면) */}
+        {children}
+      </main>
     </div>
   );
 
