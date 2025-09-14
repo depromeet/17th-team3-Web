@@ -71,7 +71,6 @@ const eslintConfig = [
           extensions: ['.js', '.jsx', '.ts', '.tsx'],
           paths: ['src', '.'],
         },
-        ignorePatterns: ['dist', '.eslintrc.cjs'],
       },
     },
     rules: {
