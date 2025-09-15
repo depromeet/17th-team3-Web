@@ -3,7 +3,12 @@ name: Build & Push Docker
 on:
   push:
     branches: [ main, feat/docker-deploy ]
+    tags: [ 'v*' ]           # 태그 푸시 시 버전 태깅도 지원 (선택)
   workflow_dispatch: {}
+
+concurrency:
+  group: docker-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   docker:
@@ -11,6 +16,14 @@ jobs:
     permissions:
       contents: read
       packages: write
+
+    env:
+      # 레지스트리/리포는 Secrets로 주입 (Docker Hub 예시)
+      # REGISTRY=docker.io
+      # IMAGE_REPO=<dockerhub-id>/<repo>
+      REGISTRY: ${{ vars.REGISTRY }}
+      IMAGE_REPO: ${{ vars.IMAGE_REPO }}
+
     steps:
       - uses: actions/checkout@v4
 
@@ -20,17 +33,40 @@ jobs:
       - name: Login to Registry
         uses: docker/login-action@v3
         with:
-          registry: ${{ secrets.REGISTRY }}
+          registry: ${{ env.REGISTRY }}
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
+      - name: Extract short SHA
+        id: vars
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}
+          # 태그 정책:
+          # - main 브랜치: latest
+          # - 모든 커밋: sha-<7자리>
+          # - 태그 이벤트(v*): 그 태그 이름으로도 푸시
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=sha-${{ steps.vars.outputs.SHORT_SHA }}
+            type=ref,event=tag
+
       - name: Build & Push
+        id: build
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
           platforms: linux/amd64
           push: true
-          tags: ${{ secrets.REGISTRY }}/${{ secrets.IMAGE_REPO }}:${{ github.sha }}
-          cache-from: type=registry,ref=${{ secrets.REGISTRY }}/${{ secrets.IMAGE_REPO }}:cache
-          cache-to: type=registry,ref=${{ secrets.REGISTRY }}/${{ secrets.IMAGE_REPO }}:cache,mode=max
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:cache
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:cache,mode=max
+
+      - name: Show image digest
+        run: echo "Pushed digest ${{ steps.build.outputs.digest }}"

@@ -9,7 +9,7 @@ ENV NODE_ENV=production
 # Next 이미지 최적화/네이티브 모듈 호환을 위한 권장 패키지
 RUN apk add --no-cache libc6-compat
 # pnpm 사용
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@pnpm@10.15.0 --activate
 
 ############################
 # 2) deps: 의존성 설치 (캐시 레이어)
