@@ -65,7 +65,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:cache
+          cache-from: typcorepack prepare pnpm@pnpm@10.15 add --no-cache libc6-compate=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:cache
           cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:cache,mode=max
 
       - name: Show image digest
