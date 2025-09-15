@@ -1,15 +1,4 @@
-/**
- * SurveyFunnel
- * - 퍼널 오케스트레이션(현재 스텝에 따라 알맞은 UI 렌더링)
- * - useSurveyFunnel의 step/context/history를 사용
- * - 각 스텝:
- *   - defaultSelectedIds/otherDefault 로 진입 시 복원
- *   - history.push(target, prev => ({ ...prev, ... })) 로 다음 스텝 이동
- *   - history.replace(target, prev => prev) 로 이전 스텝 복귀(상태 보존)
- */
 'use client';
-
-import type { FC } from 'react';
 
 import { useSurveyFunnel } from '../_hooks/useSurveyFunnel';
 import {
@@ -24,23 +13,32 @@ import { STEP_KEYS, type RoleLabel, type SurveyResult } from '../_models/types';
 import StepMultiSelect from './StepMultiSelect';
 import StepProgress from './StepProgress';
 
-type Props = {
+export interface SurveyFunnelProps {
   role: RoleLabel;
   initial?: Partial<SurveyResult>;
   onComplete?: (r: SurveyResult) => void;
-};
+}
 
-const SurveyFunnel: FC<Props> = ({ role, initial, onComplete }) => {
+/**
+ * SurveyFunnel
+ * - 퍼널 오케스트레이션(현재 스텝에 따라 알맞은 UI 렌더링)
+ * - useSurveyFunnel의 step/context/history를 사용
+ * - 각 스텝:
+ *   - defaultSelectedIds/otherDefault 로 진입 시 복원
+ *   - history.push(target, prev => ({ ...prev, ... })) 로 다음 스텝 이동
+ *   - history.replace(target, prev => prev) 로 이전 스텝 복귀(상태 보존)
+ */
+const SurveyFunnel = ({ role, initial, onComplete }: SurveyFunnelProps) => {
   const { step, context, history } = useSurveyFunnel(initial);
 
   // 진행률 계산(현재 스텝 1-index 기준)
   const currentIndex = STEP_KEYS.indexOf(step);
-  const percent = Math.round(((currentIndex + 1) / STEP_KEYS.length) * 100);
+  const total = STEP_KEYS.length;
 
   if (step === 'Mood') {
     return (
       <>
-        <StepProgress total={STEP_KEYS.length} active={currentIndex} className="mb-2" />
+        <StepProgress total={total} active={currentIndex} className="mb-2" />
         <StepMultiSelect
           key="Mood"
           roleLabel={role}
@@ -65,7 +63,7 @@ const SurveyFunnel: FC<Props> = ({ role, initial, onComplete }) => {
   if (step === 'Cuisine') {
     return (
       <>
-        <StepProgress total={STEP_KEYS.length} active={currentIndex} className="mb-2" />
+        <StepProgress total={total} active={currentIndex} className="mb-2" />
         <StepMultiSelect
           key="Cuisine"
           roleLabel={role}
@@ -91,7 +89,7 @@ const SurveyFunnel: FC<Props> = ({ role, initial, onComplete }) => {
   if (step === 'Taste') {
     return (
       <>
-        <StepProgress total={STEP_KEYS.length} active={currentIndex} className="mb-2" />
+        <StepProgress total={total} active={currentIndex} className="mb-2" />
         <StepMultiSelect
           key="Taste"
           roleLabel={role}
@@ -117,7 +115,7 @@ const SurveyFunnel: FC<Props> = ({ role, initial, onComplete }) => {
   if (step === 'AvoidIngredient') {
     return (
       <>
-        <StepProgress total={STEP_KEYS.length} active={currentIndex} className="mb-2" />
+        <StepProgress total={total} active={currentIndex} className="mb-2" />
         <StepMultiSelect
           key="AvoidIngredient"
           roleLabel={role}
@@ -142,7 +140,7 @@ const SurveyFunnel: FC<Props> = ({ role, initial, onComplete }) => {
 
   return (
     <>
-      <StepProgress total={STEP_KEYS.length} active={currentIndex} className="mb-2" />
+      <StepProgress total={total} active={currentIndex} className="mb-2" />
       <StepMultiSelect
         key="UnwantedMenu"
         roleLabel={role}

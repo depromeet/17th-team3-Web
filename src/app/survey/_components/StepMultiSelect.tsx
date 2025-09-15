@@ -1,11 +1,3 @@
-/**
- * StepMultiSelect
- * - 다중 선택 스텝 공용 컴포넌트(클라이언트)
- * - 선택 상태는 "id 배열"로 관리 (selectedIds)
- * - '배타 옵션(exclusiveIds)'은 단독 선택 규칙을 강제
- * - '기타(otherId)'가 선택되면 인풋 노출 + 텍스트 전달(otherText)
- * - 접근성: role="checkbox", aria-checked, focus-visible 스타일
- */
 'use client';
 
 import { useEffect, useMemo, useState, type ReactElement } from 'react';
@@ -13,19 +5,22 @@ import { useEffect, useMemo, useState, type ReactElement } from 'react';
 import { clsx } from 'clsx';
 import { Check } from 'lucide-react';
 
-export type Option = { id: string; label: string };
+export interface Option {
+  id: string;
+  label: string;
+}
 
-type Props = {
+export interface StepMultiSelectProps {
   /** 스텝 타이틀/부제목/역할 라벨(주최자/참여자) */
   title: string;
   subtitle?: string;
   roleLabel: string;
 
   /** 렌더링할 옵션 집합 (id/label) */
-  options: readonly Option[];
+  options: ReadonlyArray<Option>;
 
   /** 초기 선택 ids */
-  defaultSelectedIds?: string[];
+  defaultSelectedIds?: ReadonlyArray<string>;
 
   /** '기타' 옵션 id와 기본값(복원용) */
   otherId?: string;
@@ -39,10 +34,18 @@ type Props = {
   disableNextWhenEmpty?: boolean;
 
   /** 단독(배타) 옵션 ids — 예: ['mood:any'] */
-  exclusiveIds?: string[];
-};
+  exclusiveIds?: ReadonlyArray<string>;
+}
 
-const StepMultiSelect = (props: Props): ReactElement => {
+/**
+ * StepMultiSelect
+ * - 다중 선택 스텝 공용 컴포넌트(클라이언트)
+ * - 선택 상태는 "id 배열"로 관리 (selectedIds)
+ * - '배타 옵션(exclusiveIds)'은 단독 선택 규칙을 강제
+ * - '기타(otherId)'가 선택되면 인풋 노출 + 텍스트 전달(otherText)
+ * - 접근성: role="checkbox", aria-checked, focus-visible 스타일
+ */
+const StepMultiSelect = (props: StepMultiSelectProps): ReactElement => {
   const {
     title,
     subtitle,
@@ -59,18 +62,23 @@ const StepMultiSelect = (props: Props): ReactElement => {
     exclusiveIds = [],
   } = props;
 
-  const [selectedIds, setSelectedIds] = useState<string[]>(defaultSelectedIds);
-  const [otherText, setOtherText] = useState(otherDefault ?? '');
+  const [selectedIds, setSelectedIds] = useState<string[]>([...defaultSelectedIds]);
+  const [otherText, setOtherText] = useState<string>(otherDefault ?? '');
 
   // 외부 값 변경 시 동기화 (스텝 이동/복귀 시 복원)
-  useEffect(() => setSelectedIds(defaultSelectedIds), [defaultSelectedIds, options]);
-  useEffect(() => setOtherText(otherDefault ?? ''), [otherDefault]);
+  useEffect(() => {
+    setSelectedIds(Array.isArray(defaultSelectedIds) ? [...defaultSelectedIds] : []);
+  }, [defaultSelectedIds, options]);
+
+  useEffect(() => {
+    setOtherText(otherDefault ?? '');
+  }, [otherDefault]);
 
   // 파생값: 셋/비었는지/기타 표시 여부
   const selectedSet = useMemo(() => new Set(selectedIds), [selectedIds]);
   const isEmpty = selectedIds.length === 0;
   const nextDisabled = disableNextWhenEmpty && isEmpty;
-  const showOther = !!otherId && selectedSet.has(otherId);
+  const showOther = Boolean(otherId && selectedSet.has(otherId));
 
   // 선택 토글 로직
   const toggle = (id: string) => {

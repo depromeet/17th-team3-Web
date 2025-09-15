@@ -1,3 +1,15 @@
+'use client';
+
+import clsx from 'clsx';
+
+export interface StepProgressProps {
+  /** 전체 스텝 수 (1 이상) */
+  total: number;
+  /** 현재 스텝(0-based). active 이하를 "채움" 처리 */
+  active: number;
+  className?: string;
+}
+
 /**
  * StepProgress
  * - 스텝 수(total)만큼 가로로 얇은 선(벡터)을 나열해 진행도를 표현
@@ -7,26 +19,16 @@
  *   - 각 바 두께(border-width)=4px, 색상=#FF4F14(완료분), 미완료는 연灰색
  *   - angle=0deg/opacity=1은 단색 선으로 자연 충족
  *
- * 동작:
- * - active: 현재 스텝(0-based). "완료로 칠하는 구간"은 0..active 까지.
- * - total: 전체 스텝 수
+ * - 동작:
+ *   - active: 현재 스텝(0-based). "완료로 칠하는 구간"은 0..active 까지.
+ *   - total: 전체 스텝 수
  *
- * 스타일:
- * - 컨테이너 실제 유효폭(예: 375 - 20*2 = 335px)에서,
+ * - 스타일:
+ *   - 컨테이너 실제 유효폭(예: 375 - 20*2 = 335px)에서,
  *   각 바 너비 = (유효폭 - gap*(total-1)) / total
  *   → CSS Grid + gap으로 자동 충족
  */
-'use client';
-
-import clsx from 'clsx';
-
-type Props = {
-  total: number; // 전체 스텝 수
-  active: number; // 현재 스텝(0-based). active 이하를 "채움" 처리
-  className?: string;
-};
-
-const StepProgress = ({ total, active, className }: Props) => {
+const StepProgress = ({ total, active, className }: StepProgressProps) => {
   // 접근성: 진행률(%) 계산
   const completed = Math.min(Math.max(active, 0), total - 1) + 1;
   const percent = Math.round((completed / total) * 100);

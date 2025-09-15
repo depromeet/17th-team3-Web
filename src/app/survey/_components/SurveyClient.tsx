@@ -4,18 +4,18 @@
  * - 내부에서 SurveyFunnel을 렌더링하고 완료 시 페이지 이동
  */
 'use client';
-
-import type { FC } from 'react';
-
 import { useRouter } from 'next/navigation';
 
 import SurveyFunnel from './SurveyFunnel';
 
 import type { RoleLabel, SurveyResult } from '../_models/types';
 
-type Props = { role: RoleLabel; initial?: Partial<SurveyResult> };
+export interface SurveyClientProps {
+  role: RoleLabel;
+  initial?: Partial<SurveyResult>;
+}
 
-const SurveyClient: FC<Props> = ({ role, initial }) => {
+const SurveyClient = ({ role, initial }: SurveyClientProps) => {
   const router = useRouter();
 
   // 완료 시, 결과 저장 등을 처리한 뒤 완료 페이지로 이동
