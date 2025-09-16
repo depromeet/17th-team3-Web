@@ -1,10 +1,9 @@
 'use client';
 
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import { cn } from '@/app/_lib/cn';
-
-import ChevronIcon from '../icons/ChevronIcon';
 
 interface TopNavigationProps {
   title: string;
@@ -82,7 +81,7 @@ const TopNavigation = ({
               aria-label={leftAriaLabel}
               className="flex cursor-pointer items-center justify-center bg-transparent text-current"
             >
-              <ChevronIcon direction="left" />
+              <ChevronLeft size={36} strokeWidth={2} absoluteStrokeWidth />
             </button>
           )}
         </div>
@@ -97,7 +96,7 @@ const TopNavigation = ({
               aria-label={rightAriaLabel}
               className="flex cursor-pointer items-center justify-center bg-transparent text-current"
             >
-              <ChevronIcon direction="right" />
+              <ChevronRight size={36} strokeWidth={2} absoluteStrokeWidth />
             </button>
           )}
         </div>
@@ -107,3 +106,12 @@ const TopNavigation = ({
 };
 
 export default TopNavigation;
+<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path
+    d="M22.5 27L13.5 18L22.5 9"
+    stroke="black"
+    stroke-width="3"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>;
