@@ -3,8 +3,8 @@
 import { useState } from 'react';
 
 import Image from 'next/image';
-import Link from 'next/link';
 
+import TopNavigation from '@/app/_components/layout/TopNavigation';
 import Input from '@/app/_components/ui/Input';
 import StepperInput from '@/app/_components/ui/StepperInput';
 import { PARTY_SIZE } from '@/app/_constants/party';
@@ -18,7 +18,7 @@ const AnyPage = () => {
   return (
     // 페이지 단일 스크롤: 화면 높이 폴백 유틸 사용
     <main className="mx-auto bg-gradient-to-b from-white to-neutral-50 text-neutral-900">
-      {/* Sticky 헤더: 주소창 변화(dvh) 상황에서도 안정 */}
+      <TopNavigation title="Any" showBackButton />
       <br />
 
       <StepperInput value={count} onChange={setCount} />
@@ -48,22 +48,6 @@ const AnyPage = () => {
       />
       <br />
 
-      <header className="sticky top-0 z-10 border-b bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60">
-        <div className="safe-padding mx-auto flex w-full max-w-[375px] items-center justify-between px-4 py-3 sm:max-w-[480px] md:max-w-[640px]">
-          <span className="text-sm font-semibold">/any · 테스트 페이지</span>
-          <nav className="flex items-center gap-3">
-            <Link href="/" className="text-xs text-blue-600 hover:underline">
-              Home
-            </Link>
-            <a href="#cards" className="hidden text-xs text-neutral-600 hover:underline sm:inline">
-              Cards
-            </a>
-            <a href="#form" className="hidden text-xs text-neutral-600 hover:underline sm:inline">
-              Form
-            </a>
-          </nav>
-        </div>
-      </header>
       {/* 컨텐츠 래퍼: ScaledStage(production)와 동일한 max-width 센터링 */}
       <div className="mx-auto w-full max-w-[375px] px-4 py-6 sm:max-w-[480px] md:max-w-[640px]">
         {/* Hero / 안내 배너 */}
