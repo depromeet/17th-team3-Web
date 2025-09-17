@@ -25,6 +25,8 @@ const LoginButton = ({ provider = 'kakao' }: LoginButtonProps) => {
 
   return (
     <button
+      type="button"
+      aria-label={config.text}
       onClick={handleLogin}
       className={cn(
         'flex h-[62px] w-full cursor-pointer items-center justify-center gap-3 rounded-[14px] p-[10px] body-3 font-semibold transition-all duration-200',
