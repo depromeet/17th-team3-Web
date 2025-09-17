@@ -66,52 +66,41 @@ const TopNavigation = ({
   };
 
   return (
-    <>
-      <div
-        className={cn(
-          'sticky top-0 z-10 flex w-full shrink-0 items-center justify-between gap-2.5 bg-inherit px-4 py-2.5 text-neutral-1200',
-          className
+    <div
+      className={cn(
+        'sticky top-0 z-10 flex w-full shrink-0 items-center justify-between gap-2.5 bg-inherit px-4 py-2.5 text-neutral-1200',
+        className
+      )}
+    >
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center">
+        {showBackButton && (
+          <button
+            type="button"
+            onClick={handleLeftClick}
+            aria-label={leftAriaLabel}
+            className="flex cursor-pointer items-center justify-center bg-transparent text-current"
+          >
+            <ChevronLeft size={36} strokeWidth={2} absoluteStrokeWidth />
+          </button>
         )}
-      >
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center">
-          {showBackButton && (
-            <button
-              type="button"
-              onClick={handleLeftClick}
-              aria-label={leftAriaLabel}
-              className="flex cursor-pointer items-center justify-center bg-transparent text-current"
-            >
-              <ChevronLeft size={36} strokeWidth={2} absoluteStrokeWidth />
-            </button>
-          )}
-        </div>
-
-        <span className="body-3 font-semibold text-current">{title}</span>
-
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center">
-          {showNextButton && (
-            <button
-              type="button"
-              onClick={handleRightClick}
-              aria-label={rightAriaLabel}
-              className="flex cursor-pointer items-center justify-center bg-transparent text-current"
-            >
-              <ChevronRight size={36} strokeWidth={2} absoluteStrokeWidth />
-            </button>
-          )}
-        </div>
       </div>
-    </>
+
+      <span className="body-3 font-semibold text-current">{title}</span>
+
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center">
+        {showNextButton && (
+          <button
+            type="button"
+            onClick={handleRightClick}
+            aria-label={rightAriaLabel}
+            className="flex cursor-pointer items-center justify-center bg-transparent text-current"
+          >
+            <ChevronRight size={36} strokeWidth={2} absoluteStrokeWidth />
+          </button>
+        )}
+      </div>
+    </div>
   );
 };
 
 export default TopNavigation;
-<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path
-    d="M22.5 27L13.5 18L22.5 9"
-    stroke="black"
-    stroke-width="3"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-  />
-</svg>;
