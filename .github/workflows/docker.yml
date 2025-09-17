@@ -82,12 +82,38 @@ jobs:
     name: Deploy to DEV
     needs: docker
     runs-on: ubuntu-latest
-    # 예: feat/* 브랜치만 dev로
     if: startsWith(github.ref, 'refs/heads/feat/')
     env:
       IMAGE: ${{ needs.docker.outputs.image_url }}:sha-${{ needs.docker.outputs.short_sha }}
-
     steps:
+      # (임시) 디버그: DEV_HOST, 유저 확인
+      - name: Print target info (debug)
+        run: |
+          echo "HOST=${{ secrets.DEV_HOST }}"
+          echo "USER=${{ secrets.DEV_USER }}"
+
+      # (임시) 디버그: 키 파일 생성
+      - name: Prepare SSH key (debug)
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEV_SSH_KEY }}" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          # 호스트키 검증을 잠시 끄고 시도 (문제 파악용)
+          printf "Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile=/dev/null\n" > ~/.ssh/config
+          chmod 600 ~/.ssh/config
+
+      # (임시) 디버그: 로우 SSH 연결 시도 (왜 타임아웃인지 원인 확인)
+      - name: Raw SSH connectivity test (debug)
+        run: |
+          set -x
+          # 15초 제한으로 시도 (무한 대기 방지)
+          timeout 15s ssh -vvv -i ~/.ssh/id_deploy -p 22 \
+            -o ConnectTimeout=10 \
+            -o BatchMode=yes \
+            -o StrictHostKeyChecking=no \
+            ${{ secrets.DEV_USER }}@${{ secrets.DEV_HOST }} "echo 'SSH OK from runner'"
+
+      # 실제 배포 (원래 있던 스텝)
       - name: SSH deploy (pull & up)
         uses: appleboy/ssh-action@v1
         with:
