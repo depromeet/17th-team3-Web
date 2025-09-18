@@ -128,10 +128,18 @@ jobs:
     if: github.ref == 'refs/heads/main'
     environment: production
     env:
-      IMAGE: ${{ needs.docker.outputs.image_url }}:sha-${{ needs.docker.outputs.short_sha }}
+      IMAGE: ${{ format(
+        '{0}/{1}:sha-{2}',
+        (vars.REGISTRY || 'docker.io'),
+        (vars.IMAGE_REPO || 'journey1019/depromeet-team3'),
+        needs.docker.outputs.short_sha) }}
       PROJECT_DIR: ${{ secrets.PROD_PROJECT_DIR }}
-      REGISTRY: ${{ vars.REGISTRY }}
+      REGISTRY: ${{ vars.REGISTRY || 'docker.io' }}
     steps:
+      - name: Print resolved image (debug)
+        run: |
+          echo "IMAGE=${IMAGE}"
+          echo "PROJECT_DIR=${PROJECT_DIR}"
       - name: Docker login
         run: echo '${{ secrets.REGISTRY_PASSWORD }}' | docker login "$REGISTRY" -u '${{ secrets.REGISTRY_USER }}' --password-stdin
       - name: Deploy with compose
