@@ -86,6 +86,10 @@ jobs:
     env:
       IMAGE: ${{ needs.docker.outputs.image_url }}:sha-${{ needs.docker.outputs.short_sha }}
     steps:
+      # (임시) 러너 출구 IP 출력 (ACG /32 허용 테스트용)
+      - name: Print runner egress IP
+        run: curl -s https://ifconfig.me ; echo
+
       # (임시) 디버그: DEV_HOST, 유저 확인
       - name: Print target info (debug)
         run: |
