@@ -18,7 +18,7 @@ jobs:
       packages: write
     outputs:
       short_sha: ${{ steps.vars.outputs.SHORT_SHA }}
-      image_url: ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }} # docker.io/journey1019/depromeet-team3
+      image_url: ${{ steps.outs.outputs.IMAGE_URL }} # docker.io/journey1019/depromeet-team3
 
     env:
       # 레지스트리/리포는 Secrets로 주입 (Docker Hub 예시)
@@ -88,8 +88,12 @@ jobs:
       PROJECT_DIR: ${{ secrets.DEV_PROJECT_DIR }}   # 예: /srv/momuzzi
       REGISTRY: ${{ vars.REGISTRY }}
     steps:
+      - name: Print resolved image (debug)
+        run: echo "IMAGE=${IMAGE}"   # ✅ 여기서 docker.io/계정/레포:sha-xxxx 가 찍혀야 정상
+
       - name: Docker login
         run: echo '${{ secrets.REGISTRY_PASSWORD }}' | docker login "$REGISTRY" -u '${{ secrets.REGISTRY_USER }}' --password-stdin
+
       - name: Deploy with compose
         run: |
           set -Eeuo pipefail
