@@ -21,6 +21,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
     <html lang="ko" suppressHydrationWarning>
       <body className="antialiased">
         <ScaledStage
+          mode="production"
           allowScroll
           showFrame
           frameClassName="ring-2 ring-purple-500"
