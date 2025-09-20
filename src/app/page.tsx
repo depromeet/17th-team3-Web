@@ -1,28 +1,29 @@
-import clsx from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import Image from 'next/image';
+
+import Button from '@/app/_components/ui/Button';
 
 const HomePage = () => {
-  const isPrimary = true;
-  const isLarge = false;
-
-  const buttonClass = twMerge(
-    clsx(
-      'rounded-lg px-4 py-2 font-medium transition',
-      isPrimary
-        ? 'bg-blue-600 text-white hover:bg-blue-700'
-        : 'bg-gray-200 text-gray-700 hover:bg-gray-300',
-      isLarge && 'text-lg py-3 px-6',
-      'bg-black' // 충돌 유도 → twMerge가 최종값으로 병합
-    )
-  );
-
   return (
-    <main className="min-h-screen-safe flex flex-col items-center justify-center gap-4 bg-white p-4">
-      <div className="rounded-md bg-black px-3 py-1 text-xs text-white">Tailwind OK</div>
-      <button className={buttonClass}>Dynamic Button</button>
-      <p className="text-sm text-neutral-600">375×668 해상도</p>
-      <span className="text-lg text-purple-400">hello</span>
-    </main>
+    <div className="flex h-[100dvh] flex-col bg-[url('/images/mobileBackground.svg')]">
+      <div className="px-8 pt-16 pb-3">
+        <Image src={'/images/mumozzi-home-sm.svg'} alt="모무찌 작은 로고" width={36} height={36} />
+        <h1 className="mt-2 heading-2 font-bold">우리 어디서 모무찌?</h1>
+      </div>
+      <div className="flex flex-1 flex-col items-center justify-center">
+        <Image
+          src={'/images/mumozzi-home.svg'}
+          alt="모무찌 홈 대표 로고"
+          width={101}
+          height={101}
+        />
+        <p className="mt-4 body-3 font-medium text-neutral-1400">
+          아직 진행 중인 식당 추천이 없어요
+        </p>
+      </div>
+      <div className="px-5 pt-3 pb-6">
+        <Button>새로운 모임 만들고 식당 추천 받기</Button>
+      </div>
+    </div>
   );
 };
 
