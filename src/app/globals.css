@@ -253,6 +253,13 @@
     line-height: 3.875rem;
     letter-spacing: -0.01%;
   }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE, Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }
 
 /* Typography */
@@ -335,4 +342,12 @@
   );
 }
 
+/** 버튼에 배경에 사용되는 그라데이션, 스크롤시 경계선이 보이지 않도록 사용 */
+@utility button-area {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 209, 194, 0) 0%,
+    var(--Saturated-Orange-Orange200, #ffd1c2) 47.6%
+  );
+}
 /* 그 외 전역 리셋/유틸은 기존 그대로 두면 됩니다 */
