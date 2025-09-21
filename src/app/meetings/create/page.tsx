@@ -5,6 +5,7 @@ import { useState } from 'react';
 import TopNavigation from '@/app/_components/layout/TopNavigation';
 import { MEETING_SIZE } from '@/app/_constants/meeting';
 import DateTimeStep from '@/app/meetings/create/_components/step/DateTimeStep';
+import LocationStep from '@/app/meetings/create/_components/step/LocationStep';
 import MembersStep from '@/app/meetings/create/_components/step/MembersStep';
 import NameStep from '@/app/meetings/create/_components/step/NameStep';
 
@@ -13,6 +14,7 @@ const CreatePage = () => {
   const [formData, setFormData] = useState({
     name: '',
     members: MEETING_SIZE.MIN,
+    location: '',
     date: '',
     time: '',
   });
@@ -25,21 +27,26 @@ const CreatePage = () => {
     setCurrentStep((prev) => prev - 1);
   };
 
+  // todo: 아래 함수 공통화 고민 필요
   const handleNameNext = (name: string) => {
     setFormData((prev) => ({ ...prev, name }));
-    setCurrentStep(2);
+    setCurrentStep((prev) => prev + 1);
   };
 
-  // const handleMembersNext = (members: number) => {
-  //   setFormData((prev) => ({ ...prev, members }));
-  //   setCurrentStep(3);
-  // };
+  const handleMembersNext = (members: number) => {
+    setFormData((prev) => ({ ...prev, members }));
+    setCurrentStep((prev) => prev + 1);
+  };
 
-  // const handleDateTimeNext = (date: string, time: string) => {
-  //   setFormData((prev) => ({ ...prev, date, time }));
-  //   // 모임 생성 완료 로직
-  //   console.log('모임 생성:', formData);
-  // };
+  const handleLocationNext = (location: string) => {
+    setFormData((prev) => ({ ...prev, location }));
+    setCurrentStep((prev) => prev + 1);
+  };
+
+  const handleDateTimeNext = (date: string, time: string) => {
+    setFormData((prev) => ({ ...prev, date, time }));
+    console.log('모임 생성:', formData); // 모임 생성 완료 로직
+  };
 
   const renderStep = () => {
     switch (currentStep) {
@@ -48,9 +55,29 @@ const CreatePage = () => {
           <NameStep onNext={handleNameNext} onCancel={handleCancel} initialValue={formData.name} />
         );
       case 2:
-        return <MembersStep onNext={handleNameNext} onCancel={handleCancel} />;
+        return (
+          <MembersStep
+            onNext={handleMembersNext}
+            onCancel={handleCancel}
+            initialValue={formData.members}
+          />
+        );
       case 3:
-        return <DateTimeStep onNext={handleNameNext} onCancel={handleCancel} />;
+        return (
+          <LocationStep
+            onNext={handleLocationNext}
+            onCancel={handleCancel}
+            initialValue={formData.location}
+          />
+        );
+      case 4:
+        return (
+          <DateTimeStep
+            onNext={handleDateTimeNext}
+            onCancel={handleCancel}
+            initialValue={{ date: formData.date, time: formData.time }}
+          />
+        );
       default:
         return null;
     }

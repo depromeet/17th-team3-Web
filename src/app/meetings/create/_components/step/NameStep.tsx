@@ -8,7 +8,7 @@ import StepFormLayout from '@/app/meetings/_components/StepFormLayout';
 interface NameStepProps {
   onNext: (name: string) => void;
   onCancel: () => void;
-  initialValue?: string;
+  initialValue: string;
 }
 
 const NameStep = ({ onNext, onCancel, initialValue = '' }: NameStepProps) => {
@@ -21,7 +21,6 @@ const NameStep = ({ onNext, onCancel, initialValue = '' }: NameStepProps) => {
   return (
     <StepFormLayout
       title="모임 이름은 무엇인가요?"
-      description="닉네임은 언제든지 변경할 수 있어요."
       onNext={handleNext}
       onCancel={onCancel}
       isNextDisabled={!name} // todo: isNextDisabled 유효성 검증에 따른 disable 추가

@@ -6,31 +6,30 @@ import Input from '@/app/_components/ui/Input';
 import StepFormLayout from '@/app/meetings/_components/StepFormLayout';
 
 interface DateTimeStepProps {
-  onNext: (name: string) => void;
+  onNext: (date: string, time: string) => void;
   onCancel: () => void;
-  initialValue?: string;
+  initialValue: { date: string; time: string };
 }
 
-const DateTimeStep = ({ onNext, onCancel, initialValue = '' }: DateTimeStepProps) => {
-  const [name, setName] = useState(initialValue);
+const DateTimeStep = ({ onNext, onCancel, initialValue }: DateTimeStepProps) => {
+  const [date, setDate] = useState(initialValue.date);
+  const [time, setTime] = useState(initialValue.time);
 
   const handleNext = () => {
-    onNext(name);
+    onNext(date, time);
   };
 
   return (
     <StepFormLayout
-      title="모임 이름은 무엇인가요?"
-      description="닉네임은 언제든지 변경할 수 있어요."
+      title="언제 만나시나요?"
       onNext={handleNext}
       onCancel={onCancel}
-      isNextDisabled={!name} // todo: isNextDisabled 유효성 검증에 따른 disable 추가
-      prevButtonText="취소"
+      // isNextDisabled={!name} // todo: isNextDisabled 유효성 검증에 따른 disable 추가
+      nextButtonText="생성하기"
     >
       <Input
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        onClear={() => setName('')}
+        value={date}
+        onChange={(e) => setDate(e.target.value)}
         placeholder="디프만 3팀"
         showClearButton
       />
