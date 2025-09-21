@@ -14,7 +14,7 @@ const CreatePage = () => {
 
   return (
     <div className="flex h-[100dvh] flex-col bg-[url('/images/mobileBackground.svg')] bg-cover">
-      <TopNavigation title="모임 만들기" showBackButton />
+      <TopNavigation title="모임 만들기" showBackButton showNextButton />
       {/* todo: StepIndicator 컴포넌트로 추가 */}
       <FormStep
         title="모임 이름은 무엇인가요?"
