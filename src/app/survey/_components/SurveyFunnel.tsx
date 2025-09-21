@@ -1,17 +1,28 @@
 'use client';
 
-import { useSurveyFunnel } from '../_hooks/useSurveyFunnel';
-import {
-  MOOD_OPTIONS,
-  CUISINE_OPTIONS,
-  TASTE_OPTIONS,
-  AVOID_INGREDIENT_OPTIONS,
-  UNWANTED_MENU_OPTIONS,
-} from '../_models/option';
-import { STEP_KEYS, type RoleLabel, type SurveyResult } from '../_models/types';
+import StepChipSelect from '@/app/survey/_components/StepChipSelect';
+import StepName from '@/app/survey/_components/StepName';
+import StepProgress from '@/app/survey/_components/StepProgress';
+import StepReview from '@/app/survey/_components/StepReview';
 
-import StepMultiSelect from './StepMultiSelect';
-import StepProgress from './StepProgress';
+import { useSurveyFunnel } from '../_hooks/useSurveyFunnel';
+import { CUISINE_OPTIONS, type Option } from '../_models/option';
+import { STEP_KEYS, type RoleLabel, type SurveyResult } from '../_models/types';
+import { ANY_ID } from '../_styles/tokens';
+
+import type { ChipOption } from '@/app/survey/_components/ui/ChipGroupMultiSelect';
+
+// Option[] → 칩 옵션으로 변환 (variant는 리터럴 타입으로 고정)
+const toChipOptions = (opts: ReadonlyArray<Option>): ChipOption[] =>
+  opts.map((o) => ({
+    id: o.id,
+    label: o.label,
+    variant: o.id === ANY_ID ? ('any' as const) : ('cuisine' as const),
+  }));
+
+// id 배열로 선택한 Option 원본 레코드 추출(리뷰 화면용)
+const pickOptions = (ids: string[], all: ReadonlyArray<Option>) =>
+  all.filter((o) => ids.includes(o.id));
 
 export interface SurveyFunnelProps {
   role: RoleLabel;
@@ -19,148 +30,159 @@ export interface SurveyFunnelProps {
   onComplete?: (r: SurveyResult) => void;
 }
 
-/**
- * SurveyFunnel
- * - 퍼널 오케스트레이션(현재 스텝에 따라 알맞은 UI 렌더링)
- * - useSurveyFunnel의 step/context/history를 사용
- * - 각 스텝:
- *   - defaultSelectedIds/otherDefault 로 진입 시 복원
- *   - history.push(target, prev => ({ ...prev, ... })) 로 다음 스텝 이동
- *   - history.replace(target, prev => prev) 로 이전 스텝 복귀(상태 보존)
+/** SurveyFunnel (퍼널 오케스트레이터)
+ * - step/context/history를 기반으로 현재 스텝에 맞는 화면을 렌더링
+ * - '다 괜찮아요!'(c:any)는 배타 옵션 → 단독 선택
+ * - 비선호 단계의 후보는 '선호에서 선택한 항목'을 제외하고 렌더
+ * - 단계별 key 부여로 state 분리(배지 번호가 각 스텝에서 1부터 시작)
  */
 const SurveyFunnel = ({ role, initial, onComplete }: SurveyFunnelProps) => {
-  const { step, context, history } = useSurveyFunnel(initial);
+  // useFunnel: 현재 스텝(step), 전역문맥(context), 전환(history)
+  const { step, context, history } = useSurveyFunnel({ ...initial, role });
 
-  // 진행률 계산(현재 스텝 1-index 기준)
+  // 진행바 계산
   const currentIndex = STEP_KEYS.indexOf(step);
-  const total = STEP_KEYS.length;
+  const total = 5; // Name / Prefer / Dislike / Review / Complete
 
-  if (step === 'Mood') {
+  // ---- Flow Config (한 곳에서 로직 관리) ----
+  /** 1) 이름 입력 */
+  if (step === 'Name') {
     return (
       <>
         <StepProgress total={total} active={currentIndex} className="mb-2" />
-        <StepMultiSelect
-          key="Mood"
-          roleLabel={role}
-          title="이번 모임, 어떤 분위기면 좋을까요?"
-          options={MOOD_OPTIONS}
-          defaultSelectedIds={context.moodsIds}
-          exclusiveIds={['mood:any']}
-          otherId="mood:other"
-          otherDefault={context.others.Mood}
-          onNext={(moodsIds, other) =>
-            history.push('Cuisine', (prev) => ({
-              ...prev,
-              moodsIds,
-              others: { ...prev.others, Mood: other },
-            }))
-          }
+        <StepName
+          roleLabel={context.role}
+          defaultName={context.name}
+          onNext={(name) => history.push('PreferCuisine', (prev) => ({ ...prev, name }))}
         />
       </>
     );
   }
 
-  if (step === 'Cuisine') {
+  /** 2) 선호 음식 선택 (칩 + '다 괜찮아요!'는 단독) */
+  if (step === 'PreferCuisine') {
+    const options = toChipOptions(CUISINE_OPTIONS); // ANY 포함
     return (
       <>
         <StepProgress total={total} active={currentIndex} className="mb-2" />
-        <StepMultiSelect
-          key="Cuisine"
-          roleLabel={role}
-          title="어떤 종류의 음식을 선호하시나요?"
-          options={CUISINE_OPTIONS}
-          defaultSelectedIds={context.cuisinesIds}
-          exclusiveIds={['cuisine:any']}
-          otherId="cuisine:other"
-          otherDefault={context.others.Cuisine}
-          onBack={() => history.replace('Mood', (prev) => prev)}
-          onNext={(cuisinesIds, other) =>
-            history.push('Taste', (prev) => ({
-              ...prev,
-              cuisinesIds,
-              others: { ...prev.others, Cuisine: other },
-            }))
-          }
+        <StepChipSelect
+          key="PreferCuisine" // 단계별 다른 key
+          roleLabel={context.role}
+          title="선호하는 음식을 골라주세요"
+          subtitle="여러 개 선택 가능 · '다 괜찮아요!'는 단독 선택"
+          options={options}
+          defaultSelectedIds={context.preferCuisineIds}
+          exclusiveIds={[ANY_ID]}
+          onBack={() => history.replace('Name', (p) => p)}
+          onNext={(preferCuisineIds) => {
+            const nextIds = preferCuisineIds.includes(ANY_ID) ? [ANY_ID] : preferCuisineIds;
+            history.push('DislikeCuisine', (prev) => ({ ...prev, preferCuisineIds: nextIds }));
+          }}
         />
       </>
     );
   }
 
-  if (step === 'Taste') {
+  /** 3) 비선호 음식 선택 (선호에서 고른 것은 제외 + ANY 노출) */
+  if (step === 'DislikeCuisine') {
+    // '선호'에서 ANY를 골랐다면 '모두 허용' 의미 → '비선호' 후보는 전체(ANY 포함)
+    const excluded = context.preferCuisineIds.includes(ANY_ID) ? [] : context.preferCuisineIds;
+    const base = CUISINE_OPTIONS;
+
+    // ANY는 항상 맨 앞에 노출, 나머지는 선호 제외 필터링
+    const dislikeCandidates = [
+      base.find((o) => o.id === ANY_ID)!, // non-null 단언(테이블 상 항상 존재)
+      ...base.filter((o) => o.id !== ANY_ID && !excluded.includes(o.id)),
+    ];
+    const options = toChipOptions(dislikeCandidates);
+
     return (
       <>
         <StepProgress total={total} active={currentIndex} className="mb-2" />
-        <StepMultiSelect
-          key="Taste"
-          roleLabel={role}
-          title="이번 모임에서 어떤 맛을 즐기고 싶으세요?"
-          options={TASTE_OPTIONS}
-          defaultSelectedIds={context.tastesIds}
-          exclusiveIds={['taste:any']}
-          otherId="taste:other"
-          otherDefault={context.others.Taste}
-          onBack={() => history.replace('Cuisine', (prev) => prev)}
-          onNext={(tastesIds, other) =>
-            history.push('AvoidIngredient', (prev) => ({
-              ...prev,
-              tastesIds,
-              others: { ...prev.others, Taste: other },
-            }))
-          }
+        <StepChipSelect
+          key="DislikeCuisine" // ✅ 단계별 다른 key
+          roleLabel={context.role}
+          title="선호하지 않는 음식을 골라주세요"
+          subtitle="여러 개 선택 가능 · '다 괜찮아요!'는 단독 선택(아무거나 상관없음)"
+          options={options}
+          defaultSelectedIds={context.dislikeCuisineIds}
+          exclusiveIds={[ANY_ID]}
+          onBack={() => history.replace('PreferCuisine', (p) => p)}
+          onNext={(dislikeCuisineIds) => {
+            history.push('Review', (prev) => ({ ...prev, dislikeCuisineIds }));
+          }}
         />
       </>
     );
   }
 
-  if (step === 'AvoidIngredient') {
+  /** 4) 선택 결과 확인 → 완료/분기 */
+  if (step === 'Review') {
+    const prefer = pickOptions(context.preferCuisineIds, CUISINE_OPTIONS);
+    const dislike = pickOptions(context.dislikeCuisineIds, CUISINE_OPTIONS);
+
     return (
       <>
         <StepProgress total={total} active={currentIndex} className="mb-2" />
-        <StepMultiSelect
-          key="AvoidIngredient"
-          roleLabel={role}
-          title="혹시 피해야 하는 재료가 있나요?"
-          options={AVOID_INGREDIENT_OPTIONS}
-          defaultSelectedIds={context.avoidIngredientsIds}
-          exclusiveIds={['avoid:any']}
-          otherId="avoid:other"
-          otherDefault={context.others.AvoidIngredient}
-          onBack={() => history.replace('Taste', (prev) => prev)}
-          onNext={(avoidIngredientsIds, other) =>
-            history.push('UnwantedMenu', (prev) => ({
-              ...prev,
-              avoidIngredientsIds,
-              others: { ...prev.others, AvoidIngredient: other },
-            }))
-          }
+        <StepReview
+          roleLabel={context.role}
+          name={context.name}
+          prefer={prefer}
+          dislike={dislike}
+          onBack={() => history.replace('DislikeCuisine', (p) => p)}
+          // --- (확장) 분기: '한식' 선택 시 '한식 후속 설문'으로 보내기 ---
+          onSubmit={() => {
+            const enableBranch = context.hostFlags?.enableCuisineBranch;
+            const hasKorean = context.preferCuisineIds.includes('c:korean');
+            if (enableBranch && hasKorean) {
+              history.push('KoreanFollowUp', (p) => p);
+              return;
+            }
+
+            // 기본은 Complete로 진행
+            const result: SurveyResult = { ...context };
+            onComplete?.(result);
+            history.push('Complete', (p) => p);
+          }}
         />
       </>
     );
   }
 
+  /** (예시) 한식 상세 분기 스텝 — 현재는 패스스루 */
+  if (step === 'KoreanFollowUp') {
+    // 예: StepKoreanFollowUp 컴포넌트 렌더 → 완료 시 Complete로
+    return (
+      <>
+        <StepProgress total={total} active={currentIndex} className="mb-2" />
+        <div className="mx-auto max-w-[480px] px-4 py-6">
+          <h1 className="text-2xl font-bold md:text-3xl">한식 선호 상세 질문 (준비 중)</h1>
+          <p className="mt-2 text-gray-600">추후 분기 설문이 여기에 들어갑니다.</p>
+          <div className="mt-6 flex justify-end">
+            <button
+              className="rounded-xl bg-black px-4 py-2 text-sm text-white"
+              onClick={() => {
+                const result: SurveyResult = { ...context };
+                onComplete?.(result);
+                history.push('Complete', (p) => p);
+              }}
+            >
+              완료로 이동
+            </button>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  /** 5) 완료 (간단 안내; 후속 추천 페이지로 연결 가능) */
   return (
     <>
       <StepProgress total={total} active={currentIndex} className="mb-2" />
-      <StepMultiSelect
-        key="UnwantedMenu"
-        roleLabel={role}
-        title="이번 모임에서 원하지 않는 메뉴가 있나요?"
-        options={UNWANTED_MENU_OPTIONS}
-        defaultSelectedIds={context.unwantedMenusIds}
-        nextLabel="완료"
-        exclusiveIds={['unwanted:any']}
-        otherId="unwanted:other"
-        otherDefault={context.others.UnwantedMenu}
-        onBack={() => history.replace('AvoidIngredient', (prev) => prev)}
-        onNext={(unwantedMenusIds, other) => {
-          const result: SurveyResult = {
-            ...context,
-            unwantedMenusIds,
-            others: { ...context.others, UnwantedMenu: other },
-          };
-          onComplete?.(result);
-        }}
-      />
+      <div className="mx-auto max-w-[480px] px-4 py-12 text-center">
+        <h1 className="text-2xl font-bold md:text-3xl">설문이 완료되었습니다 🎉</h1>
+        <p className="mt-3 text-gray-600">추천 결과를 준비 중이에요.</p>
+      </div>
     </>
   );
 };
