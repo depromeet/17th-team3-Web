@@ -14,6 +14,8 @@ interface LocationStepProps {
 const LocationStep = ({ onNext, onCancel, initialValue = '' }: LocationStepProps) => {
   const [location, setLocation] = useState(initialValue);
 
+  // todo: 유효성 검증 어떻게 가져갈지? (e.g. 지하철역 list 중 하나 이상의 item 선택 시)
+
   const handleNext = () => {
     onNext(location);
   };

@@ -372,6 +372,7 @@
       var(--Saturated-Orange-Orange900, #5c1700) 98.95%
     )
   );
+  background-clip: text;
 }
 @utility type-gradient {
   background: var(
@@ -382,6 +383,7 @@
       var(--Saturated-Orange-Orange800, #8f2400) 67.57%
     )
   );
+  background-clip: text;
 }
 
 /** 버튼에 배경에 사용되는 그라데이션, 스크롤시 경계선이 보이지 않도록 사용 */
