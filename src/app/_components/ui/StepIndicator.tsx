@@ -11,7 +11,10 @@ const StepIndicator = ({ value, total }: StepIndicatorProps) => {
 
   return (
     <div className={cn('h-1 w-full overflow-hidden rounded-full bg-orange-100')}>
-      <div className="h-full transition-all chip-gradient" style={{ width: `${percent}%` }}></div>
+      <div
+        className="h-full bg-gradient-to-r from-orange-300 to-orange-500 transition-all"
+        style={{ width: `${percent}%` }}
+      ></div>
     </div>
   );
 };
