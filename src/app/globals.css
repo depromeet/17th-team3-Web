@@ -9,6 +9,17 @@
     font-family: 'Pretendard', sans-serif;
   }
 
+  /* input type=search 브라우저 기본 UI 표시하지 않음 */
+  input[type='search']::-webkit-search-cancel-button,
+  input[type='search']::-webkit-search-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  /* IE/Edge 대응 */
+  input[type='search']::-ms-clear {
+    display: none;
+  }
+
   /* 이미지/비디오 기본 리셋 */
   img,
   video {
@@ -16,6 +27,7 @@
     height: auto;
     display: block;
   }
+
   @font-face {
     font-family: 'Pretendard';
     font-weight: 100;

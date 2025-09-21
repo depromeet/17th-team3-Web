@@ -40,7 +40,9 @@ const Input = ({
   return (
     <>
       <div className="relative flex items-center">
-        {isSearchType && <Search className="absolute left-3 h-4 w-4 text-gray-400" />}
+        {isSearchType && (
+          <Search size={32} strokeWidth={3} className="absolute left-3 h-4 w-4 text-neutral-500" />
+        )}
         <input
           ref={ref}
           type={type}
@@ -48,12 +50,10 @@ const Input = ({
           onChange={onChange}
           placeholder={placeholder}
           className={cn(
-            'w-full px-3 py-3 text-xl font-semibold transition-all duration-200',
-            'placeholder:text-gray-400 focus:outline-none',
-            'border-0 border-b-2',
+            'w-full px-3 py-3 body-1 font-semibold transition-all duration-200',
+            'border-b-gray-300 placeholder:text-neutral-500 focus:border-b-orange-500 focus:outline-none',
+            'border-0 border-b-1 focus:border-b-2',
             shouldClearButton && 'pr-10',
-            // todo: 에러 상태 스타일
-            hasError ? 'border-b-red-500' : 'border-b-gray-300 focus:border-b-gray-600',
             isSearchType && 'pl-10',
             className
           )}
@@ -65,9 +65,9 @@ const Input = ({
             type="button"
             aria-label="입력 내용 지우기"
             onClick={handleClear}
-            className="absolute right-3 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-gray-400 text-white transition-colors hover:bg-gray-500"
+            className="absolute right-3 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-neutral-500 text-white transition-colors"
           >
-            <X className="h-3 w-3" />
+            <X strokeWidth={4} className="h-3 w-3" />
           </button>
         )}
       </div>

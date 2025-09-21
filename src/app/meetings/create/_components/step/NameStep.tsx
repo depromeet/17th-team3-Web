@@ -30,7 +30,6 @@ const NameStep = ({ onNext, onCancel, initialValue = '' }: NameStepProps) => {
         value={name}
         onChange={(e) => setName(e.target.value)}
         onClear={() => setName('')}
-        placeholder="디프만 3팀"
         showClearButton
       />
     </StepFormLayout>

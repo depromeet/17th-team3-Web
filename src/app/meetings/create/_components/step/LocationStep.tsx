@@ -30,7 +30,6 @@ const LocationStep = ({ onNext, onCancel, initialValue = '' }: LocationStepProps
         value={location}
         onChange={(e) => setLocation(e.target.value)}
         onClear={() => setLocation('')}
-        placeholder="강남역"
         showClearButton
       />
     </StepFormLayout>
