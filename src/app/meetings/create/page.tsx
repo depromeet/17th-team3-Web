@@ -56,7 +56,7 @@ const FormStep = ({
 }: FormStepProps) => {
   return (
     <main className="flex flex-1 flex-col">
-      <div className="px-4 pt-8 pb-4">
+      <div className="px-4 pt-4 pb-8">
         <h1 className="heading-3 font-bold">{title}</h1>
       </div>
 
