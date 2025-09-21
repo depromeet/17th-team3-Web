@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 
 import { useRouter } from 'next/navigation';
 
 import { useAuthParams } from '@/app/auth/_hooks/useAuthParams';
 import { exchangeCodeForCookie } from '@/app/auth/_services/authService';
 
-const CallbackPage = () => {
+const CallbackContent = () => {
   const { code, error } = useAuthParams();
 
   const router = useRouter();
@@ -39,6 +39,14 @@ const CallbackPage = () => {
   }, [code, error, router]);
 
   return <div className="mx-auto flex items-center justify-center">로그인 처리중...</div>;
+};
+
+const CallbackPage = () => {
+  return (
+    <Suspense>
+      <CallbackContent />
+    </Suspense>
+  );
 };
 
 export default CallbackPage;
