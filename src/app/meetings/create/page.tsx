@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import TopNavigation from '@/app/_components/layout/TopNavigation';
-import { PARTY_SIZE } from '@/app/_constants/party';
+import { MEETING_SIZE } from '@/app/_constants/meeting';
 import DateTimeStep from '@/app/meetings/create/_components/step/DateTimeStep';
 import MembersStep from '@/app/meetings/create/_components/step/MembersStep';
 import NameStep from '@/app/meetings/create/_components/step/NameStep';
@@ -12,7 +12,7 @@ const CreatePage = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     name: '',
-    members: PARTY_SIZE.MIN,
+    members: MEETING_SIZE.MIN,
     date: '',
     time: '',
   });

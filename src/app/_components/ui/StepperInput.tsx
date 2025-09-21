@@ -1,7 +1,7 @@
 import { Minus, Plus } from 'lucide-react';
 
 import Input, { InputProps } from '@/app/_components/ui/Input';
-import { PARTY_SIZE } from '@/app/_constants/party';
+import { MEETING_SIZE } from '@/app/_constants/meeting';
 import { cn } from '@/app/_lib/cn';
 
 export interface StepperInputProps extends Omit<InputProps, 'type' | 'onChange'> {
@@ -14,8 +14,8 @@ export interface StepperInputProps extends Omit<InputProps, 'type' | 'onChange'>
 const StepperInput = ({
   value,
   onChange,
-  min = PARTY_SIZE.MIN,
-  max = PARTY_SIZE.MAX,
+  min = MEETING_SIZE.MIN,
+  max = MEETING_SIZE.MAX,
   className,
   ...props
 }: StepperInputProps) => {
