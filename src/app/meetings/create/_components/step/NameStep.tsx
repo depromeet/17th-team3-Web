@@ -57,7 +57,7 @@ const NameStep = ({ onNext, onCancel, initialValue = '' }: NameStepProps) => {
         hasError={isError}
         errorMessage={errorMessage}
         showClearButton
-        maxLength={20}
+        maxLength={21}
       />
     </StepFormLayout>
   );
