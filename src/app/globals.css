@@ -350,4 +350,38 @@
     var(--Saturated-Orange-Orange200, #ffd1c2) 47.6%
   );
 }
+
+@utility background-1 {
+  background: var(
+    --Background-01,
+    linear-gradient(
+      180deg,
+      var(--Neutral-White-White100, #fff) 20.01%,
+      var(--Saturated-Orange-Orange100, #fff0eb) 60%,
+      var(--Saturated-Orange-Orange50, #fff7f5) 99.98%
+    )
+  );
+}
+@utility background-2 {
+  background: var(
+    --Background-02,
+    linear-gradient(
+      180deg,
+      var(--Neutral-White-White100, #fff) 20%,
+      var(--Saturated-Orange-Orange200, #ffd1c2) 60%,
+      var(--Saturated-Orange-Orange100, #fff0eb) 100%
+    )
+  );
+}
+@utility background-3 {
+  background: var(
+    --Background-03,
+    linear-gradient(
+      180deg,
+      #fff 0%,
+      var(--Saturated-Orange-Orange100, #fff0eb) 50%,
+      var(--Saturated-Yellow-Yellow100, #fff6e0) 100%
+    )
+  );
+}
 /* 그 외 전역 리셋/유틸은 기존 그대로 두면 됩니다 */
