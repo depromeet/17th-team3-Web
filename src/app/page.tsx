@@ -4,12 +4,14 @@ import Button from '@/app/_components/ui/Button';
 
 const HomePage = () => {
   return (
-    <div className="flex h-[100dvh] flex-col bg-[url('/images/mobileBackground.svg')]">
+    <div className="flex h-[100dvh] flex-col bg-[url('/images/mobileBackground.svg')] bg-cover">
       <div className="px-8 pt-16 pb-3">
         <Image src={'/images/mumozzi-home-sm.svg'} alt="모무찌 작은 로고" width={36} height={36} />
-        <h1 className="mt-2 heading-2 font-bold">우리 어디서 모무찌?</h1>
+        <h1 className="mt-2 bg-gradient-to-r from-orange-900 to-orange-500 bg-clip-text heading-2 font-bold text-transparent">
+          우리 어디서 모무찌?
+        </h1>
       </div>
-      <div className="flex flex-1 flex-col items-center justify-center">
+      <div className="flex flex-1 flex-col items-center justify-center gap-3">
         <Image
           src={'/images/mumozzi-home.svg'}
           alt="모무찌 홈 대표 로고"
