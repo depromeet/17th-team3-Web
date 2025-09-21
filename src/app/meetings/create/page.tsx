@@ -34,47 +34,50 @@ const CreatePage = () => {
     setCurrentStep((prev) => prev - 1);
   };
 
-  // todo: 아래 함수 공통화 고민 필요
-  const handleNameNext = (name: string) => {
-    setFormData((prev) => ({ ...prev, name }));
-    setCurrentStep((prev) => prev + 1);
-  };
-
-  const handleMembersNext = (members: number) => {
-    setFormData((prev) => ({ ...prev, members }));
-    setCurrentStep((prev) => prev + 1);
-  };
-
-  const handleLocationNext = (location: string) => {
-    setFormData((prev) => ({ ...prev, location }));
-    setCurrentStep((prev) => prev + 1);
-  };
+  interface FormData {
+    name: string;
+    members: number;
+    location: string;
+    date: string;
+    time: string;
+  }
 
   const handleDateTimeNext = (date: string, time: string) => {
     setFormData((prev) => ({ ...prev, date, time }));
     console.log('모임 생성:', formData); // 모임 생성 완료 로직
   };
 
-  const renderStep = () => {
+  function handleNext<K extends keyof FormData>(field: K, value: FormData[K]) {
+    setFormData((prev) => ({ ...prev, [field]: value }) as FormData);
+    setCurrentStep((prev) => prev + 1);
+  }
+
+  const { name, members, location, date, time } = formData;
+
+  const renderStepForm = () => {
     switch (currentStep) {
       case 1:
         return (
-          <NameStep onNext={handleNameNext} onCancel={handleCancel} initialValue={formData.name} />
+          <NameStep
+            onNext={() => handleNext('name', formData.name)}
+            onCancel={handleCancel}
+            initialValue={name}
+          />
         );
       case 2:
         return (
           <MembersStep
-            onNext={handleMembersNext}
+            onNext={() => handleNext('members', formData.members)}
             onCancel={handleCancel}
-            initialValue={formData.members}
+            initialValue={members}
           />
         );
       case 3:
         return (
           <LocationStep
-            onNext={handleLocationNext}
+            onNext={() => handleNext('location', formData.location)}
             onCancel={handleCancel}
-            initialValue={formData.location}
+            initialValue={location}
           />
         );
       case 4:
@@ -82,7 +85,7 @@ const CreatePage = () => {
           <DateTimeStep
             onNext={handleDateTimeNext}
             onCancel={handleCancel}
-            initialValue={{ date: formData.date, time: formData.time }}
+            initialValue={{ date, time }}
           />
         );
       default:
@@ -96,7 +99,7 @@ const CreatePage = () => {
       <div className="flex items-center justify-center px-4 py-1.5">
         <StepIndicator value={currentStep} total={MEETING_CREATE_TOTAL_STEPS} />
       </div>
-      {renderStep()}
+      {renderStepForm()}
     </div>
   );
 };
