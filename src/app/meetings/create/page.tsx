@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import TopNavigation from '@/app/_components/layout/TopNavigation';
+import { Heading } from '@/app/_components/typography';
 import Button from '@/app/_components/ui/Button';
 import Input from '@/app/_components/ui/Input';
 
@@ -14,7 +15,7 @@ const CreatePage = () => {
 
   return (
     <div className="flex h-[100dvh] flex-col bg-[url('/images/mobileBackground.svg')] bg-cover">
-      <TopNavigation title="모임 만들기" showBackButton showNextButton />
+      <TopNavigation title="모임 만들기" showBackButton />
       {/* todo: StepIndicator 컴포넌트로 추가 */}
       <FormStep
         title="모임 이름은 무엇인가요?"
@@ -57,7 +58,7 @@ const FormStep = ({
   return (
     <main className="flex flex-1 flex-col">
       <div className="px-4 pt-4 pb-8">
-        <h1 className="heading-3 font-bold">{title}</h1>
+        <Heading>{title}</Heading>
       </div>
 
       <div className="flex-1 px-4">{children}</div>
