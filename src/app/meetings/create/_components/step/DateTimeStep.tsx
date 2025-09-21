@@ -45,7 +45,7 @@ const DateTimeStep = ({ onNext, onCancel, initialValue }: DateTimeStepProps) => 
         onTimeClick={handleTimeClick}
         className="mb-5"
       />
-      <div className="flex items-center justify-center rounded-sm bg-orange-100 p-3 text-xs font-medium text-orange-700">
+      <div className="flex items-center justify-center rounded-sm bg-orange-500/[0.114] p-3 text-xs font-medium text-orange-600">
         모임 시간 1시간 전에 자동으로 식사 취향 설문이 마감됩니다.
       </div>
     </StepFormLayout>
