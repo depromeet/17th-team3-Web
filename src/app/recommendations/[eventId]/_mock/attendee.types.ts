@@ -1,4 +1,4 @@
-import { FoodKey } from '@/app/_constants/Menu';
+import { FoodKey } from '@/app/_constants/menu';
 
 /**
  * 참석자 개인 정보 및 음식 선호도를 나타내는 타입

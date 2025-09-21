@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-import { FOOD_MAP, FoodKey } from '@/app/_constants/Menu';
+import { FOOD_MAP, FoodKey } from '@/app/_constants/menu';
 import { cn } from '@/app/_lib/cn';
 import { Attendee } from '@/app/recommendations/[eventId]/_mock/attendee.types';
 
