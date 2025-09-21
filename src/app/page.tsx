@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 import Button from '@/app/_components/ui/Button';
 
@@ -23,7 +24,9 @@ const HomePage = () => {
         </p>
       </div>
       <div className="px-5 pt-3 pb-6">
-        <Button>새로운 모임 만들고 식당 추천 받기</Button>
+        <Button>
+          <Link href="/meetings/create/">새로운 모임 만들고 식당 추천 받기</Link>
+        </Button>
       </div>
     </div>
   );
