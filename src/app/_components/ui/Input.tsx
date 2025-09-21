@@ -73,8 +73,8 @@ const Input = ({
       </div>
 
       {(hasError && errorMessage) || helperText ? (
-        <div className="mt-2 px-1">
-          <p className={cn('text-xs', hasError ? 'text-red-600' : 'text-gray-500')}>
+        <div className="p-3">
+          <p className={cn('label-1', hasError ? 'text-orange-500' : 'text-neutral-500')}>
             {hasError && errorMessage ? errorMessage : helperText}
           </p>
         </div>

@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import { useRouter } from 'next/navigation';
+
 import TopNavigation from '@/app/_components/layout/TopNavigation';
 import { MEETING_SIZE } from '@/app/_constants/meeting';
 import DateTimeStep from '@/app/meetings/create/_components/step/DateTimeStep';
@@ -19,9 +21,12 @@ const CreatePage = () => {
     time: '',
   });
 
+  const router = useRouter();
+
   const handleCancel = () => {
     if (currentStep === 1) {
       // todo: 모달 출력
+      router.push('/');
       return;
     }
     setCurrentStep((prev) => prev - 1);

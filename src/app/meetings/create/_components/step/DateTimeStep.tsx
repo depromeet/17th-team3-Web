@@ -24,15 +24,10 @@ const DateTimeStep = ({ onNext, onCancel, initialValue }: DateTimeStepProps) => 
       title="언제 만나시나요?"
       onNext={handleNext}
       onCancel={onCancel}
-      // isNextDisabled={!name} // todo: isNextDisabled 유효성 검증에 따른 disable 추가
+      isNextDisabled={!date} // todo: isNextDisabled 유효성 검증에 따른 disable 추가
       nextButtonText="생성하기"
     >
-      <Input
-        value={date}
-        onChange={(e) => setDate(e.target.value)}
-        placeholder="디프만 3팀"
-        showClearButton
-      />
+      <Input value={date} onChange={(e) => setDate(e.target.value)} showClearButton />
     </StepFormLayout>
   );
 };
