@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 import Input from '@/app/_components/ui/Input';
 import StepFormLayout from '@/app/meetings/_components/StepFormLayout';
-import { validateText } from '@/app/meetings/_utils/validate';
+import { validateText } from '@/app/meetings/_utils/validation';
 
 interface NameStepProps {
   onNext: (name: string) => void;
