@@ -44,8 +44,8 @@ const StepperInput = ({
         className={cn(
           'absolute top-4 left-3 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-md transition-colors',
           canDecrement
-            ? 'bg-[#FF4F1420] text-[#FF4F14]'
-            : 'cursor-not-allowed bg-[#9BA3B020] text-[#9BA3B0]'
+            ? 'bg-orange-100 text-orange-500'
+            : 'cursor-not-allowed bg-neutral-400 text-neutral-600'
         )}
         aria-label="감소"
       >
@@ -60,7 +60,7 @@ const StepperInput = ({
         min={min}
         max={max}
         showClearButton={false}
-        className={cn('p-3 text-center focus:border-b-gray-300', className)}
+        className={cn('p-3 text-center focus:border-b-1 focus:border-b-neutral-300', className)}
         {...props}
       />
 
@@ -71,8 +71,8 @@ const StepperInput = ({
         className={cn(
           'absolute top-4 right-3 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-md transition-colors',
           canIncrement
-            ? 'bg-[#FF4F1420] text-[#FF4F14]'
-            : 'cursor-not-allowed bg-[#9BA3B020] text-[#9BA3B0]'
+            ? 'bg-orange-100 text-orange-500'
+            : 'cursor-not-allowed bg-neutral-400 text-neutral-600'
         )}
         aria-label="증가"
       >

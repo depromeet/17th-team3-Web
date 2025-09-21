@@ -51,7 +51,7 @@ const Input = ({
           placeholder={placeholder}
           className={cn(
             'w-full px-3 py-3 body-1 font-semibold transition-all duration-200',
-            'border-b-gray-300 placeholder:text-neutral-500 focus:border-b-orange-500 focus:outline-none',
+            'border-b-neutral-300 placeholder:text-neutral-500 focus:border-b-orange-500 focus:outline-none',
             'border-0 border-b-1 focus:border-b-2',
             shouldClearButton && 'pr-10',
             isSearchType && 'pl-10',
