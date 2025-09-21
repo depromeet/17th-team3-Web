@@ -89,7 +89,7 @@ const CreatePage = () => {
   };
 
   return (
-    <div className="flex h-[100dvh] flex-col">
+    <div className="flex h-[100dvh] flex-col background-1">
       <TopNavigation title="모임 만들기" showBackButton onLeftClick={handleCancel} />
       {/* todo: StepIndicator 컴포넌트로 추가 */}
       {renderStep()}
