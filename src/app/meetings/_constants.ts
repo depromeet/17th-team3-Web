@@ -1,0 +1,1 @@
+export const MEETING_CREATE_TOTAL_STEPS = 4;

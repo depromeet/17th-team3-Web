@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import TopNavigation from '@/app/_components/layout/TopNavigation';
 import StepIndicator from '@/app/_components/ui/StepIndicator';
 import { MEETING_SIZE } from '@/app/_constants/meeting';
+import { MEETING_CREATE_TOTAL_STEPS } from '@/app/meetings/_constants';
 import DateTimeStep from '@/app/meetings/create/_components/step/DateTimeStep';
 import LocationStep from '@/app/meetings/create/_components/step/LocationStep';
 import MembersStep from '@/app/meetings/create/_components/step/MembersStep';
@@ -93,7 +94,7 @@ const CreatePage = () => {
     <div className="flex h-[100dvh] flex-col background-1">
       <TopNavigation title="모임 만들기" showBackButton onLeftClick={handleCancel} />
       <div className="flex items-center justify-center px-4 py-1.5">
-        <StepIndicator value={currentStep} total={4} />
+        <StepIndicator value={currentStep} total={MEETING_CREATE_TOTAL_STEPS} />
       </div>
       {renderStep()}
     </div>
