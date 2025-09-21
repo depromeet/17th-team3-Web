@@ -1,29 +1,13 @@
 'use client';
-
 import SurveyClient from '@/app/survey/_components/SurveyClient';
 
 import type { RoleLabel, SurveyResult } from '../_models/types';
 
-export interface SurveyClientShellProps {
-  role: RoleLabel;
-  initial?: Partial<SurveyResult>;
-}
-
-/**
- * SurveyClientShell.tsx
- * - 퍼널 화면(SurveyFunnel)을 **CSR 전용**으로 구동하기 위한 "클라이언트 셸" 래퍼.
- * - `page.tsx`(Server Component)에서 직접 `dynamic(..., { ssr:false })`를 쓰면
- *   오류가 발생하므로(서버 컴포넌트에서 금지), 이 중간 Client 컴포넌트를 둡니다.
- *
- * Props
- * - role: '참여자' | '주최자'
- * - initial?: 퍼널 초기화에 필요한 선택값/기타 입력값(있으면 복원)
- *
- * 확장 포인트
- * - 로딩 UI 추가: `dynamic(..., { ssr:false, loading: () => <Loading/> })`
- * - 오류 경계: 상위에서 ErrorBoundary로 감싸는 것을 권장
+/** CSR 전용 셸
+ * - Server Component에서 직접 dynamic({ ssr:false }) 사용하는 대신
+ *   Client Shell로 감싸 안전하게 CSR-only 트리 시작
  */
-const SurveyClientShell = (props: SurveyClientShellProps) => {
+const SurveyClientShell = (props: { role: RoleLabel; initial?: Partial<SurveyResult> }) => {
   return <SurveyClient {...props} />;
 };
 
