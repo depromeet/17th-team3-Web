@@ -41,7 +41,7 @@ const Input = ({
     <>
       <div className="relative flex items-center">
         {isSearchType && (
-          <Search size={32} strokeWidth={3} className="absolute left-3 h-4 w-4 text-neutral-500" />
+          <Search size={20} strokeWidth={3} className="absolute left-3 text-neutral-500" />
         )}
         <input
           ref={ref}
@@ -54,7 +54,7 @@ const Input = ({
             'border-b-neutral-300 placeholder:text-neutral-500 focus:border-b-orange-500 focus:outline-none',
             'border-0 border-b-1 focus:border-b-2',
             shouldClearButton && 'pr-10',
-            isSearchType && 'pl-10',
+            isSearchType && 'pl-11',
             className
           )}
           {...props}

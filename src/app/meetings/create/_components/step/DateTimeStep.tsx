@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import Input from '@/app/_components/ui/Input';
 import StepFormLayout from '@/app/meetings/_components/StepFormLayout';
+import DateTimePicker from '@/app/meetings/create/_components/DateTimePicker';
 
 interface DateTimeStepProps {
   onNext: (date: string, time: string) => void;
@@ -19,6 +20,14 @@ const DateTimeStep = ({ onNext, onCancel, initialValue }: DateTimeStepProps) => 
     onNext(date, time);
   };
 
+  const handleDateClick = () => {
+    console.log('zxcvzx');
+  };
+
+  const handleTimeClick = () => {
+    console.log('1234123');
+  };
+
   return (
     <StepFormLayout
       title="언제 만나시나요?"
@@ -27,7 +36,7 @@ const DateTimeStep = ({ onNext, onCancel, initialValue }: DateTimeStepProps) => 
       isNextDisabled={!date} // todo: isNextDisabled 유효성 검증에 따른 disable 추가
       nextButtonText="생성하기"
     >
-      <Input value={date} onChange={(e) => setDate(e.target.value)} showClearButton />
+      <DateTimePicker onDateClick={handleDateClick} onTimeClick={handleTimeClick} />
     </StepFormLayout>
   );
 };
