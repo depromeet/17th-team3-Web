@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 
-import Input from '@/app/_components/ui/Input';
 import StepFormLayout from '@/app/meetings/_components/StepFormLayout';
 import DateTimePicker from '@/app/meetings/create/_components/DateTimePicker';
 
@@ -13,19 +12,22 @@ interface DateTimeStepProps {
 }
 
 const DateTimeStep = ({ onNext, onCancel, initialValue }: DateTimeStepProps) => {
-  const [date, setDate] = useState(initialValue.date);
-  const [time, setTime] = useState(initialValue.time);
-
-  const handleNext = () => {
-    onNext(date, time);
-  };
+  const { date, time } = initialValue;
+  const [selectedDate, setSelectedDate] = useState(date);
+  const [selectedTime, setSelectedTime] = useState(time);
 
   const handleDateClick = () => {
-    console.log('zxcvzx');
+    // todo: 수정 필요
+    setSelectedDate('2025-07-24');
   };
 
   const handleTimeClick = () => {
-    console.log('1234123');
+    // todo: 수정 필요
+    setSelectedTime('14:34:00');
+  };
+
+  const handleNext = () => {
+    onNext(selectedDate, selectedTime);
   };
 
   return (
@@ -33,10 +35,15 @@ const DateTimeStep = ({ onNext, onCancel, initialValue }: DateTimeStepProps) => 
       title="언제 만나시나요?"
       onNext={handleNext}
       onCancel={onCancel}
-      isNextDisabled={!date} // todo: isNextDisabled 유효성 검증에 따른 disable 추가
+      isNextDisabled={!selectedDate || !selectedTime}
       nextButtonText="생성하기"
     >
-      <DateTimePicker onDateClick={handleDateClick} onTimeClick={handleTimeClick} />
+      <DateTimePicker
+        dateValue={selectedDate}
+        timeValue={selectedTime}
+        onDateClick={handleDateClick}
+        onTimeClick={handleTimeClick}
+      />
     </StepFormLayout>
   );
 };
