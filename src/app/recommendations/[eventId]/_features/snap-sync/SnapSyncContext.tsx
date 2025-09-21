@@ -11,7 +11,7 @@ import React, {
   useCallback,
 } from 'react';
 
-import { AttendeesData } from '@/app/recommendations/_mock/attendee.types';
+import { AttendeesData } from '@/app/recommendations/[eventId]/_mock/attendee.types';
 
 const INTERSECTION_OBSERVER_THRESHOLDS = [0.5, 0.6, 0.7];
 const SCROLL_ANIMATION_BACKUP_TIMEOUT = 400;

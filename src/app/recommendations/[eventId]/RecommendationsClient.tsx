@@ -1,10 +1,10 @@
 'use client';
 
 import Button from '@/app/_components/ui/Button';
-import AttendeeReel from '@/app/recommendations/_features/attendees/AttendeeReel';
-import PersonaCarousel from '@/app/recommendations/_features/personas/PersonaCarousel';
-import { SnapSyncProvider } from '@/app/recommendations/_features/snap-sync/SnapSyncContext';
-import { AttendeesData } from '@/app/recommendations/_mock/attendee.types';
+import AttendeeReel from '@/app/recommendations/[eventId]/_features/attendees/AttendeeReel';
+import PersonaCarousel from '@/app/recommendations/[eventId]/_features/personas/PersonaCarousel';
+import { SnapSyncProvider } from '@/app/recommendations/[eventId]/_features/snap-sync/SnapSyncContext';
+import { AttendeesData } from '@/app/recommendations/[eventId]/_mock/attendee.types';
 
 interface RecommendationsClientProps {
   attendeesData: AttendeesData;

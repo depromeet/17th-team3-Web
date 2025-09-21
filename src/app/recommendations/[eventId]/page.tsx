@@ -1,14 +1,20 @@
 import { Flame, MapPin } from 'lucide-react';
 
-import IconChip from '@/app/recommendations/_components/IconChip';
-import { attendeesMockData } from '@/app/recommendations/_mock/attendee.mock';
-import RecommendationsClient from '@/app/recommendations/RecommendationsClient';
+import IconChip from '@/app/recommendations/[eventId]/_components/IconChip';
+import { attendeesMockData } from '@/app/recommendations/[eventId]/_mock/attendee.mock';
+import RecommendationsClient from '@/app/recommendations/[eventId]/RecommendationsClient';
+
+interface RecommendationsPageProps {
+  params: Promise<{ eventId: string }>;
+}
 
 /**
  * 추천 페이지 컴포넌트
  * 참석자들의 선호도를 확인하고 식당을 추천받을 수 있는 페이지
  */
-const RecommendationsPage = () => {
+const RecommendationsPage = async ({ params }: RecommendationsPageProps) => {
+  const { eventId } = await params;
+
   const remainingAttendeesCount =
     attendeesMockData.totalAttendees - attendeesMockData.attendees.length;
 
@@ -18,7 +24,7 @@ const RecommendationsPage = () => {
         <div className="mx-auto flex flex-row gap-2">
           <IconChip
             icon={<Flame className="h-4 w-4 text-orange-500" absoluteStrokeWidth />}
-            label="한국고 동창 모임"
+            label={`한국고 동창 모임 (${eventId})`}
           />
           <IconChip
             icon={<MapPin className="h-4 w-4 text-green-600" absoluteStrokeWidth />}

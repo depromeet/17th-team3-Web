@@ -1,5 +1,5 @@
 import { cn } from '@/app/_lib/cn';
-import { Attendee } from '@/app/recommendations/_mock/attendee.types';
+import { Attendee } from '@/app/recommendations/[eventId]/_mock/attendee.types';
 
 /**
  * 참석자 아바타 버튼 컴포넌트의 Props

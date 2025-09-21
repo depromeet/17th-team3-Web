@@ -1,7 +1,7 @@
-import EmptyPersonaCard from '@/app/recommendations/_features/personas/EmptyPersonaCard';
-import PersonaCard from '@/app/recommendations/_features/personas/PersonaCard';
-import { useSnapSync } from '@/app/recommendations/_features/snap-sync/SnapSyncContext';
-import { Attendee } from '@/app/recommendations/_mock/attendee.types';
+import EmptyPersonaCard from '@/app/recommendations/[eventId]/_features/personas/EmptyPersonaCard';
+import PersonaCard from '@/app/recommendations/[eventId]/_features/personas/PersonaCard';
+import { useSnapSync } from '@/app/recommendations/[eventId]/_features/snap-sync/SnapSyncContext';
+import { Attendee } from '@/app/recommendations/[eventId]/_mock/attendee.types';
 
 const CARD_SPACING_PERCENTAGE = 0.8;
 

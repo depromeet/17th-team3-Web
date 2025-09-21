@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 import { FOOD_MAP, FoodKey } from '@/app/_constants/Menu';
 import { cn } from '@/app/_lib/cn';
-import { Attendee } from '@/app/recommendations/_mock/attendee.types';
+import { Attendee } from '@/app/recommendations/[eventId]/_mock/attendee.types';
 
 /**
  * 참석자의 선호도 정보를 보여주는 카드 컴포넌트의 Props

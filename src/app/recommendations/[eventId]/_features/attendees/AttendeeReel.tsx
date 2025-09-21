@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react';
 
 import { cn } from '@/app/_lib/cn';
-import AttendeeAvatarButton from '@/app/recommendations/_features/attendees/AttendeeAvatarButton';
-import AttendeeReelSpacer from '@/app/recommendations/_features/attendees/AttendeeReelSpacer';
-import EmptyAttendeeButton from '@/app/recommendations/_features/attendees/EmptyAttendeeButton';
-import { useSnapSync } from '@/app/recommendations/_features/snap-sync/SnapSyncContext';
-import { Attendee } from '@/app/recommendations/_mock/attendee.types';
+import AttendeeAvatarButton from '@/app/recommendations/[eventId]/_features/attendees/AttendeeAvatarButton';
+import AttendeeReelSpacer from '@/app/recommendations/[eventId]/_features/attendees/AttendeeReelSpacer';
+import EmptyAttendeeButton from '@/app/recommendations/[eventId]/_features/attendees/EmptyAttendeeButton';
+import { useSnapSync } from '@/app/recommendations/[eventId]/_features/snap-sync/SnapSyncContext';
+import { Attendee } from '@/app/recommendations/[eventId]/_mock/attendee.types';
 
 const EMPTY_AVATAR_SLOTS_COUNT = 3;
 
