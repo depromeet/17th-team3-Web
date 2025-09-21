@@ -11,7 +11,6 @@ interface DateTimePickerProps {
   onTimeClick: () => void;
   dateLabel?: string;
   timeLabel?: string;
-  className?: string;
 }
 
 interface PickerItemProps {
@@ -52,10 +51,9 @@ const DateTimePicker = ({
   onTimeClick,
   dateLabel = '날짜 선택하기',
   timeLabel = '시간 선택하기',
-  className,
 }: DateTimePickerProps) => {
   return (
-    <div className={cn('flex flex-col gap-4', className)}>
+    <div className={cn('flex flex-col gap-4')}>
       <DatePickerItem value={dateValue} onClick={onDateClick} placeholder={dateLabel} />
       <TimePickerItem value={timeValue} onClick={onTimeClick} placeholder={timeLabel} />
     </div>
