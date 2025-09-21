@@ -36,7 +36,9 @@ const CreatePage = () => {
 
   const handleDateTimeNext = (date: string, time: string) => {
     setFormData((prev) => ({ ...prev, date, time }));
-    console.log('모임 생성:', formData); // 모임 생성 완료 로직
+    // todo: API 요청
+    console.log('모임 생성:', formData);
+    router.push('/meetings/create/success/');
   };
 
   function handleNext<K extends keyof FormData>(field: K, value: FormData[K]) {
