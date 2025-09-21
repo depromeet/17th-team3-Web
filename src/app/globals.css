@@ -265,6 +265,13 @@
     line-height: 3.875rem;
     letter-spacing: -0.01%;
   }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE, Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }
 
 /* Typography */
@@ -346,5 +353,77 @@
     var(--Saturated-Orange-Orange400, #ff7e52) 109.25%
   );
 }
+@utility chip-gradient {
+  background: var(
+    --Chip-Gradient,
+    radial-gradient(
+      66.04% 70.41% at 50% 50%,
+      var(--Saturated-Orange-Orange500, #ff4f14) 43.2%,
+      var(--Saturated-Orange-Orange400, #ff7e52) 100%
+    )
+  );
+}
+@utility title-gradient {
+  background: var(
+    --Title-Gradient,
+    linear-gradient(
+      287deg,
+      var(--Saturated-Orange-Orange600, #e03900) 5.16%,
+      var(--Saturated-Orange-Orange900, #5c1700) 98.95%
+    )
+  );
+}
+@utility type-gradient {
+  background: var(
+    --Type-Gradient,
+    linear-gradient(
+      93deg,
+      var(--Saturated-Orange-Orange900, #5c1700) 0.08%,
+      var(--Saturated-Orange-Orange800, #8f2400) 67.57%
+    )
+  );
+}
 
+/** 버튼에 배경에 사용되는 그라데이션, 스크롤시 경계선이 보이지 않도록 사용 */
+@utility button-area {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 209, 194, 0) 0%,
+    var(--Saturated-Orange-Orange200, #ffd1c2) 47.6%
+  );
+}
+
+@utility background-1 {
+  background: var(
+    --Background-01,
+    linear-gradient(
+      180deg,
+      var(--Neutral-White-White100, #fff) 20.01%,
+      var(--Saturated-Orange-Orange100, #fff0eb) 60%,
+      var(--Saturated-Orange-Orange50, #fff7f5) 99.98%
+    )
+  );
+}
+@utility background-2 {
+  background: var(
+    --Background-02,
+    linear-gradient(
+      180deg,
+      var(--Neutral-White-White100, #fff) 20%,
+      var(--Saturated-Orange-Orange200, #ffd1c2) 60%,
+      var(--Saturated-Orange-Orange100, #fff0eb) 100%
+    )
+  );
+}
+@utility background-3 {
+  background: var(
+    --Background-03,
+    linear-gradient(
+      180deg,
+      #fff 0%,
+      var(--Saturated-Orange-Orange100, #fff0eb) 50%,
+      var(--Saturated-Yellow-Yellow100, #fff6e0) 100%
+    )
+  );
+}
 /* 그 외 전역 리셋/유틸은 기존 그대로 두면 됩니다 */
