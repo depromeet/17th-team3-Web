@@ -5,7 +5,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/app/_lib/cn';
 
 const headingVariants = cva(
-  'bg-gradient-to-r from-orange-900 to-orange-500 bg-clip-text font-bold text-transparent',
+  'bg-gradient-to-r from-orange-900 to-orange-500 bg-clip-text font-bold whitespace-pre-line text-transparent',
   {
     variants: {
       level: {
