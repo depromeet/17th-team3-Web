@@ -53,7 +53,7 @@ const CreatePage = () => {
       case 1:
         return (
           <NameStep
-            onNext={() => handleNext('name', formData.name)}
+            onNext={(value: string) => handleNext('name', value)}
             onCancel={handleCancel}
             initialValue={name}
           />
@@ -61,7 +61,7 @@ const CreatePage = () => {
       case 2:
         return (
           <MembersStep
-            onNext={() => handleNext('members', formData.members)}
+            onNext={(value: number) => handleNext('members', value)}
             onCancel={handleCancel}
             initialValue={members}
           />
@@ -69,7 +69,7 @@ const CreatePage = () => {
       case 3:
         return (
           <LocationStep
-            onNext={() => handleNext('location', formData.location)}
+            onNext={(value: string) => handleNext('location', value)}
             onCancel={handleCancel}
             initialValue={location}
           />
