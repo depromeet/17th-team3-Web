@@ -6,8 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import TopNavigation from '@/app/_components/layout/TopNavigation';
 import StepIndicator from '@/app/_components/ui/StepIndicator';
-import { MEETING_SIZE } from '@/app/_constants/meeting';
-import { MEETING_CREATE_TOTAL_STEPS } from '@/app/meetings/_constants';
+import { MEETING_CREATE_TOTAL_STEPS, MEETING_SIZE } from '@/app/meetings/_models/constants';
 import DateTimeStep from '@/app/meetings/create/_components/step/DateTimeStep';
 import LocationStep from '@/app/meetings/create/_components/step/LocationStep';
 import MembersStep from '@/app/meetings/create/_components/step/MembersStep';

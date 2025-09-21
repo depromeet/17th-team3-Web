@@ -1,8 +1,8 @@
 import { Minus, Plus } from 'lucide-react';
 
 import Input, { InputProps } from '@/app/_components/ui/Input';
-import { MEETING_SIZE } from '@/app/_constants/meeting';
 import { cn } from '@/app/_lib/cn';
+import { MEETING_SIZE } from '@/app/meetings/_models/constants';
 
 export interface StepperInputProps extends Omit<InputProps, 'type' | 'onChange'> {
   value: number;

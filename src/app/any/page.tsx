@@ -7,7 +7,7 @@ import Image from 'next/image';
 import TopNavigation from '@/app/_components/layout/TopNavigation';
 import Input from '@/app/_components/ui/Input';
 import StepperInput from '@/app/_components/ui/StepperInput';
-import { MEETING_SIZE } from '@/app/_constants/meeting';
+import { MEETING_SIZE } from '@/app/meetings/_models/constants';
 
 const AnyPage = () => {
   const [value, setValue] = useState('');
