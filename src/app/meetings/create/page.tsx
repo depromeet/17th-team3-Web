@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import TopNavigation from '@/app/_components/layout/TopNavigation';
-import { Heading } from '@/app/_components/typography';
+import { TitleGroup } from '@/app/_components/typography';
 import Button from '@/app/_components/ui/Button';
 import Input from '@/app/_components/ui/Input';
 
@@ -19,6 +19,7 @@ const CreatePage = () => {
       {/* todo: StepIndicator 컴포넌트로 추가 */}
       <FormStep
         title="모임 이름은 무엇인가요?"
+        description="닉네임은 언제든지 변경할 수 있어요."
         onNext={handleNext}
         onCancel={handleCancel}
         isNextDisabled={!name} // todo: isNextDisabled 유효성 검증에 따른 disable 추가
@@ -38,6 +39,7 @@ const CreatePage = () => {
 
 interface FormStepProps {
   title: string;
+  description?: string;
   children: React.ReactNode;
   onNext: () => void;
   onCancel: () => void;
@@ -48,6 +50,7 @@ interface FormStepProps {
 
 const FormStep = ({
   title,
+  description,
   children,
   onNext,
   onCancel,
@@ -58,7 +61,7 @@ const FormStep = ({
   return (
     <main className="flex flex-1 flex-col">
       <div className="px-4 pt-4 pb-8">
-        <Heading>{title}</Heading>
+        <TitleGroup title={title} description={description} />
       </div>
 
       <div className="flex-1 px-4">{children}</div>

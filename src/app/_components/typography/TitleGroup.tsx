@@ -17,19 +17,23 @@ interface TitleGroupProps {
 const TitleGroup = ({
   title,
   description,
-  align = 'center',
+  align = 'left',
   className,
   wrapperAs,
   headingAs,
-  level = 'h1',
+  level = 'h3',
 }: TitleGroupProps) => {
   const Wrapper = wrapperAs ?? 'header';
 
   return (
     <Wrapper
-      className={cn('pt-8 pb-6', align === 'center' ? 'text-center' : 'text-left', className)}
+      className={cn(
+        'flex flex-col gap-1',
+        align === 'center' ? 'text-center' : 'text-left',
+        className
+      )}
     >
-      <Heading level={level} as={headingAs} className="mb-1">
+      <Heading level={level} as={headingAs}>
         {title}
       </Heading>
       {description && <Text>{description}</Text>}

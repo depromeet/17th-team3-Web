@@ -6,7 +6,7 @@ interface TextProps {
 }
 
 const Text = ({ children, className }: TextProps) => {
-  return <p className={cn('body-3 font-medium', className)}>{children}</p>;
+  return <p className={cn('body-3 font-medium text-neutral-800', className)}>{children}</p>;
 };
 
 export default Text;
