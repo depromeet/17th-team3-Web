@@ -1,0 +1,7 @@
+export interface FormData {
+  name: string;
+  members: number;
+  location: string;
+  date: string;
+  time: string;
+}
