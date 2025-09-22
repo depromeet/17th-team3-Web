@@ -11,11 +11,11 @@ import LocationStep from '@/app/meetings/create/_components/step/LocationStep';
 import MembersStep from '@/app/meetings/create/_components/step/MembersStep';
 import NameStep from '@/app/meetings/create/_components/step/NameStep';
 import { TOTAL_STEPS, MEMBERS_SIZE } from '@/app/meetings/create/_models/constants';
-import { FormData } from '@/app/meetings/create/_models/types';
+import { CreateMeetingForm } from '@/app/meetings/create/_models/types';
 
 const CreatePage = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState({
+  const [createMeetingForm, setCreateMeetingForm] = useState({
     name: '',
     members: MEMBERS_SIZE.MIN,
     location: '',
@@ -35,18 +35,18 @@ const CreatePage = () => {
   };
 
   const handleDateTimeNext = (date: string, time: string) => {
-    setFormData((prev) => ({ ...prev, date, time }));
+    setCreateMeetingForm((prev) => ({ ...prev, date, time }));
     // todo: API 요청
-    console.log('모임 생성:', formData);
+    console.log('모임 생성:', createMeetingForm);
     router.push('/meetings/create/success/');
   };
 
-  function handleNext<K extends keyof FormData>(field: K, value: FormData[K]) {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+  function handleNext<K extends keyof CreateMeetingForm>(field: K, value: CreateMeetingForm[K]) {
+    setCreateMeetingForm((prev) => ({ ...prev, [field]: value }));
     setCurrentStep((prev) => prev + 1);
   }
 
-  const { name, members, location, date, time } = formData;
+  const { name, members, location, date, time } = createMeetingForm;
 
   const renderStepForm = () => {
     switch (currentStep) {

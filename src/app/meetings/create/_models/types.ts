@@ -1,4 +1,4 @@
-export interface FormData {
+export interface CreateMeetingForm {
   name: string;
   members: number;
   location: string;
