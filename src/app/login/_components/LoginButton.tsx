@@ -17,7 +17,7 @@ interface LoginButtonProps {
 const LoginButton = ({ provider = 'kakao' }: LoginButtonProps) => {
   const providerConfig = {
     kakao: {
-      text: '카카오로 시작하기',
+      text: '카카오톡으로 시작하기',
       icon: '/icons/kakao-icon.svg',
       className: 'bg-yellow-400',
       redirectUrl: `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URL)}`,
@@ -36,11 +36,11 @@ const LoginButton = ({ provider = 'kakao' }: LoginButtonProps) => {
       aria-label={config.text}
       onClick={handleLogin}
       className={cn(
-        'flex h-[62px] w-full cursor-pointer items-center justify-center gap-3 rounded-[14px] p-[10px] body-3 font-semibold transition-all duration-200',
+        'flex h-[62px] w-full cursor-pointer items-center justify-center gap-2 rounded-[14px] p-[10px] body-3 font-semibold transition-all duration-200',
         config.className
       )}
     >
-      <Image src={config.icon} alt={`${provider} 아이콘`} width={18} height={18} />
+      <Image src={config.icon} alt={`${provider} 아이콘`} width={24} height={24} />
       {config.text}
     </button>
   );
