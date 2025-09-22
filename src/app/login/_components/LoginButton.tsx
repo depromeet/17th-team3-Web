@@ -19,7 +19,7 @@ const LoginButton = ({ provider = 'kakao' }: LoginButtonProps) => {
     kakao: {
       text: '카카오로 시작하기',
       icon: '/icons/kakao-icon.svg',
-      className: 'bg-[#fee500] hover:bg-[#fdd835]',
+      className: 'bg-yellow-400',
       redirectUrl: `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URL)}`,
     },
   };
