@@ -16,22 +16,22 @@ const CallbackContent = () => {
     const processAuth = async () => {
       if (error) {
         console.error('OAuth 실패:', error);
-        router.push('/login');
+        router.replace('/login');
         return;
       }
 
       if (!code) {
         console.error('code 파라미터 없음');
-        router.push('/login');
+        router.replace('/login');
         return;
       }
 
       try {
         await exchangeCodeForCookie(code);
-        router.push('/');
+        router.replace('/');
       } catch (error) {
         console.error('로그인 실패:', error);
-        router.push('/login');
+        router.replace('/login');
       }
     };
 
