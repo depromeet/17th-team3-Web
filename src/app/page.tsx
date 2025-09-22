@@ -1,12 +1,13 @@
-import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
+
+import { cn } from '@/app/_lib/cn';
 
 const HomePage = () => {
   const isPrimary = true;
   const isLarge = false;
 
   const buttonClass = twMerge(
-    clsx(
+    cn(
       'rounded-lg px-4 py-2 font-medium transition',
       isPrimary
         ? 'bg-blue-600 text-white hover:bg-blue-700'

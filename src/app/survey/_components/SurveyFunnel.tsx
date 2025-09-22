@@ -1,5 +1,6 @@
 'use client';
 
+import TopNavigation from '@/app/_components/layout/TopNavigation';
 import StepChipSelect from '@/app/survey/_components/StepChipSelect';
 import StepName from '@/app/survey/_components/StepName';
 import StepProgress from '@/app/survey/_components/StepProgress';
@@ -49,6 +50,8 @@ const SurveyFunnel = ({ role, initial, onComplete }: SurveyFunnelProps) => {
   if (step === 'Name') {
     return (
       <>
+        {/* Name 단계: 브라우저 이전 페이지로 돌아갈 수 있도록 기본 동작 유지 */}
+        <TopNavigation title="" showBackButton />
         <StepProgress total={total} active={currentIndex} className="mb-2" />
         <StepName
           roleLabel={context.role}
@@ -61,9 +64,20 @@ const SurveyFunnel = ({ role, initial, onComplete }: SurveyFunnelProps) => {
 
   /** 2) 선호 음식 선택 (칩 + '다 괜찮아요!'는 단독) */
   if (step === 'PreferCuisine') {
-    const options = toChipOptions(CUISINE_OPTIONS); // ANY 포함
+    const options: ChipOption[] = CUISINE_OPTIONS.map((o) => ({
+      id: o.id,
+      label: o.label,
+      variant: o.id === ANY_ID ? 'any' : 'cuisine',
+    }));
+
     return (
       <>
+        {/* ← 뒤로가기: 이전 스텝('Name')으로 이동 */}
+        <TopNavigation
+          title=""
+          showBackButton
+          onLeftClick={() => history.replace('Name', (p) => p)}
+        />
         <StepProgress total={total} active={currentIndex} className="mb-2" />
         <StepChipSelect
           key="PreferCuisine" // 단계별 다른 key
@@ -90,17 +104,27 @@ const SurveyFunnel = ({ role, initial, onComplete }: SurveyFunnelProps) => {
     const base = CUISINE_OPTIONS;
 
     // ANY는 항상 맨 앞에 노출, 나머지는 선호 제외 필터링
-    const dislikeCandidates = [
+    const dislikeCandidates: Option[] = [
       base.find((o) => o.id === ANY_ID)!, // non-null 단언(테이블 상 항상 존재)
       ...base.filter((o) => o.id !== ANY_ID && !excluded.includes(o.id)),
     ];
-    const options = toChipOptions(dislikeCandidates);
+    const options: ChipOption[] = dislikeCandidates.map((o) => ({
+      id: o.id,
+      label: o.label,
+      variant: o.id === ANY_ID ? 'any' : 'cuisine',
+    }));
 
     return (
       <>
+        {/* ← 뒤로가기: 이전 스텝('PreferCuisine')으로 이동 */}
+        <TopNavigation
+          title=""
+          showBackButton
+          onLeftClick={() => history.replace('PreferCuisine', (p) => p)}
+        />
         <StepProgress total={total} active={currentIndex} className="mb-2" />
         <StepChipSelect
-          key="DislikeCuisine" // ✅ 단계별 다른 key
+          key="DislikeCuisine" // 단계별 다른 key
           roleLabel={context.role}
           title="선호하지 않는 음식을 골라주세요"
           subtitle="여러 개 선택 가능 · '다 괜찮아요!'는 단독 선택(아무거나 상관없음)"
@@ -118,11 +142,17 @@ const SurveyFunnel = ({ role, initial, onComplete }: SurveyFunnelProps) => {
 
   /** 4) 선택 결과 확인 → 완료/분기 */
   if (step === 'Review') {
-    const prefer = pickOptions(context.preferCuisineIds, CUISINE_OPTIONS);
-    const dislike = pickOptions(context.dislikeCuisineIds, CUISINE_OPTIONS);
+    const prefer = CUISINE_OPTIONS.filter((o) => context.preferCuisineIds.includes(o.id));
+    const dislike = CUISINE_OPTIONS.filter((o) => context.dislikeCuisineIds.includes(o.id));
 
     return (
       <>
+        {/* ← 뒤로가기: 이전 스텝('DislikeCuisine')으로 이동 */}
+        <TopNavigation
+          title=""
+          showBackButton
+          onLeftClick={() => history.replace('DislikeCuisine', (p) => p)}
+        />
         <StepProgress total={total} active={currentIndex} className="mb-2" />
         <StepReview
           roleLabel={context.role}
@@ -154,6 +184,12 @@ const SurveyFunnel = ({ role, initial, onComplete }: SurveyFunnelProps) => {
     // 예: StepKoreanFollowUp 컴포넌트 렌더 → 완료 시 Complete로
     return (
       <>
+        {/* ← 뒤로가기: 리뷰로 되돌리기(또는 필요 시 이전 분기 스텝) */}
+        <TopNavigation
+          title="한식 추가 설문"
+          showBackButton
+          onLeftClick={() => history.replace('Review', (p) => p)}
+        />
         <StepProgress total={total} active={currentIndex} className="mb-2" />
         <div className="mx-auto max-w-[480px] px-4 py-6">
           <h1 className="text-2xl font-bold md:text-3xl">한식 선호 상세 질문 (준비 중)</h1>
@@ -178,6 +214,7 @@ const SurveyFunnel = ({ role, initial, onComplete }: SurveyFunnelProps) => {
   /** 5) 완료 (간단 안내; 후속 추천 페이지로 연결 가능) */
   return (
     <>
+      {/* 완료 페이지는 브라우저 back 동작 유도(TopNavigation 생략 가능) */}
       <StepProgress total={total} active={currentIndex} className="mb-2" />
       <div className="mx-auto max-w-[480px] px-4 py-12 text-center">
         <h1 className="text-2xl font-bold md:text-3xl">설문이 완료되었습니다 🎉</h1>
