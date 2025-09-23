@@ -1,21 +1,16 @@
 'use client';
+
 import { useEffect, useState } from 'react';
 
 import { cn } from '@/app/_lib/cn';
 
-/** 이름 입력 스텝
- * - 내부 상태(name)로 입력을 제어하고, 공백일 땐 다음 버튼 비활성화
- * - 상위 onNext(name)으로 다음 스텝으로 전환
- */
-const StepName = ({
-  defaultName = '',
-  roleLabel,
-  onNext,
-}: {
+interface StepNameProps {
   defaultName?: string;
   roleLabel: string;
   onNext: (name: string) => void;
-}) => {
+}
+
+const StepName = ({ defaultName = '', roleLabel, onNext }: StepNameProps) => {
   const [name, setName] = useState(defaultName);
   const disabled = !name.trim();
 

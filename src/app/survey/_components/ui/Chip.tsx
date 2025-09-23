@@ -1,5 +1,6 @@
 'use client';
 
+import { Text } from '@/app/_components/typography';
 import { cn } from '@/app/_lib/cn';
 import { COLORS } from '@/app/survey/_styles/tokens';
 
@@ -66,7 +67,7 @@ const Chip = ({
         <span
           className={cn(
             'absolute -top-1',
-            'right-1',
+            'left-1',
             'flex items-center justify-center',
             'h-5 w-5 rounded-full',
             'bg-white',
@@ -80,7 +81,7 @@ const Chip = ({
 
       <span className="flex items-center gap-1">
         {startIcon && <span className="inline-flex">{startIcon}</span>}
-        <span className={cn(selected ? 'text-white' : 'text-black')}>{label}</span>
+        <Text className={cn(selected ? 'text-neutral-100' : 'text-neutral-1500')}>{label}</Text>
       </span>
     </button>
   );

@@ -1,4 +1,3 @@
-// src/app/survey/_styles/tokens.ts
 export const COLORS = {
   white: '#FFFFFF',
   gray300: '#E1E4E8',
