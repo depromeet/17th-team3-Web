@@ -1,5 +1,6 @@
 'use client';
 
+import { FOOD_MAP } from '@/app/_constants/menu';
 import { cn } from '@/app/_lib/cn';
 import KoreanFollowUpStep from '@/app/survey/_components/step/KoreanFollowUpStep';
 import SurveyCuisineStep from '@/app/survey/_components/step/SurveyCuisineStep';
@@ -17,13 +18,44 @@ import { ANY_ID } from '@/app/survey/_styles/tokens';
 
 import type { ChipOption } from '@/app/survey/_components/ui/ChipGroupMultiSelect';
 
-// Option[] → 칩 옵션으로 변환
+// CUISINE id → FOOD_MAP key 매핑
+const ID_TO_FOOD_KEY: Record<string, keyof typeof FOOD_MAP> = {
+  'c:korean': 'korean',
+  'c:japanese': 'japanese',
+  'c:chinese': 'chinese',
+  'c:western': 'western',
+  'c:vietnamese': 'vietnamese',
+  'c:mexican': 'mexican',
+  'c:indian': 'indian',
+  'c:thai': 'thai',
+  'c:school': 'bunsik',
+};
+
+// Option[] → ChipOption[] (startIcon 주입)
 const toChipOptions = (opts: ReadonlyArray<Option>): ChipOption[] =>
-  opts.map((o) => ({
-    id: o.id,
-    label: o.label,
-    variant: o.id === ANY_ID ? ('any' as const) : ('cuisine' as const),
-  }));
+  opts.map((o) => {
+    if (o.id === ANY_ID) {
+      return {
+        id: o.id,
+        label: o.label,
+        variant: 'any' as const,
+        startIcon: null, // '다 괜찮아요'는 아이콘 없이
+      };
+    }
+
+    const key = ID_TO_FOOD_KEY[o.id];
+    const src = key ? FOOD_MAP[key].imageSrc : undefined;
+
+    return {
+      id: o.id,
+      label: o.label,
+      variant: 'cuisine' as const,
+      startIcon: src ? (
+        // Next <Image>를 써도 되지만, SVG는 img가 간편
+        <img src={src} alt={o.label} width={20} height={20} />
+      ) : null,
+    };
+  });
 
 // 리뷰용 원본 옵션 추출
 const pickOptions = (ids: string[], all: ReadonlyArray<Option>) =>
@@ -81,6 +113,7 @@ const SurveyFunnel = ({ role, initial, onComplete }: SurveyFunnelProps) => {
     return (
       <SurveyLayout stepValue={stepValue} totalSteps={SURVEY_TOTAL_STEPS} onBack={handleBack}>
         <SurveyCuisineStep
+          key="PreferCuisine"
           title={`어떤 종류의 음식을\n선호하시나요?`}
           roleLabel={context.role}
           options={options}
@@ -102,6 +135,19 @@ const SurveyFunnel = ({ role, initial, onComplete }: SurveyFunnelProps) => {
     const excluded = context.preferCuisineIds.includes(ANY_ID) ? [] : context.preferCuisineIds;
     const base = CUISINE_OPTIONS;
 
+    /**
+     * ToDo
+     * - if -> switch 문 변경 시 적용 (불필요한 렌더 줄이기)
+     * */
+    // const dislikeOptions = useMemo(() => {
+    //   const excluded = context.preferCuisineIds.includes(ANY_ID) ? [] : context.preferCuisineIds;
+    //   const list: Option[] = [
+    //     CUISINE_OPTIONS.find(o => o.id === ANY_ID)!,
+    //     ...CUISINE_OPTIONS.filter(o => o.id !== ANY_ID && !excluded.includes(o.id)),
+    //   ];
+    //   return toChipOptions(list);
+    // }, [context.preferCuisineIds]);
+
     // ANY는 항상 맨 앞에 노출, 나머지는 선호 제외 필터링
     const dislikeCandidates: Option[] = [
       base.find((o) => o.id === ANY_ID)!, // non-null 단언(테이블 상 항상 존재)
@@ -112,6 +158,7 @@ const SurveyFunnel = ({ role, initial, onComplete }: SurveyFunnelProps) => {
     return (
       <SurveyLayout stepValue={stepValue} totalSteps={SURVEY_TOTAL_STEPS} onBack={handleBack}>
         <SurveyCuisineStep
+          key="PreferCuisine"
           title={`혹시 피하는 종류의 음식이\n있나요?`}
           roleLabel={context.role}
           options={options}
@@ -131,12 +178,14 @@ const SurveyFunnel = ({ role, initial, onComplete }: SurveyFunnelProps) => {
     const prefer = pickOptions(context.preferCuisineIds, CUISINE_OPTIONS);
     const dislike = pickOptions(context.dislikeCuisineIds, CUISINE_OPTIONS);
 
+    console.log(context);
     return (
       <SurveyLayout
         stepValue={stepValue}
         totalSteps={SURVEY_TOTAL_STEPS}
         onBack={handleBack}
         title="설문 검토"
+        className="background-2"
       >
         <SurveyReviewStep
           roleLabel={context.role}

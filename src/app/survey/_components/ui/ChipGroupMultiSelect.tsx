@@ -39,20 +39,15 @@ const ChipGroupMultiSelect = ({
       const isExclusive = exclusiveIds.includes(id);
 
       if (has) {
-        const next = selectedIds.filter((v) => v !== id);
-        onChange?.(next);
+        onChange?.(selectedIds.filter((v) => v !== id));
         return;
       }
-
       if (isExclusive) {
-        onChange?.([id]); // 배타 옵션 단독
+        onChange?.([id]);
         return;
       }
-
-      // 일반 선택인데 이미 배타가 있으면 초기화 후 추가
       const base = activeExclusive ? [] : selectedIds;
-      const next = [...base, id]; // 뒤에 붙여서 선택 순서 유지
-      onChange?.(next);
+      onChange?.([...base, id]);
     },
     [selectedIds, exclusiveIds, activeExclusive, onChange]
   );
@@ -63,10 +58,31 @@ const ChipGroupMultiSelect = ({
     return idx >= 0 ? idx + 1 : 0;
   };
 
+  // ANY 칩만 상단에 단독 렌더링
+  const anyChip = options.find((o) => o.variant === 'any');
+  const restChips = options.filter((o) => o !== anyChip);
+
   return (
     <div className={className}>
+      {/* ANY 단독 행 */}
+      {anyChip && (
+        <div className="mb-2 flex">
+          <Chip
+            key={anyChip.id}
+            label={anyChip.label}
+            variant="any"
+            selected={selectedIds.includes(anyChip.id)}
+            disabled={isDisabled(anyChip.id)}
+            orderBadge={orderOf(anyChip.id)}
+            startIcon={anyChip.startIcon}
+            onClick={() => toggle(anyChip.id)}
+          />
+        </div>
+      )}
+
+      {/* 나머지 칩: 내용 너비에 맞춰 wrap */}
       <div className="flex flex-wrap gap-2">
-        {options.map((o) => (
+        {restChips.map((o) => (
           <Chip
             key={o.id}
             label={o.label}

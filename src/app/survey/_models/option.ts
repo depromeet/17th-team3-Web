@@ -18,9 +18,9 @@ export const CUISINE_OPTIONS = [
   { id: 'c:japanese', label: '일식' },
   { id: 'c:chinese', label: '중식' },
   { id: 'c:western', label: '양식' },
-  { id: 'c:vietnamese', label: '베트남' },
+  { id: 'c:vietnamese', label: '베트남 음식' },
   { id: 'c:mexican', label: '멕시칸' },
-  { id: 'c:indian', label: '인도' },
-  { id: 'c:thai', label: '태국' },
+  { id: 'c:indian', label: '인도 음식' },
+  { id: 'c:thai', label: '태국 음식' },
   { id: 'c:school', label: '분식' },
 ] as const satisfies ReadonlyArray<Option>;

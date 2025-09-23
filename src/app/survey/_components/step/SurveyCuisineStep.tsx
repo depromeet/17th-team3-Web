@@ -1,6 +1,7 @@
+/** src/app/survey/_components/step/SurveyCuisineStep.tsx */
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import StepFormLayout from '@/app/meetings/_components/StepFormLayout';
 import ChipGroupMultiSelect, {
@@ -43,10 +44,16 @@ const SurveyCuisineStep = ({
 }: SurveyCuisineStepProps) => {
   const [selectedIds, setSelectedIds] = useState<string[]>(defaultSelectedIds);
 
-  // 스텝 왕복 시 복원
+  // 1) 기본값이 바뀌면 동기화
   useEffect(() => {
     setSelectedIds(defaultSelectedIds);
   }, [defaultSelectedIds.join('|')]);
+
+  // 2) 옵션이 바뀌면, 현재 선택값을 옵션 집합에 맞춰 정리(없는 id 제거)
+  const optionIdSet = useMemo(() => new Set(options.map((o) => o.id)), [options]);
+  useEffect(() => {
+    setSelectedIds((prev) => prev.filter((id) => optionIdSet.has(id)));
+  }, [optionIdSet]);
 
   const isNextDisabled = selectedIds.length === 0;
 
@@ -65,7 +72,6 @@ const SurveyCuisineStep = ({
         selectedIds={selectedIds}
         exclusiveIds={exclusiveIds}
         onChange={setSelectedIds}
-        className="pt-1"
       />
     </StepFormLayout>
   );
