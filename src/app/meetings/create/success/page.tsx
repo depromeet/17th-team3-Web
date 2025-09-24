@@ -86,6 +86,7 @@ const CreateSuccessPage = () => {
             <div className="flex justify-around">
               {SHARE_OPTIONS.map((option) => (
                 <button
+                  type="button"
                   key={option.id}
                   onClick={() => handleShareOption(option.id)}
                   className="flex flex-col items-center gap-3 p-2"
