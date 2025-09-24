@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { Copy, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 import Button from '@/app/_components/ui/Button';
 import ResultCard from '@/app/survey/_components/ResultCard';
@@ -17,6 +18,8 @@ const SHARE_OPTIONS = [
 // const CreateSuccessPage = ({ ... }) => {
 const CreateSuccessPage = () => {
   const [showBottomSheet, setShowBottomSheet] = useState(false);
+
+  const router = useRouter();
 
   const toggleBottomSheet = () => {
     setShowBottomSheet((prev) => !prev);
@@ -50,7 +53,11 @@ const CreateSuccessPage = () => {
   return (
     <div className="relative flex h-[100dvh] flex-col p-4">
       <div className="w-full">
-        <X size={32} className="ml-auto cursor-pointer text-orange-800" />
+        <X
+          onClick={() => router.push('/')}
+          size={32}
+          className="ml-auto cursor-pointer text-orange-800"
+        />
       </div>
 
       <div className="flex flex-1 flex-col items-center justify-center gap-8">
@@ -72,7 +79,10 @@ const CreateSuccessPage = () => {
 
       <div className="flex flex-col gap-3 px-1 pb-2">
         <Button onClick={toggleBottomSheet}>모임원에게 공유하기</Button>
-        <Button theme="orange-light">내 취향 설문 시작하기</Button>
+        {/* todo: 라우터 URL 변경 필요 */}
+        <Button theme="orange-light" onClick={() => router.push('/survey/')}>
+          내 취향 설문 시작하기
+        </Button>
       </div>
 
       {showBottomSheet && (
