@@ -240,14 +240,14 @@ const LocationStep = ({ onNext, onCancel }: LocationStepProps) => {
           )}
         </div>
 
-        {selectedStation && (
+        {/* {selectedStation && (
           <div className="rounded-xl bg-orange-50 p-4">
             <div className="flex items-center gap-2">
               <Check size={20} className="text-orange-500" />
               <p className="font-semibold text-gray-900">{selectedStation.name}</p>
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </StepFormLayout>
   );
