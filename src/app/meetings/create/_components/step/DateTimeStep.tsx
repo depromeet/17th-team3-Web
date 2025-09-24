@@ -8,13 +8,11 @@ import DateTimePicker from '@/app/meetings/create/_components/DateTimePicker';
 interface DateTimeStepProps {
   onNext: (date: string, time: string) => void;
   onCancel: () => void;
-  initialValue: { date: string; time: string };
 }
 
-const DateTimeStep = ({ onNext, onCancel, initialValue }: DateTimeStepProps) => {
-  const { date, time } = initialValue;
-  const [selectedDate, setSelectedDate] = useState(date);
-  const [selectedTime, setSelectedTime] = useState(time);
+const DateTimeStep = ({ onNext, onCancel }: DateTimeStepProps) => {
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedTime, setSelectedTime] = useState('');
 
   const handleDateClick = () => {
     // todo: 수정 필요

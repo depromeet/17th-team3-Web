@@ -9,11 +9,10 @@ import { validateText } from '@/app/meetings/_utils/validation';
 interface NameStepProps {
   onNext: (name: string) => void;
   onCancel: () => void;
-  initialValue: string;
 }
 
-const NameStep = ({ onNext, onCancel, initialValue = '' }: NameStepProps) => {
-  const [name, setName] = useState(initialValue);
+const NameStep = ({ onNext, onCancel }: NameStepProps) => {
+  const [name, setName] = useState('');
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 

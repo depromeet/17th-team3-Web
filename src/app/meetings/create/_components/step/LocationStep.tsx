@@ -11,7 +11,6 @@ import StepFormLayout from '@/app/meetings/_components/StepFormLayout';
 interface LocationStepProps {
   onNext: (location: string) => void;
   onCancel: () => void;
-  initialValue: string;
 }
 
 const LocationItem = ({
@@ -45,8 +44,8 @@ const LocationItem = ({
   );
 };
 
-const LocationStep = ({ onNext, onCancel, initialValue = '' }: LocationStepProps) => {
-  const [location, setLocation] = useState(initialValue);
+const LocationStep = ({ onNext, onCancel }: LocationStepProps) => {
+  const [location, setLocation] = useState('');
   // todo: 유효성 검증 어떻게 가져갈지? (e.g. 지하철역 list 중 하나 이상의 item 선택 시)
   const [selectedLocation, setSelectedLocation] = useState('');
 
