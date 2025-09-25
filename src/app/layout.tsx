@@ -2,6 +2,7 @@ import './globals.css';
 import Image from 'next/image';
 
 import ScaledStage from '@/app/_components/layout/ScaledStage';
+import { ToastProvider } from '@/app/_features/toast';
 
 import type { Viewport, Metadata } from 'next';
 
@@ -44,6 +45,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         >
           {children}
         </ScaledStage>
+        <ToastProvider />
       </body>
     </html>
   );
