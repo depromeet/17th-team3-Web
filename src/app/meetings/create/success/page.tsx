@@ -6,13 +6,9 @@ import { Copy, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import Button from '@/app/_components/ui/Button';
+import { SHARE_OPTIONS } from '@/app/meetings/create/_models/constants';
+import { ShareType } from '@/app/meetings/create/_models/types';
 import ResultCard from '@/app/survey/_components/ResultCard';
-
-const SHARE_OPTIONS = [
-  { id: 'kakao', label: '카카오톡' },
-  { id: 'sms', label: 'SMS' },
-  { id: 'url', label: 'URL 복사' },
-];
 
 // URL에서 모임 URL 갖고 오기
 // const CreateSuccessPage = ({ ... }) => {
@@ -25,7 +21,7 @@ const CreateSuccessPage = () => {
     setShowBottomSheet((prev) => !prev);
   };
 
-  const handleUrlCopyClick = async () => {
+  const copyUrlToClipboard = async () => {
     // todo: URL 조건 처리
     if (typeof window === 'undefined') {
       return;
@@ -35,19 +31,27 @@ const CreateSuccessPage = () => {
     // todo: 토스트 표시
   };
 
-  const handleShareOption = (optionId: string) => {
-    switch (optionId) {
+  const handleShareButtonClick = (shareType: ShareType) => {
+    switch (shareType) {
       case 'url':
-        handleUrlCopyClick();
+        copyUrlToClipboard();
         break;
       case 'kakao':
         // todo: 카카오톡 공유
+        // shareToKakaoTalk()
         break;
       case 'sms':
         // todo: SMS은 무엇일까? 템플릿 클립보드 복사일까?
+        // shareViaSms()
         break;
+      default:
+        exhaustiveCheck(shareType);
     }
     setShowBottomSheet(false);
+  };
+
+  const exhaustiveCheck = (param: never) => {
+    throw new Error(`${param}는 없는 옵션`);
   };
 
   return (
@@ -69,7 +73,7 @@ const CreateSuccessPage = () => {
         <div className="flex w-full justify-between border-b border-neutral-300 p-4">
           <p className="label-1 font-medium text-neutral-1300">bit.ly/hqKUS6Bo1gKgBQ47</p>
           <Copy
-            onClick={handleUrlCopyClick}
+            onClick={copyUrlToClipboard}
             size={20}
             className="text-orange-500"
             strokeWidth={2}
@@ -98,7 +102,7 @@ const CreateSuccessPage = () => {
                 <button
                   type="button"
                   key={option.id}
-                  onClick={() => handleShareOption(option.id)}
+                  onClick={() => handleShareButtonClick(option.id)}
                   className="flex flex-col items-center gap-3 p-2"
                 >
                   <div className="h-15 w-15 rounded-full bg-neutral-300" />
