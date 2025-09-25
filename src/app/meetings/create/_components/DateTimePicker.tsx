@@ -86,16 +86,6 @@ const DateTimePicker = ({
                   fontSize: '20px',
                   fontWeight: '400',
                   letterSpacing: '-0.45px',
-                  '&[dataSelected]': {
-                    backgroundColor: '#ff6b35',
-                    color: 'white',
-                    fontWeight: 'bold',
-                    borderRadius: '8px',
-                  },
-                  '&[data-selected]': {
-                    backgroundColor: 'var(--mantine-color-primary-filled)',
-                    color: 'white',
-                  },
                 },
                 weekday: {
                   fontSize: '13px',
