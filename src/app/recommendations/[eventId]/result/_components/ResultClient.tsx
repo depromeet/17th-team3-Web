@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 
 import FanToSingleAnimation from '@/app/recommendations/[eventId]/result/_components/animations/FanToSingleAnimation';
 import { RestaurantCarousel } from '@/app/recommendations/[eventId]/result/_components/animations/RestaurantCarouselAnimation';

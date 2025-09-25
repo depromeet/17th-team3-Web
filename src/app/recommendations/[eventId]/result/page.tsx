@@ -9,7 +9,7 @@ interface RecommendationsResultPageProps {
 }
 
 const ResultPage = async ({ params }: RecommendationsResultPageProps) => {
-  const { eventId } = await params;
+  const { eventId: _eventId } = await params;
 
   return <ResultClient surveys={mockSurveysData} restaurants={mockRestaurantsData} />;
 };

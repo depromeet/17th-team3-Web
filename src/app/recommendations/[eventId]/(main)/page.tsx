@@ -22,7 +22,7 @@ interface RecommendationsPageProps {
 }
 
 const RecommendationsPage = async ({ params }: RecommendationsPageProps) => {
-  const { eventId } = await params;
+  const { eventId: _eventId } = await params;
 
   const remainingAttendeesCount =
     attendeesMockData.totalAttendees - attendeesMockData.attendees.length;

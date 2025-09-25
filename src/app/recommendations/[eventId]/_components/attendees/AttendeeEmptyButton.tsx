@@ -1,5 +1,3 @@
-import { UserRound } from 'lucide-react';
-
 import PersonFillIcon from '@/app/_components/icons/PersonFillIcon';
 import { cn } from '@/app/_lib/cn';
 

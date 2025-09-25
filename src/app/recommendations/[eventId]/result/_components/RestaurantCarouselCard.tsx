@@ -39,7 +39,7 @@ interface RestaurantCardProps {
   isActive: boolean;
 }
 
-const RestaurantCarouselCard = ({ restaurant, index, isActive }: RestaurantCardProps) => {
+const RestaurantCarouselCard = ({ restaurant, index: _, isActive }: RestaurantCardProps) => {
   return (
     <motion.div
       key={restaurant.id}
