@@ -6,7 +6,7 @@ import { ToastProvider } from '@/app/_features/toast';
 
 import type { Viewport, Metadata } from 'next';
 
-import '@mantine/core/styles.css';
+import '@mantine/core/styles.layer.css';
 import '@mantine/dates/styles.css';
 import './globals.css';
 
