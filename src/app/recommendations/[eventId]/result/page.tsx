@@ -1,16 +1,17 @@
+import ResultClient from '@/app/recommendations/[eventId]/result/_components/ResultClient';
+import {
+  mockRestaurantsData,
+  mockSurveysData,
+} from '@/app/recommendations/[eventId]/result/_mocks/results.mock';
+
 interface RecommendationsResultPageProps {
   params: Promise<{ eventId: string }>;
 }
 
-const RecommendationsResultPage = async ({ params }: RecommendationsResultPageProps) => {
+const ResultPage = async ({ params }: RecommendationsResultPageProps) => {
   const { eventId } = await params;
 
-  return (
-    <div>
-      <h1>RecommendationsResultPage</h1>
-      <p>{eventId}</p>
-    </div>
-  );
+  return <ResultClient surveys={mockSurveysData} restaurants={mockRestaurantsData} />;
 };
 
-export default RecommendationsResultPage;
+export default ResultPage;
