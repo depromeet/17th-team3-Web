@@ -26,7 +26,7 @@ export const RestaurantCarousel = ({ restaurants }: RestaurantCarouselProps) => 
       transition={{ duration: 0.1, ease: 'easeInOut' }}
       className={cn('relative flex flex-1 flex-col overflow-hidden background-2')}
     >
-      <TopNavigation title="추천 결과" showBackButton className="text-orange-900" />
+      <TopNavigation title="추천 결과" showBackButton />
       <h1 className="type-gradient px-5 pt-4 pb-6 text-start heading-3 font-bold">
         가장 많은 모임원이 선택한
         <br /> 한식당이에요.

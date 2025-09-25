@@ -53,7 +53,7 @@ const FanToSingleAnimation = ({ restaurants, onComplete }: TransitionAnimationPr
       transition={{ duration: 0.3, ease: 'easeInOut' }}
       className="flex flex-1 flex-col overflow-hidden"
     >
-      <TopNavigation title="추천 결과" showBackButton className="text-orange-900" />
+      <TopNavigation title="추천 결과" showBackButton />
 
       <div className="flex w-full items-center justify-center pt-15 pb-10">
         <h1 className="type-gradient text-center heading-3 font-bold">
