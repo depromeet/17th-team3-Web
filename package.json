@@ -14,9 +14,13 @@
     "prepare": "lefthook install"
   },
   "dependencies": {
+    "@mantine/core": "^8.3.2",
+    "@mantine/dates": "^8.3.2",
+    "@mantine/hooks": "^8.3.2",
     "canvas-confetti": "^1.9.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dayjs": "^1.11.18",
     "next": "15.5.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
