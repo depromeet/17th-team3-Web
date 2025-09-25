@@ -14,14 +14,12 @@ const DateTimeStep = ({ onNext, onCancel }: DateTimeStepProps) => {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
 
-  const handleDateClick = () => {
-    // todo: 수정 필요
-    setSelectedDate('2025-07-24');
+  const handleDateClick = (data: string) => {
+    setSelectedDate(data);
   };
 
-  const handleTimeClick = () => {
-    // todo: 수정 필요
-    setSelectedTime('14:34:00');
+  const handleTimeClick = (time: string) => {
+    setSelectedTime(time);
   };
 
   const handleNext = () => {

@@ -48,7 +48,7 @@ const CreatePage = () => {
 
   const renderStepForm = () => {
     switch (currentStep) {
-      case 1:
+      case 4:
         return (
           <NameStep onNext={(value: string) => handleNext('name', value)} onCancel={handleCancel} />
         );
@@ -66,7 +66,7 @@ const CreatePage = () => {
             onCancel={handleCancel}
           />
         );
-      case 4:
+      case 1:
         return <DateTimeStep onNext={handleDateTimeNext} onCancel={handleCancel} />;
       default:
         return null;
@@ -74,7 +74,7 @@ const CreatePage = () => {
   };
 
   return (
-    <div className="flex h-[100dvh] flex-col background-1">
+    <div className="relative flex h-[100dvh] flex-col background-1">
       <TopNavigation title="모임 만들기" showBackButton onLeftClick={handleCancel} />
       <div className="flex items-center justify-center px-5 py-1.5">
         <StepIndicator value={currentStep} total={TOTAL_STEPS} />

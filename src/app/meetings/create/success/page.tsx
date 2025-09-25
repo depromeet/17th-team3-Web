@@ -88,7 +88,7 @@ const CreateSuccessPage = () => {
       </div>
 
       {showBottomSheet && (
-        <BottomSheet title="요청하기" onClose={toggleBottomSheet}>
+        <BottomSheet title="요청하기" showCloseButton onClose={toggleBottomSheet}>
           <div className="flex flex-1 justify-around p-4">
             {SHARE_OPTIONS.map((option) => (
               <button
