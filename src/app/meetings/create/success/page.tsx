@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Copy, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
+import BottomSheet from '@/app/_components/ui/BottomSheet';
 import Button from '@/app/_components/ui/Button';
 import { exhaustiveCheck } from '@/app/_utils/typeGuards';
 import { SHARE_OPTIONS } from '@/app/meetings/create/_models/constants';
@@ -18,18 +19,19 @@ const CreateSuccessPage = () => {
 
   const router = useRouter();
 
-  const toggleBottomSheet = () => {
-    setShowBottomSheet((prev) => !prev);
-  };
-
-  const copyUrlToClipboard = async () => {
+  const copyUrlToClipboard = () => {
     // todo: URL 조건 처리
+    // if (meetingId && typeof window === 'undefined') {
     if (typeof window === 'undefined') {
       return;
     }
     // todo: 모임 링크로 교체
     navigator.clipboard.writeText('bit.ly/hqKUS6Bo1gKgBQ47');
     // todo: 토스트 표시
+  };
+
+  const toggleBottomSheet = () => {
+    setShowBottomSheet((prev) => !prev);
   };
 
   const handleShareButtonClick = (shareType: ShareType) => {
@@ -42,13 +44,12 @@ const CreateSuccessPage = () => {
         // shareToKakaoTalk()
         break;
       case 'sms':
-        // todo: SMS은 무엇일까? 템플릿 클립보드 복사일까?
+        // todo: SMS 방법 무엇일까? 템플릿 클립보드 복사일까?
         // shareViaSms()
         break;
       default:
         exhaustiveCheck(shareType);
     }
-    setShowBottomSheet(false);
   };
 
   return (
@@ -81,34 +82,27 @@ const CreateSuccessPage = () => {
       <div className="flex flex-col gap-3 px-1 pb-2">
         <Button onClick={toggleBottomSheet}>모임원에게 공유하기</Button>
         {/* todo: 라우터 URL 변경 필요 */}
-        <Button theme="orange-light" onClick={() => router.push('/survey/')}>
+        <Button theme="orange-light" onClick={() => router.replace('/')}>
           내 취향 설문 시작하기
         </Button>
       </div>
 
       {showBottomSheet && (
-        <div className="fixed inset-0 z-10 bg-black/40">
-          <div className="absolute bottom-0 h-[198px] w-full rounded-t-2xl bg-white p-4">
-            <div className="flex items-center justify-between">
-              <p className="font-semibold text-neutral-1600">요청하기</p>
-              <X onClick={toggleBottomSheet} size={24} className="cursor-pointer" />
-            </div>
-
-            <div className="flex justify-around">
-              {SHARE_OPTIONS.map((option) => (
-                <button
-                  type="button"
-                  key={option.id}
-                  onClick={() => handleShareButtonClick(option.id)}
-                  className="flex flex-col items-center gap-3 p-2"
-                >
-                  <div className="h-15 w-15 rounded-full bg-neutral-300" />
-                  <span className="text-sm text-neutral-800">{option.label}</span>
-                </button>
-              ))}
-            </div>
+        <BottomSheet title="요청하기" onClose={toggleBottomSheet}>
+          <div className="flex flex-1 justify-around p-4">
+            {SHARE_OPTIONS.map((option) => (
+              <button
+                type="button"
+                key={option.id}
+                onClick={() => handleShareButtonClick(option.id)}
+                className="flex flex-col items-center justify-center gap-3"
+              >
+                <div className="h-15 w-15 rounded-full bg-neutral-300" />
+                <span className="font-semibold text-neutral-900">{option.label}</span>
+              </button>
+            ))}
           </div>
-        </div>
+        </BottomSheet>
       )}
     </div>
   );
