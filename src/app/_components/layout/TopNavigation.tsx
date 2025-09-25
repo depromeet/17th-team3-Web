@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { cn } from '@/app/_lib/cn';
 
 interface TopNavigationProps {
-  title: string;
+  title?: string;
   showBackButton?: boolean;
   showNextButton?: boolean;
   onLeftClick?: () => void;
@@ -68,7 +68,7 @@ const TopNavigation = ({
   return (
     <div
       className={cn(
-        'sticky top-0 z-10 flex w-full shrink-0 items-center justify-between gap-2.5 bg-inherit px-4 py-2.5 text-neutral-1200',
+        'sticky top-0 z-10 flex w-full shrink-0 items-center justify-between bg-inherit p-4',
         className
       )}
     >
@@ -80,12 +80,17 @@ const TopNavigation = ({
             aria-label={leftAriaLabel}
             className="flex cursor-pointer items-center justify-center bg-transparent text-current"
           >
-            <ChevronLeft size={36} strokeWidth={2} absoluteStrokeWidth />
+            <ChevronLeft
+              size={32}
+              strokeWidth={2}
+              absoluteStrokeWidth
+              className="text-orange-800"
+            />
           </button>
         )}
       </div>
 
-      <span className="body-3 font-semibold text-current">{title}</span>
+      <span className="body-3 font-semibold text-orange-800">{title}</span>
 
       <div className="flex h-9 w-9 shrink-0 items-center justify-center">
         {showNextButton && (
@@ -95,7 +100,12 @@ const TopNavigation = ({
             aria-label={rightAriaLabel}
             className="flex cursor-pointer items-center justify-center bg-transparent text-current"
           >
-            <ChevronRight size={36} strokeWidth={2} absoluteStrokeWidth />
+            <ChevronRight
+              size={32}
+              strokeWidth={2}
+              absoluteStrokeWidth
+              className="text-orange-800"
+            />
           </button>
         )}
       </div>
