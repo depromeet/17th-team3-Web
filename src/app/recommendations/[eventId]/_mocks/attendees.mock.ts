@@ -5,29 +5,29 @@ import { AttendeesData } from '@/app/recommendations/[eventId]/_models/attendee'
  * 실제 API 연동 전까지 사용할 샘플 데이터
  */
 export const attendeesMockData: AttendeesData = {
-  totalAttendees: 2,
+  totalAttendees: 5,
   notYetSelectedAttendees: 2,
   attendees: [
     {
       id: '1',
-      name: '곽두팔',
+      name: '진혁이',
       avatar: '🥩',
       preferredFoods: ['korean', 'chinese', 'western', 'indian', 'thai', 'vietnamese', 'mexican'],
       avoidedFoods: ['japanese', 'bunsik'],
     },
-    // {
-    //   id: '2',
-    //   name: '진혁이',
-    //   avatar: '🍖',
-    //   preferredFoods: ['korean', 'chinese', 'western', 'indian', 'thai', 'bunsik'],
-    //   avoidedFoods: ['japanese', 'vietnamese', 'mexican'],
-    // },
-    // {
-    //   id: '3',
-    //   name: '지현이',
-    //   avatar: '🍣',
-    //   preferredFoods: ['korean', 'chinese', 'western', 'indian', 'thai', 'bunsik'],
-    //   avoidedFoods: ['japanese', 'vietnamese', 'mexican'],
-    // },
+    {
+      id: '2',
+      name: '팔도비빔면너무좋아',
+      avatar: '🍖',
+      preferredFoods: ['korean', 'chinese', 'western', 'indian', 'thai', 'bunsik'],
+      avoidedFoods: ['japanese', 'vietnamese', 'mexican'],
+    },
+    {
+      id: '3',
+      name: '나는야오빠주인공',
+      avatar: '🍣',
+      preferredFoods: ['korean', 'chinese', 'western', 'indian', 'thai', 'bunsik'],
+      avoidedFoods: ['japanese', 'vietnamese', 'mexican'],
+    },
   ],
 };

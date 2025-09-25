@@ -42,6 +42,9 @@ const PersonaCard = ({
         'flex w-11/12 shrink-0 flex-col gap-7 rounded-[1.25rem] bg-white px-5 py-6',
         className
       )}
+      style={{
+        boxShadow: '0 4px 12px 0 rgba(250, 165, 148, 0.50)',
+      }}
     >
       <div className="flex flex-row items-center gap-3">
         <div className="flex flex-row gap-0.5 rounded-sm bg-neutral-200 px-2 py-1.5 subheading-2 font-bold">
