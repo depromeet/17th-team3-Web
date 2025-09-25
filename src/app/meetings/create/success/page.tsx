@@ -6,6 +6,7 @@ import { Copy, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import Button from '@/app/_components/ui/Button';
+import { exhaustiveCheck } from '@/app/_utils/typeGuards';
 import { SHARE_OPTIONS } from '@/app/meetings/create/_models/constants';
 import { ShareType } from '@/app/meetings/create/_models/types';
 import ResultCard from '@/app/survey/_components/ResultCard';
@@ -48,10 +49,6 @@ const CreateSuccessPage = () => {
         exhaustiveCheck(shareType);
     }
     setShowBottomSheet(false);
-  };
-
-  const exhaustiveCheck = (param: never) => {
-    throw new Error(`${param}는 없는 옵션`);
   };
 
   return (
