@@ -7,13 +7,13 @@ import Image from 'next/image';
 import TopNavigation from '@/app/_components/layout/TopNavigation';
 import Input from '@/app/_components/ui/Input';
 import StepperInput from '@/app/_components/ui/StepperInput';
-import { PARTY_SIZE } from '@/app/_constants/party';
+import { MEMBERS_SIZE } from '@/app/meetings/create/_models/constants';
 
 const AnyPage = () => {
   const [value, setValue] = useState('');
   const [email, setEmail] = useState('');
   const [groupName, setGroupName] = useState('');
-  const [count, setCount] = useState(PARTY_SIZE.MIN);
+  const [count, setCount] = useState(MEMBERS_SIZE.MIN);
 
   return (
     // 페이지 단일 스크롤: 화면 높이 폴백 유틸 사용

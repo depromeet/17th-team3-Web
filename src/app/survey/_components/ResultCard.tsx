@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 
 import Image from 'next/image';
 
+import { Heading, Text } from '@/app/_components/typography';
 import { useConfetti } from '@/app/_hooks/useConfetti';
 
 interface ResultCardProps {
@@ -22,10 +23,13 @@ const ResultCard = ({ title, subtitle, showConfetti = false }: ResultCardProps) 
   }, [showConfetti, celebrate]);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-1">
+    <div className="flex flex-col items-center justify-center">
       <Image src={'/firecracker.png'} alt="폭죽 이미지" width={156} height={156} />
-      <h3 className="mt-3 text-2xl font-bold">{title}</h3>
-      <p className="font-medium text-gray-600">{subtitle}</p>
+
+      <div className="mt-4 flex flex-col items-center gap-2">
+        <Heading>{title}</Heading>
+        <Text className="text-center whitespace-pre-line text-[#757575]">{subtitle}</Text>
+      </div>
     </div>
   );
 };

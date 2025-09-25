@@ -1,25 +1,34 @@
 import { JSX } from 'react';
 
+import { cva, type VariantProps } from 'class-variance-authority';
+
 import { cn } from '@/app/_lib/cn';
 
-interface HeadingProps {
+const headingVariants = cva('type-gradient font-bold whitespace-pre-line text-transparent', {
+  variants: {
+    level: {
+      h1: 'heading-1',
+      h2: 'heading-2',
+      h3: 'heading-3',
+      h4: 'heading-4',
+    },
+  },
+  defaultVariants: {
+    level: 'h3',
+  },
+});
+
+interface HeadingProps extends VariantProps<typeof headingVariants> {
   level?: 'h1' | 'h2' | 'h3' | 'h4';
   as?: keyof JSX.IntrinsicElements;
   children: React.ReactNode;
   className?: string;
 }
 
-const Heading = ({ level = 'h1', as, children, className }: HeadingProps) => {
+const Heading = ({ level = 'h3', as, children, className }: HeadingProps) => {
   const Tag = as ?? level;
-  // todo: 디자인시스템 확인 후, 스타일 점검 -> cva로 교체 (whitespace-pre-wrap 제거)
-  const styles = {
-    h1: 'text-2xl/[1.5] font-bold whitespace-pre-wrap',
-    h2: 'text-xl/[1.4] font-semibold whitespace-pre-wrap',
-    h3: 'text-lg/[1.3] font-semibold whitespace-pre-wrap',
-    h4: 'text-base/[1.2] font-semibold whitespace-pre-wrap',
-  };
 
-  return <Tag className={cn(styles[level], className)}>{children}</Tag>;
+  return <Tag className={cn(headingVariants({ level }), className)}>{children}</Tag>;
 };
 
 export default Heading;
