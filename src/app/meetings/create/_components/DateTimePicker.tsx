@@ -29,7 +29,6 @@ const DateTimePicker = ({
 }: DateTimePickerProps) => {
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  // const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
   const handleDateSelect = () => {
     if (selectedDate) {
@@ -37,12 +36,6 @@ const DateTimePicker = ({
       setShowCalendar(false);
     }
   };
-
-  // const handleTimeSelect = () => {
-  //   if (selectedTime) {
-  //     onTimeClick(selectedTime);
-  //   }
-  // };
 
   return (
     <div>
@@ -59,10 +52,10 @@ const DateTimePicker = ({
         </button>
 
         <button
-          onClick={() => setShowCalendar(true)}
+          onClick={() => {}}
           className={cn(
             'flex w-full items-center gap-3 border-b-1 border-b-neutral-300 px-3 py-3 body-1 font-semibold text-neutral-500 select-none',
-            dateValue && 'text-gray-1600'
+            timeValue && 'text-gray-1600'
           )}
         >
           <Clock size={24} strokeWidth={2.5} className="text-neutral-500" />
@@ -98,6 +91,10 @@ const DateTimePicker = ({
                     color: 'white',
                     fontWeight: 'bold',
                     borderRadius: '8px',
+                  },
+                  '&[data-selected]': {
+                    backgroundColor: 'var(--mantine-color-primary-filled)',
+                    color: 'white',
                   },
                 },
                 weekday: {
