@@ -152,7 +152,7 @@
 
   /* === Saturated / Green === */
   --color-green-50: #f7fdfa;
-  --color-green-100: #efffb5;
+  --color-green-100: #effbf5;
   --color-green-200: #cef3e2;
   --color-green-300: #a5e9c5;
   --color-green-400: #7cdea7;
@@ -370,6 +370,33 @@
       var(--Saturated-Orange-Orange800, #8f2400) 67.57%
     )
   );
+  background-clip: text;
+  color: transparent;
+}
+
+@utility result-text-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--Saturated-Orange-Orange600, #e03900) 0%,
+    var(--Saturated-Orange-Orange900, #5c1700) 50%,
+    var(--Saturated-Orange-Orange600, #e03900) 100%
+  );
+  background-size: 200% 200%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: result-text-flow 1.5s ease-in-out infinite;
+  animation-delay: 0s;
+}
+
+@keyframes result-text-flow {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: -100% 50%;
+  }
 }
 
 /** 버튼에 배경에 사용되는 그라데이션, 스크롤시 경계선이 보이지 않도록 사용 */
