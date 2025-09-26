@@ -53,7 +53,7 @@ const DateTimePicker = ({
   timeLabel = '시간 선택하기',
 }: DateTimePickerProps) => {
   return (
-    <div className="flex flex-col gap-4">
+    <div className={cn('flex flex-col gap-4')}>
       <DatePickerItem value={dateValue} onClick={onDateClick} placeholder={dateLabel} />
       <TimePickerItem value={timeValue} onClick={onTimeClick} placeholder={timeLabel} />
     </div>

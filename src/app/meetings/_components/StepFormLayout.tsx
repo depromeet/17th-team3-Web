@@ -1,7 +1,7 @@
 import { TitleGroup } from '@/app/_components/typography';
 import Button from '@/app/_components/ui/Button';
 
-interface StepFormLayoutrProps {
+interface StepFormLayoutProps {
   title: string;
   description?: string;
   children: React.ReactNode;
@@ -21,16 +21,16 @@ const StepFormLayout = ({
   isNextDisabled,
   prevButtonText = '이전',
   nextButtonText = '다음 단계로',
-}: StepFormLayoutrProps) => {
+}: StepFormLayoutProps) => {
   return (
-    <main className="flex flex-1 flex-col">
-      <div className="px-4 pt-4 pb-8">
+    <main className="flex flex-1 flex-col px-5">
+      <div className="pt-4 pb-8">
         <TitleGroup title={title} description={description} />
       </div>
 
-      <div className="flex-1 px-4">{children}</div>
+      <div className="flex-1">{children}</div>
 
-      <div className="flex gap-3 px-5 pt-3 pb-6">
+      <div className="flex gap-3 pt-3 pb-6">
         <Button theme="gray" onClick={onCancel} className="w-[114px]">
           {prevButtonText}
         </Button>

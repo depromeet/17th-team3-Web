@@ -11,7 +11,7 @@ import LocationStep from '@/app/meetings/create/_components/step/LocationStep';
 import MembersStep from '@/app/meetings/create/_components/step/MembersStep';
 import NameStep from '@/app/meetings/create/_components/step/NameStep';
 import { TOTAL_STEPS, MEMBERS_SIZE } from '@/app/meetings/create/_models/constants';
-import { FormData } from '@/app/meetings/create/_models/types';
+import { CreateMeetingForm } from '@/app/meetings/create/_models/types';
 
 const CreatePage = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -41,29 +41,22 @@ const CreatePage = () => {
     router.push('/meetings/create/success/');
   };
 
-  function handleNext<K extends keyof FormData>(field: K, value: FormData[K]) {
+  function handleNext<K extends keyof CreateMeetingForm>(field: K, value: CreateMeetingForm[K]) {
     setFormData((prev) => ({ ...prev, [field]: value }));
     setCurrentStep((prev) => prev + 1);
   }
-
-  const { name, members, location, date, time } = formData;
 
   const renderStepForm = () => {
     switch (currentStep) {
       case 1:
         return (
-          <NameStep
-            onNext={(value: string) => handleNext('name', value)}
-            onCancel={handleCancel}
-            initialValue={name}
-          />
+          <NameStep onNext={(value: string) => handleNext('name', value)} onCancel={handleCancel} />
         );
       case 2:
         return (
           <MembersStep
             onNext={(value: number) => handleNext('members', value)}
             onCancel={handleCancel}
-            initialValue={members}
           />
         );
       case 3:
@@ -71,17 +64,10 @@ const CreatePage = () => {
           <LocationStep
             onNext={(value: string) => handleNext('location', value)}
             onCancel={handleCancel}
-            initialValue={location}
           />
         );
       case 4:
-        return (
-          <DateTimeStep
-            onNext={handleDateTimeNext}
-            onCancel={handleCancel}
-            initialValue={{ date, time }}
-          />
-        );
+        return <DateTimeStep onNext={handleDateTimeNext} onCancel={handleCancel} />;
       default:
         return null;
     }
@@ -90,7 +76,7 @@ const CreatePage = () => {
   return (
     <div className="flex h-[100dvh] flex-col background-1">
       <TopNavigation title="모임 만들기" showBackButton onLeftClick={handleCancel} />
-      <div className="flex items-center justify-center px-4 py-1.5">
+      <div className="flex items-center justify-center px-5 py-1.5">
         <StepIndicator value={currentStep} total={TOTAL_STEPS} />
       </div>
       {renderStepForm()}

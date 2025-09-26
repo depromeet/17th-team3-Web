@@ -21,9 +21,9 @@ const HomePage = () => {
         <Text className="text-neutral-1400">아직 진행 중인 식당 추천이 없어요</Text>
       </div>
       <div className="px-5 pt-3 pb-6">
-        <Button>
-          <Link href="/meetings/create/">새로운 모임 만들고 식당 추천 받기</Link>
-        </Button>
+        <Link href="/meetings/create/">
+          <Button>새로운 모임 만들고 식당 추천 받기</Button>
+        </Link>
       </div>
     </div>
   );

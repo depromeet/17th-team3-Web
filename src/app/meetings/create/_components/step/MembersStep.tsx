@@ -4,15 +4,15 @@ import { useState } from 'react';
 
 import StepperInput from '@/app/_components/ui/StepperInput';
 import StepFormLayout from '@/app/meetings/_components/StepFormLayout';
+import { MEMBERS_SIZE } from '@/app/meetings/create/_models/constants';
 
 interface MembersStepProps {
   onNext: (members: number) => void;
   onCancel: () => void;
-  initialValue: number;
 }
 
-const MembersStep = ({ onNext, onCancel, initialValue }: MembersStepProps) => {
-  const [members, setMembers] = useState(initialValue);
+const MembersStep = ({ onNext, onCancel }: MembersStepProps) => {
+  const [members, setMembers] = useState(MEMBERS_SIZE.MIN);
 
   const handleNext = () => {
     onNext(members);
