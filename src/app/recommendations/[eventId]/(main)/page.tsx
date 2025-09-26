@@ -32,11 +32,11 @@ const RecommendationsPage = async ({ params }: RecommendationsPageProps) => {
       <div className="flex flex-col gap-3">
         <div className="mx-auto flex flex-row gap-4">
           <IconChip
-            icon={<Flame className="h-4 w-4 text-orange-500" absoluteStrokeWidth />}
+            icon={<Flame className="h-4 w-4 scale-x-[-1] text-orange-500" absoluteStrokeWidth />}
             label={`한국고 동창 모임`}
           />
           <IconChip
-            icon={<MapPin className="h-4 w-4 text-green-600" absoluteStrokeWidth />}
+            icon={<MapPin className="h-4 w-4 text-orange-500" absoluteStrokeWidth />}
             label="강남역"
           />
         </div>

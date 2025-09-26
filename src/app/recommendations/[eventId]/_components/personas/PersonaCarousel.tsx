@@ -16,7 +16,7 @@ const PersonaCarousel = () => {
   return (
     <div className="flex flex-1 flex-row overflow-x-hidden">
       <div
-        className="no-scrollbar flex w-full touch-pan-x snap-x snap-mandatory flex-row gap-4 overflow-x-auto scroll-smooth px-5 py-0.5"
+        className="no-scrollbar flex w-full snap-x snap-mandatory flex-row gap-4 overflow-x-auto scroll-smooth px-5 py-4"
         ref={cardsContainerRef}
       >
         <CarouselEdgeSpacer />

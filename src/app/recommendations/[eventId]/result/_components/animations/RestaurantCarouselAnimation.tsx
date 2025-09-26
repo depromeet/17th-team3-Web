@@ -24,20 +24,19 @@ export const RestaurantCarousel = ({ restaurants }: RestaurantCarouselProps) => 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.1, ease: 'easeInOut' }}
-      className={cn('relative flex flex-1 flex-col overflow-hidden background-2')}
+      className={cn('flex w-full flex-1 flex-col background-2')}
     >
       <TopNavigation title="추천 결과" showBackButton />
-      <h1 className="type-gradient px-5 pt-4 pb-6 text-start heading-3 font-bold">
+      <h1 className="z-10 type-gradient px-5 pt-4 pb-6 text-start heading-3 font-bold">
         가장 많은 모임원이 선택한
         <br /> 한식당이에요.
       </h1>
-
       <Swiper
         effect="coverflow"
         modules={[EffectCoverflow]}
         grabCursor={true}
         centeredSlides={true}
-        slidesPerView={1}
+        slidesPerView={1} // ← auto
         centeredSlidesBounds // auto 폭을 기준으로 정확히 중앙 보정
         initialSlide={1}
         coverflowEffect={{
@@ -54,7 +53,7 @@ export const RestaurantCarousel = ({ restaurants }: RestaurantCarouselProps) => 
       >
         {restaurants.map((restaurant, index) => {
           return (
-            <SwiperSlide key={restaurant.id}>
+            <SwiperSlide key={restaurant.id} className="pb-9">
               <RestaurantCarouselCard
                 key={restaurant.id}
                 restaurant={restaurant}
