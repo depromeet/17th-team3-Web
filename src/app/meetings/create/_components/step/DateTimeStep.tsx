@@ -14,14 +14,12 @@ const DateTimeStep = ({ onNext, onCancel }: DateTimeStepProps) => {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
 
-  const handleDateClick = () => {
-    // todo: 수정 필요
-    setSelectedDate('2025-07-24');
+  const handleDateClick = (data: string) => {
+    setSelectedDate(data);
   };
 
-  const handleTimeClick = () => {
-    // todo: 수정 필요
-    setSelectedTime('14:34:00');
+  const handleTimeClick = (time: string) => {
+    setSelectedTime(time);
   };
 
   const handleNext = () => {
@@ -33,7 +31,8 @@ const DateTimeStep = ({ onNext, onCancel }: DateTimeStepProps) => {
       title="언제 만나시나요?"
       onNext={handleNext}
       onCancel={onCancel}
-      isNextDisabled={!selectedDate || !selectedTime}
+      isNextDisabled={!selectedDate}
+      // isNextDisabled={!selectedDate || !selectedTime}
       nextButtonText="생성하기"
     >
       <div className="flex flex-col gap-5">

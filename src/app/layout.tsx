@@ -1,10 +1,14 @@
-import './globals.css';
+import { MantineProvider } from '@mantine/core';
 import Image from 'next/image';
 
 import ScaledStage from '@/app/_components/layout/ScaledStage';
 import { ToastProvider } from '@/app/_features/toast';
 
 import type { Viewport, Metadata } from 'next';
+
+import '@mantine/core/styles.layer.css';
+import '@mantine/dates/styles.css';
+import './globals.css';
 
 export const metadata: Metadata = {
   title: 'App',
@@ -43,7 +47,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
             />
           }
         >
-          {children}
+          <MantineProvider>{children}</MantineProvider>
         </ScaledStage>
         <ToastProvider />
       </body>

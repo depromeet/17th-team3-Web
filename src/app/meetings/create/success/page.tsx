@@ -82,13 +82,13 @@ const CreateSuccessPage = () => {
       <div className="flex flex-col gap-3 px-1 pb-2">
         <Button onClick={toggleBottomSheet}>모임원에게 공유하기</Button>
         {/* todo: 라우터 URL 변경 필요 */}
-        <Button theme="orange-light" onClick={() => router.replace('/')}>
+        <Button theme="orange-light" onClick={() => router.replace('/meetings/1')}>
           내 취향 설문 시작하기
         </Button>
       </div>
 
       {showBottomSheet && (
-        <BottomSheet title="요청하기" onClose={toggleBottomSheet}>
+        <BottomSheet title="요청하기" showCloseButton onClose={toggleBottomSheet}>
           <div className="flex flex-1 justify-around p-4">
             {SHARE_OPTIONS.map((option) => (
               <button

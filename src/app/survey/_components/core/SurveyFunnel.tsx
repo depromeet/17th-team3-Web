@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import { FOOD_MAP } from '@/app/_constants/menu';
 import SurveyLayout from '@/app/survey/_components/core/SurveyLayout';
@@ -77,11 +78,13 @@ export interface SurveyFunnelProps {
 const SurveyFunnel = ({ role, initial, onComplete }: SurveyFunnelProps) => {
   const { step, context, history } = useSurveyFunnel({ ...initial, role });
   const stepValue = stepKeyToIndex(step); // 1-based step index
+  const router = useRouter(); // 라우터 훅 사용
 
   // 공통 뒤로가기 핸들러
   const handleBack = () => {
     if (step === 'Name') {
-      history.replace('Name', (p) => p); // 첫 스텝은 강제 Name 고정
+      // 임시: SurveyNameStep에서 "이전" → meeting/1 이동
+      router.push('/meeting/1');
       return;
     }
     history.replace(getPrevStepKey(step), (p) => p);
