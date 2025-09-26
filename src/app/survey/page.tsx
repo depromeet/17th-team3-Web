@@ -1,4 +1,4 @@
-import SurveyClientShell from '@/app/survey/_components/SurveyClientShell';
+import SurveyClientShell from '@/app/survey/_components/core/SurveyClientShell';
 
 import type { RoleLabel } from '@/app/survey/_models/types';
 
@@ -9,6 +9,7 @@ import type { RoleLabel } from '@/app/survey/_models/types';
 const SurveyPage = async ({ searchParams }: { searchParams: Promise<{ role?: string }> }) => {
   const { role } = await searchParams;
 
+  // todo: 쿼리스트링 -> 상태 관리
   // URL ?role=주최자 일 때만 주최자, 그 외엔 참여자
   const roleLabel: RoleLabel = role === '주최자' ? '주최자' : '참여자';
   return <SurveyClientShell role={roleLabel} />;

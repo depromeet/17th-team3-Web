@@ -54,6 +54,10 @@ const ChipGroupMultiSelect = ({
 
   const isDisabled = (id: string) => Boolean(activeExclusive && !exclusiveIds.includes(id));
   const orderOf = (id: string) => {
+    const option = options.find((o) => o.id === id);
+    // "다 괜찮아요" (variant === "any") → 항상 배지 없음
+    if (option?.variant === 'any') return 0;
+
     const idx = selectedIds.indexOf(id);
     return idx >= 0 ? idx + 1 : 0;
   };

@@ -3,10 +3,10 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
-import StepFormLayout from '@/app/meetings/_components/StepFormLayout';
 import ChipGroupMultiSelect, {
   type ChipOption,
 } from '@/app/survey/_components/ui/ChipGroupMultiSelect';
+import StepFormLayout from '@/app/survey/_components/ui/StepFormLayout';
 
 interface SurveyCuisineStepProps {
   /** 상단 타이틀/설명 */
@@ -33,7 +33,6 @@ interface SurveyCuisineStepProps {
 const SurveyCuisineStep = ({
   title,
   description,
-  roleLabel,
   options,
   defaultSelectedIds = [],
   exclusiveIds = [],
@@ -47,7 +46,7 @@ const SurveyCuisineStep = ({
   // 1) 기본값이 바뀌면 동기화
   useEffect(() => {
     setSelectedIds(defaultSelectedIds);
-  }, [defaultSelectedIds.join('|')]);
+  }, [defaultSelectedIds]);
 
   // 2) 옵션이 바뀌면, 현재 선택값을 옵션 집합에 맞춰 정리(없는 id 제거)
   const optionIdSet = useMemo(() => new Set(options.map((o) => o.id)), [options]);

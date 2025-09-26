@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 
 import SurveyFunnel from './SurveyFunnel';
 
-import type { RoleLabel, SurveyResult } from '../_models/types';
+import type { RoleLabel, SurveyResult } from '../../_models/types';
 
 /** SurveyClient
  * - 완료 시 후속 액션(예: 서버 저장) 후 완료 페이지로 이동

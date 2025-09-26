@@ -2,7 +2,7 @@
 'use client';
 
 import { cn } from '@/app/_lib/cn';
-import StepFormLayout from '@/app/meetings/_components/StepFormLayout';
+import StepFormLayout from '@/app/survey/_components/ui/StepFormLayout';
 
 export interface KoreanFollowUpStepProps {
   /** 이전으로 */

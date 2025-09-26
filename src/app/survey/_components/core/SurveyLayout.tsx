@@ -17,6 +17,7 @@ interface SurveyLayoutProps {
   children: React.ReactNode;
   /** 레이이웃 className 커스텀(옵션) */
   className?: string;
+  navClassName?: string; // 👈 추가
 }
 
 /**
@@ -28,13 +29,19 @@ const SurveyLayout = ({
   stepValue,
   totalSteps,
   onBack,
-  title = '설문 진행하기',
+  title = '',
   children,
   className,
+  navClassName,
 }: SurveyLayoutProps) => {
   return (
-    <div className={cn('flex h-[100dvh] flex-col background-1', className)}>
-      <TopNavigation title={title} showBackButton onLeftClick={onBack} />
+    <div className={cn('flex min-h-screen flex-col background-1', className)}>
+      <TopNavigation
+        title={title}
+        showBackButton
+        onLeftClick={onBack}
+        className={cn('bg-inherit', navClassName)} // 👈 여기서 덮어쓰기
+      />
       <div className="flex items-center justify-center px-4 py-1.5">
         <StepIndicator value={stepValue} total={totalSteps} />
       </div>

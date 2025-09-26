@@ -4,9 +4,9 @@
 import { useEffect, useState } from 'react';
 
 import Input from '@/app/_components/ui/Input';
-import StepFormLayout from '@/app/meetings/_components/StepFormLayout';
-// meetings 유틸 재사용 (공유가 어렵다면 아래 fallback 사용)
 import { validateText } from '@/app/meetings/_utils/validation';
+import StepFormLayout from '@/app/survey/_components/ui/StepFormLayout';
+// meetings 유틸 재사용 (공유가 어렵다면 아래 fallback 사용)
 
 interface SurveyNameStepProps {
   onNext: (name: string) => void;

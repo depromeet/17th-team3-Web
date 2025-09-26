@@ -17,3 +17,6 @@ export const getPrevStepKey = (k: StepKey): StepKey => {
   const prevIdx0 = Math.max(0, STEP_KEYS.indexOf(k) - 1);
   return STEP_KEYS[prevIdx0];
 };
+
+/** Survey Any Option ID */
+export const ANY_ID = 'c:any';
