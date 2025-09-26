@@ -18,8 +18,10 @@ const DateTimeStep = ({ onNext, onCancel }: DateTimeStepProps) => {
     setSelectedDate(date);
   };
 
-  const handleTimeClick = (hour: string, minute: string) => {
-    setSelectedTime(`${hour}:${minute}`);
+  const handleTimeClick = (hour: string | null, minute: string | null) => {
+    if (hour && minute) {
+      setSelectedTime(`${hour}:${minute}`);
+    }
   };
 
   const handleNext = () => {

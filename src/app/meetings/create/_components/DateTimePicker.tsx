@@ -14,7 +14,7 @@ import 'dayjs/locale/ko';
 interface DateTimePickerProps {
   dateValue?: string;
   onDateClick: (date: string) => void;
-  onTimeClick: (hour: string, minute: string) => void;
+  onTimeClick: (hour: string | null, minute: string | null) => void;
   dateLabel?: string;
 }
 
@@ -26,8 +26,8 @@ const DateTimePicker = ({
 }: DateTimePickerProps) => {
   const [showCalendar, setShowCalendar] = useState(false);
   const [date, setDate] = useState<string | null>(null);
-  const [hour, setHour] = useState('00');
-  const [minute, setMinute] = useState('00');
+  const [hour, setHour] = useState<string | null>(null);
+  const [minute, setMinute] = useState<string | null>(null);
 
   const handleDateSelect = () => {
     if (date) {
@@ -36,10 +36,10 @@ const DateTimePicker = ({
     }
   };
 
-  const handleTimeSelect = (newHour: string, newMinute: string) => {
-    setHour(newHour);
-    setMinute(newMinute);
-    onTimeClick(newHour, newMinute);
+  const handleTimeSelect = (hour: string | null, minute: string | null) => {
+    setHour(hour);
+    setMinute(minute);
+    onTimeClick(hour, minute);
   };
 
   return (
@@ -101,9 +101,9 @@ const DateTimePicker = ({
 };
 
 interface TimePickerProps {
-  selectedHour?: string;
-  selectedMinute?: string;
-  onTimeChange: (hour: string, minute: string) => void;
+  selectedHour: string | null;
+  selectedMinute: string | null;
+  onTimeChange: (hour: string | null, minute: string | null) => void;
 }
 
 const TimePicker = ({
@@ -175,12 +175,12 @@ const TimePicker = ({
 };
 
 interface TimeUnitProps {
-  value: string;
+  value: string | null;
   unit: string;
   options: string[];
   isOpen: boolean;
   onToggle: () => void;
-  onSelect: (val: string) => void;
+  onSelect: (value: string) => void;
   dropdownRef: React.RefObject<HTMLDivElement | null>;
 }
 
@@ -200,10 +200,10 @@ const TimeUnit = ({
     <div
       className={cn(
         'mr-4 flex items-center gap-2 body-1 font-semibold text-neutral-500',
-        value !== '00' && 'text-neutral-1600'
+        value !== null && 'text-neutral-1600'
       )}
     >
-      {value}
+      {value === null ? '00' : value}
     </div>
     <span className="body-1 font-semibold text-neutral-1500">{unit}</span>
     <ChevronDown
