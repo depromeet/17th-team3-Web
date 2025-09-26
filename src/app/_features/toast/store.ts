@@ -27,7 +27,7 @@ export const useToastStore = create<ToastState>((set, get) => ({
 
   addToast: (message: ToastMessage, options: ToastOptions = {}): string => {
     const {
-      type = 'info',
+      type = 'success',
       position = DEFAULT_POSITION,
       duration = DEFAULT_DURATION,
       preventDuplicate = false,
