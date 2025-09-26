@@ -14,7 +14,7 @@ const AttendeeReel = () => {
   return (
     <div
       className={cn(
-        'scrollbar-hide no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pt-6 pr-5 pb-4',
+        'scrollbar-hide no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pt-6 pr-5 pb-6',
         'pl-[calc(50%-2.375rem)]'
       )}
     >

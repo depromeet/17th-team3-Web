@@ -1,4 +1,5 @@
 import { FoodKey } from '@/app/_constants/menu';
+import { AvatarVariantKey } from '@/app/_models/avator';
 
 /**
  * 참석자 개인 정보 및 음식 선호도를 나타내는 타입
@@ -14,6 +15,8 @@ export interface Attendee {
   preferredFoods: FoodKey[];
   /** 먹지 못하는 음식 카테고리 목록 */
   avoidedFoods: FoodKey[];
+  /** 아바타 테마 키 */
+  avatarThemeKey: AvatarVariantKey;
 }
 
 /**

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import PersonFillIcon from '@/app/_components/icons/PersonFillIcon';
 import { Heading } from '@/app/_components/typography';
+import AvatarChip from '@/app/_components/ui/AvatarChip';
 import Button from '@/app/_components/ui/Button';
 import { cn } from '@/app/_lib/cn';
 
@@ -63,21 +64,13 @@ const MeetingPage = () => {
           </div>
 
           <div className="flex flex-col gap-4">
-            <div className="no-scrollbar no-scrollbar::-webkit-scrollbar flex gap-3 overflow-x-auto pb-2">
-              <div className="flex w-18 flex-shrink-0 flex-col items-center justify-center rounded-[0.875rem] bg-yellow-400">
-                <Image src={'/images/avatar/avatar1.svg'} alt={'아바타-1'} width={48} height={48} />
-                <p className="label-1 font-medium text-neutral-1500">말랑이</p>
-              </div>
-              <div className="flex w-18 flex-shrink-0 flex-col items-center justify-center rounded-[0.875rem] bg-[#FFBDBF]">
-                <Image src={'/images/avatar/avatar2.svg'} alt={'아바타-2'} width={48} height={48} />
-                <p className="label-1 font-semibold text-neutral-1500">녹차</p>
-              </div>
-              <div className="flex w-18 flex-shrink-0 flex-col items-center justify-center rounded-[10px] bg-[#6ade81]">
-                <Image src={'/images/avatar/avatar3.svg'} alt={'아바타-3'} width={48} height={48} />
-                <p className="label-1 font-semibold text-neutral-1500">오렌지</p>
-              </div>
-              <EmptyAttendeeButton />
-              <EmptyAttendeeButton />
+            <div className="no-scrollbar no-scrollbar::-webkit-scrollbar flex gap-3 overflow-x-auto pb-4">
+              <AvatarChip variant="grape" name="팔도비빔면너무좋아" isMarquee />
+              <AvatarChip variant="default" name="진혁이" isMarquee />
+              <AvatarChip variant="chocolate" name="나는야오빠주인공" isMarquee />
+              <AvatarChip variant="orange" name="빵빠라빵" isMarquee />
+              <AvatarChip variant="empty" />
+              <AvatarChip variant="empty" />
             </div>
 
             <Button
