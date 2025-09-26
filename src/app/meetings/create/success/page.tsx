@@ -30,7 +30,7 @@ const CreateSuccessPage = () => {
       return;
     }
     // todo: 모임 링크로 교체
-    navigator.clipboard.writeText('bit.ly/hqKUS6Bo1gKgBQ47');
+    navigator.clipboard.writeText('momuzzi.site/meetings/sAmCHo');
     // todo: 토스트 표시
     successToast('참여 링크가 복사되었어요.\n 공유해서 참여를 독촉해보세요.', {
       preventDuplicate: true,
@@ -119,6 +119,7 @@ const CreateSuccessPage = () => {
                     alt="카카오톡 공유"
                     width={60}
                     height={60}
+                    priority
                   />
                 </div>
                 <span className="font-semibold text-neutral-900">{option.label}</span>
