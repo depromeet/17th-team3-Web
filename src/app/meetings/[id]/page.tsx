@@ -80,7 +80,10 @@ const MeetingPage = () => {
               <EmptyAttendeeButton />
             </div>
 
-            <Button className="flex justify-between px-3 py-4">
+            <Button
+              onClick={() => router.push('/survey')}
+              className="flex justify-between px-3 py-4"
+            >
               <p className="body-2 font-semibold">0 / 6</p>
               <div className="flex items-center justify-center gap-1">
                 <p>취향 설문 참여 하기</p>

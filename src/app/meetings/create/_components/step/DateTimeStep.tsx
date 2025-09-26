@@ -31,7 +31,8 @@ const DateTimeStep = ({ onNext, onCancel }: DateTimeStepProps) => {
       title="언제 만나시나요?"
       onNext={handleNext}
       onCancel={onCancel}
-      isNextDisabled={!selectedDate || !selectedTime}
+      isNextDisabled={!selectedDate}
+      // isNextDisabled={!selectedDate || !selectedTime}
       nextButtonText="생성하기"
     >
       <div className="flex flex-col gap-5">
