@@ -1,10 +1,10 @@
-name: Build & Push Docker
+name: Build & Deploy Docker
 
 on:
   push:
-    branches: [main]
-    tags: ['v*'] # 태그 푸시 시 버전 태깅도 지원 (선택)
-  workflow_dispatch: {}
+    branches: [ main ] # main 브랜치에서만 실행
+    tags: [ 'v*' ] # 태그 push 시 실행 (선택)
+  workflow_dispatch: {} # 수동 실행 지원
 
 concurrency:
   group: docker-${{ github.ref }}
@@ -82,49 +82,12 @@ jobs:
       - name: Show image digest
         run: echo "Pushed digest ${{ steps.build.outputs.digest }}"
 
-  deploy-dev:
-    name: Deploy to DEV (self-hosted)
-    needs: docker
-    runs-on: [self-hosted, Linux, X64] # ← 기본 라벨로 매칭
-    if: startsWith(github.ref, 'refs/heads/feat/')
-    env:
-      # 레지스트리/레포 기본값 포함해서 안전하게 조립
-      IMAGE: ${{ format(
-        '{0}/{1}:sha-{2}',
-        (vars.REGISTRY || 'docker.io'),
-        (vars.IMAGE_REPO || 'journey1019/depromeet-team3'),
-        needs.docker.outputs.short_sha) }}
-
-      PROJECT_DIR: ${{ secrets.DEV_PROJECT_DIR }} # 예: /srv/momuzzi
-      REGISTRY: ${{ vars.REGISTRY != '' && vars.REGISTRY || 'docker.io' }}
-
-    steps:
-      - name: Print resolved image (debug)
-        run: |
-          echo "REGISTRY=${{ vars.REGISTRY }}"
-          echo "IMAGE_REPO=${{ vars.IMAGE_REPO }}"
-          echo "SHORT_SHA=${{ needs.docker.outputs.short_sha }}"
-          echo "IMAGE=${IMAGE}"   # ✅ 여기서 docker.io/계정/레포:sha-xxxx 가 찍혀야 정상
-
-      - name: Docker login
-        run: echo '${{ secrets.REGISTRY_PASSWORD }}' | docker login "$REGISTRY" -u '${{ secrets.REGISTRY_USER }}' --password-stdin
-
-      - name: Deploy with compose
-        run: |
-          set -Eeuo pipefail
-          test -f "$PROJECT_DIR/deploy/compose.yaml" || { echo "compose.yaml not found"; exit 1; }
-          cd "$PROJECT_DIR"
-          IMAGE='${{ env.IMAGE }}' docker compose -f deploy/compose.yaml pull web
-          IMAGE='${{ env.IMAGE }}' docker compose -f deploy/compose.yaml up -d web
-          docker network connect depromeet_network web 2>/dev/null || true
-          sleep 2
-          curl -fsS http://127.0.0.1:3000 >/dev/null && echo "Health OK" || (docker logs web --tail=200 && exit 1)
 
   deploy-prod:
     name: Deploy to PROD (self-hosted)
     needs: docker
-    runs-on: [self-hosted, Linux, X64] # prod에도 서버에 러너가 있다면 동일
-    if: github.ref == 'refs/heads/main'
+    runs-on: [self-hosted, Linux, X64]
+    if: github.ref == 'refs/heads/main' # main일 때만 실행
     environment: production
     env:
       IMAGE: ${{ format(
@@ -148,6 +111,5 @@ jobs:
           cd "$PROJECT_DIR"
           IMAGE='${{ env.IMAGE }}' docker compose -f deploy/compose.yaml pull web
           IMAGE='${{ env.IMAGE }}' docker compose -f deploy/compose.yaml up -d web
-          docker network connect depromeet_network web 2>/dev/null || true
           sleep 2
           curl -fsS http://127.0.0.1:3000 >/dev/null && echo "Health OK" || (docker logs web --tail=200 && exit 1)

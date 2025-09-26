@@ -68,9 +68,13 @@ const SurveyReviewStep = ({
       prevButtonText={prevButtonText}
       nextButtonText={nextButtonText}
     >
-      <div className="mx-auto flex h-full w-full max-w-md pb-2">
+      {/* 아웃카드 */}
+      <div className="mx-auto flex min-h-[300px] w-full max-w-md pb-2">
         <div
-          className={cn('flex w-full flex-col gap-7 rounded-2xl bg-white px-5 pt-4 pb-6')}
+          className={cn(
+            'flex w-full flex-col gap-7 overflow-y-auto rounded-2xl bg-white px-5 pt-4 pb-6',
+            'min-h-[auto] sm:min-h-[400px]' // 👈 모바일에서는 auto, sm 이상일 때만 400px 보장
+          )}
           style={{
             boxShadow: '0px 4px 12px rgba(250,165,148,0.5)',
           }}
