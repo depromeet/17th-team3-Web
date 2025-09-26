@@ -11,7 +11,7 @@ const BottomSheet = ({ title, showCloseButton = false, onClose, children }: Bott
   return (
     <div className="absolute inset-0 z-10">
       <div role="presentation" className="h-full bg-black/40" onClick={onClose} />
-      <div className="absolute bottom-0 flex min-h-[198px] w-full flex-col justify-between rounded-t-2xl bg-white p-5">
+      <div className="absolute bottom-0 flex min-h-[198px] w-full flex-col justify-between gap-4 rounded-t-2xl bg-white p-5">
         <div className="flex items-center justify-between">
           <p className="font-semibold text-neutral-1600">{title}</p>
           {showCloseButton && <X onClick={onClose} size={24} className="cursor-pointer" />}

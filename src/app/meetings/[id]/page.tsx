@@ -19,7 +19,7 @@ const MeetingPage = () => {
         <Heading level="h2">우리 어디서 모무찌?</Heading>
       </div>
 
-      <div className="flex-1 px-5 pt-4 pb-12">
+      <div className="flex-1 px-5 pt-4 pb-9">
         <div
           className="flex h-full shrink-0 flex-col justify-between rounded-[1.25rem] bg-white p-4"
           style={{
@@ -42,8 +42,8 @@ const MeetingPage = () => {
             </div>
           </div>
 
-          <div className="flex flex-col items-center justify-center">
-            <div className="flex w-full flex-col justify-center gap-2 p-4">
+          <div className="flex flex-col items-center justify-center gap-6">
+            <div className="flex w-full flex-col justify-center gap-2 px-4">
               <div className="flex w-full items-center justify-between border-b-1 border-neutral-300 p-2">
                 <div className="flex items-center gap-2">
                   <Calendar size={16} className="text-neutral-500" />
@@ -62,17 +62,17 @@ const MeetingPage = () => {
             </div>
           </div>
 
-          <div className="flex flex-col gap-6 pt-4">
+          <div className="flex flex-col gap-4">
             <div className="no-scrollbar no-scrollbar::-webkit-scrollbar flex gap-3 overflow-x-auto pb-2">
-              <div className="flex w-18 flex-shrink-0 flex-col items-center justify-center rounded-[0.875rem] bg-blue-600 p-2 text-neutral-100">
+              <div className="flex h-[5.625rem] w-18 flex-shrink-0 flex-col items-center justify-center rounded-[0.875rem] bg-blue-600 text-neutral-100">
                 <div className="mb-1 text-[32px]">🍣</div>
                 <div className="label-1 font-medium">곽두팔</div>
               </div>
-              <div className="flex w-18 flex-shrink-0 flex-col items-center justify-center rounded-[0.875rem] bg-red-450 p-2 text-neutral-100">
+              <div className="flex h-[5.625rem] w-18 flex-shrink-0 flex-col items-center justify-center rounded-[0.875rem] bg-red-450 text-neutral-100">
                 <div className="mb-1 text-[32px]">🍖</div>
                 <div className="text-sm font-medium">한재</div>
               </div>
-              <div className="text-gray-1500 flex w-18 flex-shrink-0 flex-col items-center justify-center rounded-[10px] bg-yellow-300 p-2">
+              <div className="text-gray-1500 flex h-[5.625rem] w-18 flex-shrink-0 flex-col items-center justify-center rounded-[10px] bg-yellow-300">
                 <div className="mb-1 text-[32px]">🥩</div>
                 <div className="text-sm font-medium">진혁이</div>
               </div>
@@ -82,9 +82,9 @@ const MeetingPage = () => {
 
             <Button
               onClick={() => router.push('/survey')}
-              className="flex justify-between px-3 py-4"
+              className="flex justify-between py-4 pr-2 pl-3"
             >
-              <p className="body-2 font-semibold">0 / 6</p>
+              <p className="body-2 font-semibold text-white/56">0 / 6</p>
               <div className="flex items-center justify-center gap-1">
                 <p>취향 설문 참여 하기</p>
                 <ChevronRight size={20} color="#fff" />
@@ -113,10 +113,10 @@ const IconChip = ({ icon, label }: IconChipProps) => {
 
 const EmptyAttendeeButton = () => {
   return (
-    <div className="flex shrink-0 cursor-pointer flex-col items-center gap-2 transition-all duration-200">
+    <div className="flex h-[5.625rem] shrink-0 cursor-pointer flex-col items-center gap-2 transition-all duration-200">
       <div
         className={cn(
-          'flex h-24 w-18 shrink-0 items-center justify-center gap-2 rounded-[0.875rem] border border-0 bg-neutral-200 body-3 font-semibold'
+          'flex h-[5.625rem] w-18 shrink-0 items-center justify-center gap-2 rounded-[0.875rem] border-0 bg-neutral-200 body-3 font-semibold'
         )}
       >
         <PersonFillIcon className="h-11 w-11 text-neutral-300" />
