@@ -15,7 +15,7 @@ interface RecommendationsClientProps {
 const RecommendationsClient = ({ attendeesData }: RecommendationsClientProps) => {
   const router = useRouter();
   const handleClick = () => {
-    router.push(`/recommendations/1/result`);
+    router.push(`/recommendations/sAmCHo/result`);
   };
   return (
     <SnapSyncProvider attendeesData={attendeesData}>

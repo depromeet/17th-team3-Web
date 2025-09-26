@@ -13,7 +13,7 @@ const SurveyClient = ({ role, initial }: { role: RoleLabel; initial?: Partial<Su
   const router = useRouter();
   const handleComplete = async (_data: SurveyResult) => {
     // TODO: 서버 저장 로직
-    router.push('/recommendations/1');
+    router.push('/recommendations/sAmCHo');
   };
   return <SurveyFunnel role={role} initial={initial} onComplete={handleComplete} />;
 };
