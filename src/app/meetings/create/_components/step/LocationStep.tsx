@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback, ChangeEvent } from 'react';
 
 import { MapPin } from 'lucide-react';
 
@@ -8,6 +8,11 @@ import BottomSheet from '@/app/_components/ui/BottomSheet';
 import Input from '@/app/_components/ui/Input';
 import { cn } from '@/app/_lib/cn';
 import StepFormLayout from '@/app/meetings/_components/StepFormLayout';
+
+interface Station {
+  id: number;
+  name: string;
+}
 
 interface LocationStepProps {
   onNext: (location: string) => void;
@@ -19,42 +24,33 @@ const LocationStep = ({ onNext, onCancel }: LocationStepProps) => {
   const [selectedStation, setSelectedStation] = useState<Station | null>(null);
   const [showBottomSheet, setShowBottomSheet] = useState(false);
 
-  const filteredStations = useMemo(() => {
-    if (!inputValue.trim()) return [];
-    return STATION_DATA.filter((station) => station.name.includes(inputValue));
-  }, [inputValue]);
-
-  const toggleBottomSheet = () => {
+  const toggleBottomSheet = useCallback(() => {
     setShowBottomSheet((prev) => !prev);
-  };
+  }, []);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setInputValue(value);
-
-    const exactMatch = STATION_DATA.find((station) => station.name === value);
-    if (exactMatch) {
-      setSelectedStation(exactMatch);
-    } else if (selectedStation && selectedStation.name !== value) {
-      setSelectedStation(null);
-    }
-  };
-
-  const handleStationSelect = (station: Station) => {
+  const handleStationSelect = useCallback((station: Station) => {
     setSelectedStation(station);
     setInputValue(station.name);
-  };
+    setShowBottomSheet(false);
+  }, []);
 
-  const handleClear = () => {
+  const handleClear = useCallback(() => {
     setInputValue('');
     setSelectedStation(null);
-  };
+  }, []);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     if (selectedStation) {
       onNext(selectedStation.name);
     }
-  };
+  }, [selectedStation, onNext]);
+
+  const filteredStations = useMemo(() => {
+    const query = inputValue.trim();
+    if (!inputValue.trim()) return [];
+
+    return STATION_DATA.filter((station) => station.name.startsWith(query)).slice(0, 10);
+  }, [inputValue]);
 
   return (
     <StepFormLayout
@@ -66,7 +62,7 @@ const LocationStep = ({ onNext, onCancel }: LocationStepProps) => {
       <button
         type="button"
         onClick={toggleBottomSheet}
-        className="flex w-full items-center gap-3 border-b-1 border-b-neutral-300 px-3 py-3 body-1 font-semibold text-neutral-500 select-none"
+        className="flex w-full items-center gap-3 border-b-1 border-b-neutral-300 px-3 py-3 body-1 font-semibold text-neutral-500 transition-all duration-150 select-none active:scale-[0.98] active:bg-gray-50"
       >
         <MapPin size={24} />
         <p className={cn('text-neutral-500', selectedStation && 'text-neutral-1500')}>
@@ -80,21 +76,27 @@ const LocationStep = ({ onNext, onCancel }: LocationStepProps) => {
             <Input
               type="search"
               value={inputValue}
-              onChange={handleInputChange}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
               onClear={handleClear}
               showClearButton
               placeholder="지하철역을 검색해주세요"
             />
+
             {filteredStations.length > 0 && (
-              <div className="mt-3">
+              <div className="mt-3 overflow-y-auto">
                 {filteredStations.map((station) => (
                   <LocationItem
                     key={station.id}
                     station={station}
+                    searchQuery={inputValue.trim()}
                     onClick={() => handleStationSelect(station)}
                   />
                 ))}
               </div>
+            )}
+
+            {inputValue && filteredStations.length === 0 && (
+              <div className="mt-12 text-center text-neutral-500">검색 결과가 없습니다</div>
             )}
           </div>
         </BottomSheet>
@@ -103,26 +105,39 @@ const LocationStep = ({ onNext, onCancel }: LocationStepProps) => {
   );
 };
 
-interface Station {
-  id: number;
-  name: string;
+interface LocationItemProps {
+  station: Station;
+  searchQuery: string;
+  onClick: () => void;
 }
 
-const LocationItem = ({ station, onClick }: { station: Station; onClick: () => void }) => {
+const LocationItem = ({ station, searchQuery, onClick }: LocationItemProps) => {
+  const highlightText = (text: string, query: string) => {
+    if (!query) return text;
+
+    const match = text.slice(0, query.length);
+    const afterMatch = text.slice(query.length);
+
+    return (
+      <>
+        <span className="font-bold text-orange-500">{match}</span>
+        {afterMatch}
+      </>
+    );
+  };
+
   return (
-    <div
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => e.key === 'Enter' && onClick()}
+    <button
+      type="button"
       onClick={onClick}
-      className="rounded-xl p-[0.625rem] text-lg font-semibold transition-all duration-150 active:scale-98 active:bg-orange-500/8"
+      className="w-full rounded-xl p-[0.625rem] text-left text-lg font-semibold transition-all duration-150 active:scale-[0.98] active:bg-orange-500/8"
     >
-      {station.name}
-    </div>
+      {highlightText(station.name, searchQuery)}
+    </button>
   );
 };
 
-const STATION_DATA = [
+const STATION_DATA: Station[] = [
   { id: 1, name: '강남역' },
   { id: 2, name: '강변역' },
   { id: 3, name: '강북역' },

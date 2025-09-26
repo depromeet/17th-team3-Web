@@ -32,7 +32,7 @@ const MeetingPage = () => {
                 icon={<Flame className="h-4 w-4 text-orange-500" absoluteStrokeWidth />}
                 label={`한국고 동창 모임`}
               />
-              <span className="text-neutral-7000 body-3 font-medium">까지</span>
+              <span className="body-3 font-medium text-neutral-700">까지</span>
             </div>
             <div className="heading-2 font-bold text-neutral-1200">
               <span className="text-orange-500">10</span>일
@@ -46,16 +46,16 @@ const MeetingPage = () => {
             <div className="flex w-full flex-col justify-center gap-2 px-4">
               <div className="flex w-full items-center justify-between border-b-1 border-neutral-300 p-2">
                 <div className="flex items-center gap-2">
-                  <Calendar size={16} className="text-neutral-500" />
-                  <span className="text-gray-500">모이는 날</span>
+                  <Calendar size={16} strokeWidth={2.5} className="text-neutral-500" />
+                  <span className="label-2 font-semibold text-neutral-700">모이는 날</span>
                 </div>
                 <span className="label-1 font-semibold text-neutral-1400">2025년 11월 24일</span>
               </div>
 
               <div className="flex w-full items-center justify-between border-b-1 border-neutral-300 p-2">
                 <div className="flex items-center gap-2">
-                  <MapPin size={16} className="text-neutral-500" />
-                  <span className="text-gray-500">장소</span>
+                  <MapPin size={16} strokeWidth={2.5} className="text-neutral-500" />
+                  <p className="label-2 font-semibold text-neutral-700">장소</p>
                 </div>
                 <span className="label-1 font-semibold text-neutral-1400">강남역</span>
               </div>
@@ -64,17 +64,17 @@ const MeetingPage = () => {
 
           <div className="flex flex-col gap-4">
             <div className="no-scrollbar no-scrollbar::-webkit-scrollbar flex gap-3 overflow-x-auto pb-2">
-              <div className="flex h-[5.625rem] w-18 flex-shrink-0 flex-col items-center justify-center rounded-[0.875rem] bg-blue-600 text-neutral-100">
-                <div className="mb-1 text-[32px]">🍣</div>
-                <div className="label-1 font-medium">곽두팔</div>
+              <div className="flex w-18 flex-shrink-0 flex-col items-center justify-center rounded-[0.875rem] bg-yellow-400">
+                <Image src={'/images/avatar/avatar1.svg'} alt={'아바타-1'} width={48} height={48} />
+                <p className="label-1 font-medium text-neutral-1500">말랑이</p>
               </div>
-              <div className="flex h-[5.625rem] w-18 flex-shrink-0 flex-col items-center justify-center rounded-[0.875rem] bg-red-450 text-neutral-100">
-                <div className="mb-1 text-[32px]">🍖</div>
-                <div className="text-sm font-medium">한재</div>
+              <div className="flex w-18 flex-shrink-0 flex-col items-center justify-center rounded-[0.875rem] bg-[#FFBDBF]">
+                <Image src={'/images/avatar/avatar2.svg'} alt={'아바타-2'} width={48} height={48} />
+                <p className="label-1 font-semibold text-neutral-1500">녹차</p>
               </div>
-              <div className="text-gray-1500 flex h-[5.625rem] w-18 flex-shrink-0 flex-col items-center justify-center rounded-[10px] bg-yellow-300">
-                <div className="mb-1 text-[32px]">🥩</div>
-                <div className="text-sm font-medium">진혁이</div>
+              <div className="flex w-18 flex-shrink-0 flex-col items-center justify-center rounded-[10px] bg-[#6ade81]">
+                <Image src={'/images/avatar/avatar3.svg'} alt={'아바타-3'} width={48} height={48} />
+                <p className="label-1 font-semibold text-neutral-1500">오렌지</p>
               </div>
               <EmptyAttendeeButton />
               <EmptyAttendeeButton />
@@ -82,12 +82,12 @@ const MeetingPage = () => {
 
             <Button
               onClick={() => router.push('/survey')}
-              className="flex justify-between py-4 pr-2 pl-3"
+              className="flex justify-between py-4 pr-2 pl-4"
             >
               <p className="body-2 font-semibold text-white/56">0 / 6</p>
               <div className="flex items-center justify-center gap-1">
                 <p>취향 설문 참여 하기</p>
-                <ChevronRight size={20} color="#fff" />
+                <ChevronRight size={20} className="text-white" />
               </div>
             </Button>
           </div>
@@ -113,7 +113,7 @@ const IconChip = ({ icon, label }: IconChipProps) => {
 
 const EmptyAttendeeButton = () => {
   return (
-    <div className="flex h-[5.625rem] shrink-0 cursor-pointer flex-col items-center gap-2 transition-all duration-200">
+    <div className="flex h-[5.625rem] shrink-0 flex-col items-center gap-2 transition-all duration-200">
       <div
         className={cn(
           'flex h-[5.625rem] w-18 shrink-0 items-center justify-center gap-2 rounded-[0.875rem] border-0 bg-neutral-200 body-3 font-semibold'

@@ -84,7 +84,7 @@ const SurveyFunnel = ({ role, initial, onComplete }: SurveyFunnelProps) => {
   const handleBack = () => {
     if (step === 'Name') {
       // 임시: SurveyNameStep에서 "이전" → meeting/1 이동
-      router.push('/meeting/1');
+      router.push('/meetings/1');
       return;
     }
     history.replace(getPrevStepKey(step), (p) => p);
