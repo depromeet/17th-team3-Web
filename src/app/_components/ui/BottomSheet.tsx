@@ -10,7 +10,7 @@ interface BottomSheetProps {
 const BottomSheet = ({ title, showCloseButton = false, onClose, children }: BottomSheetProps) => {
   return (
     <div className="absolute inset-0 z-10">
-      <div role="presentation" className="h-full bg-black/40" onClick={onClose} />
+      <div role="presentation" className="h-full bg-black/60" onClick={onClose} />
       <div className="absolute bottom-0 flex min-h-[198px] w-full flex-col justify-between gap-4 rounded-t-2xl bg-white p-5">
         <div className="flex items-center justify-between">
           <p className="font-semibold text-neutral-1600">{title}</p>

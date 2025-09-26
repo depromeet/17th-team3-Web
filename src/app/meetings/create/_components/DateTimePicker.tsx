@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { DatePicker } from '@mantine/dates';
+import { DatePicker, TimePicker } from '@mantine/dates';
 import { CalendarPlus2, Clock } from 'lucide-react';
 
 import BottomSheet from '@/app/_components/ui/BottomSheet';
@@ -28,9 +28,18 @@ const DateTimePicker = ({
   timeLabel = '시간 선택하기',
 }: DateTimePickerProps) => {
   const [showCalendar, setShowCalendar] = useState(false);
+  const [showTimer, setShowTimer] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
   const handleDateSelect = () => {
+    if (selectedDate) {
+      onDateClick(selectedDate);
+      setShowCalendar(false);
+    }
+  };
+
+  const handleTimeSelect = () => {
     if (selectedDate) {
       onDateClick(selectedDate);
       setShowCalendar(false);
@@ -52,7 +61,7 @@ const DateTimePicker = ({
         </button>
 
         <button
-          onClick={() => {}}
+          onClick={() => setShowTimer(true)}
           className={cn(
             'flex w-full items-center gap-3 border-b-1 border-b-neutral-300 px-3 py-3 body-1 font-semibold text-neutral-500 select-none',
             timeValue && 'text-gray-1600'
@@ -99,6 +108,17 @@ const DateTimePicker = ({
             </Button>
           </div>
         </BottomSheet>
+      )}
+
+      {showTimer && (
+        <TimePicker
+          label="Enter time"
+          withDropdown
+          popoverProps={{
+            position: 'top-start',
+            middlewares: { flip: false, shift: false },
+          }}
+        />
       )}
     </div>
   );

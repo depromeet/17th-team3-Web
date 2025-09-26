@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import TopNavigation from '@/app/_components/layout/TopNavigation';
+import ConfirmModal from '@/app/_components/ui/Modal/ConfirmModal';
 import StepIndicator from '@/app/_components/ui/StepIndicator';
 import DateTimeStep from '@/app/meetings/create/_components/step/DateTimeStep';
 import LocationStep from '@/app/meetings/create/_components/step/LocationStep';
@@ -23,12 +24,13 @@ const CreatePage = () => {
     time: '',
   });
 
+  const [showConfirm, setShowConfirm] = useState(false);
+
   const router = useRouter();
 
   const handleCancel = () => {
     if (currentStep === 1) {
-      // todo: 모달 출력
-      router.push('/');
+      setShowConfirm(true);
       return;
     }
     setCurrentStep((prev) => prev - 1);
@@ -48,7 +50,7 @@ const CreatePage = () => {
 
   const renderStepForm = () => {
     switch (currentStep) {
-      case 1:
+      case 4:
         return (
           <NameStep onNext={(value: string) => handleNext('name', value)} onCancel={handleCancel} />
         );
@@ -66,7 +68,7 @@ const CreatePage = () => {
             onCancel={handleCancel}
           />
         );
-      case 4:
+      case 1:
         return <DateTimeStep onNext={handleDateTimeNext} onCancel={handleCancel} />;
       default:
         return null;
@@ -80,6 +82,13 @@ const CreatePage = () => {
         <StepIndicator value={currentStep} total={TOTAL_STEPS} />
       </div>
       {renderStepForm()}
+
+      <ConfirmModal
+        isOpen={showConfirm}
+        title="모임 만들기를 취소하시겠어요?"
+        onConfirm={() => router.push('/')}
+        onCancel={() => setShowConfirm(false)}
+      />
     </div>
   );
 };
