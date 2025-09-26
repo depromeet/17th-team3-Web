@@ -14,12 +14,12 @@ const DateTimeStep = ({ onNext, onCancel }: DateTimeStepProps) => {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
 
-  const handleDateClick = (data: string) => {
-    setSelectedDate(data);
+  const handleDateClick = (date: string) => {
+    setSelectedDate(date);
   };
 
-  const handleTimeClick = (time: string) => {
-    setSelectedTime(time);
+  const handleTimeClick = (hour: string, minute: string) => {
+    setSelectedTime(`${hour}:${minute}`);
   };
 
   const handleNext = () => {
@@ -37,7 +37,6 @@ const DateTimeStep = ({ onNext, onCancel }: DateTimeStepProps) => {
       <div className="flex flex-col gap-5">
         <DateTimePicker
           dateValue={selectedDate}
-          timeValue={selectedTime}
           onDateClick={handleDateClick}
           onTimeClick={handleTimeClick}
         />

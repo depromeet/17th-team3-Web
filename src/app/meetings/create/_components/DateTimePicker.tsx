@@ -1,10 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import { DatePicker } from '@mantine/dates';
 import { CalendarPlus2, ChevronDown, Clock } from 'lucide-react';
-import Image from 'next/image';
 
 import BottomSheet from '@/app/_components/ui/BottomSheet';
 import Button from '@/app/_components/ui/Button';
@@ -14,31 +13,33 @@ import 'dayjs/locale/ko';
 
 interface DateTimePickerProps {
   dateValue?: string;
-  timeValue?: string;
   onDateClick: (date: string) => void;
-  onTimeClick: (time: string) => void;
+  onTimeClick: (hour: string, minute: string) => void;
   dateLabel?: string;
-  timeLabel?: string;
 }
+
 const DateTimePicker = ({
   dateValue = '',
-  timeValue = '',
   onDateClick,
-  // onTimeClick,
+  onTimeClick,
   dateLabel = '날짜 선택하기',
-  timeLabel = '시간 선택하기',
 }: DateTimePickerProps) => {
   const [showCalendar, setShowCalendar] = useState(false);
-  const [showTimer, setShowTimer] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [date, setDate] = useState<string | null>(null);
   const [hour, setHour] = useState('00');
   const [minute, setMinute] = useState('00');
 
   const handleDateSelect = () => {
-    if (selectedDate) {
-      onDateClick(selectedDate);
+    if (date) {
+      onDateClick(date);
       setShowCalendar(false);
     }
+  };
+
+  const handleTimeSelect = (newHour: string, newMinute: string) => {
+    setHour(newHour);
+    setMinute(newMinute);
+    onTimeClick(newHour, newMinute);
   };
 
   return (
@@ -47,29 +48,23 @@ const DateTimePicker = ({
         <button
           onClick={() => setShowCalendar(true)}
           className={cn(
-            'flex w-full items-center gap-3 border-b-1 border-b-neutral-300 px-3 py-3 body-1 font-semibold text-neutral-500 select-none',
+            'flex w-full items-center gap-3 border-b-1 border-b-neutral-300 px-3 py-3 body-1 font-semibold text-neutral-500',
             dateValue && 'text-gray-1600'
           )}
         >
           <CalendarPlus2 size={24} strokeWidth={2.5} className="text-neutral-500" />
           {dateValue || dateLabel}
         </button>
-        <TimePicker
-          selectedHour={hour}
-          selectedMinute={minute}
-          onTimeChange={(newHour, newMinute) => {
-            setHour(newHour);
-            setMinute(newMinute);
-            onDateClick(`${newHour}:${newMinute}`);
-          }}
-        />
+
+        <TimePicker selectedHour={hour} selectedMinute={minute} onTimeChange={handleTimeSelect} />
       </div>
+
       {showCalendar && (
         <BottomSheet onClose={() => setShowCalendar(false)}>
           <div className="flex flex-col items-center justify-center gap-6">
             <DatePicker
-              value={selectedDate}
-              onChange={setSelectedDate}
+              value={date}
+              onChange={setDate}
               minDate={new Date()}
               locale="ko"
               hideOutsideDates
@@ -95,7 +90,7 @@ const DateTimePicker = ({
                 },
               }}
             />
-            <Button onClick={handleDateSelect} status={!selectedDate ? 'disabled' : 'normal'}>
+            <Button onClick={handleDateSelect} status={!date ? 'disabled' : 'normal'}>
               선택
             </Button>
           </div>
@@ -105,123 +100,133 @@ const DateTimePicker = ({
   );
 };
 
+interface TimePickerProps {
+  selectedHour?: string;
+  selectedMinute?: string;
+  onTimeChange: (hour: string, minute: string) => void;
+}
+
 const TimePicker = ({
   selectedHour = '00',
   selectedMinute = '00',
   onTimeChange,
-}: {
-  selectedHour?: string;
-  selectedMinute?: string;
-  onTimeChange: (hour: string, minute: string) => void;
-}) => {
+}: TimePickerProps) => {
   const [showHourDropdown, setShowHourDropdown] = useState(false);
   const [showMinuteDropdown, setShowMinuteDropdown] = useState(false);
+
+  const hourDropdownRef = useRef<HTMLDivElement>(null);
+  const minuteDropdownRef = useRef<HTMLDivElement>(null);
 
   const hours = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
   const minutes = ['00', '10', '20', '30', '40', '50'];
 
-  const currentHour = new Date().getHours();
-  const isValidHour = (hour: string) => parseInt(hour) > currentHour;
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        hourDropdownRef.current &&
+        !hourDropdownRef.current.contains(event.target as HTMLDivElement)
+      ) {
+        setShowHourDropdown(false);
+      }
+      if (
+        minuteDropdownRef.current &&
+        !minuteDropdownRef.current.contains(event.target as HTMLDivElement)
+      ) {
+        setShowMinuteDropdown(false);
+      }
+    };
 
-  const toggleHourDropdown = () => {
-    setShowHourDropdown(!showHourDropdown);
-    setShowMinuteDropdown(false);
-  };
-
-  const toggleMinuteDropdown = () => {
-    setShowMinuteDropdown(!showMinuteDropdown);
-    setShowHourDropdown(false);
-  };
-
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
   return (
-    <div className="flex w-full items-center justify-center gap-2 p-3">
+    <div className="flex w-full items-center gap-2 p-3">
       <Clock size={24} strokeWidth={2.5} className="text-neutral-500" />
 
-      <div className="flex items-center justify-center gap-2 border-b-1 border-neutral-300 py-2 pr-1 pl-5">
-        <div className="mr-4 flex items-center gap-2 body-1 font-semibold text-neutral-500">
-          {selectedHour}
-        </div>
-        <span className="body-1 font-semibold text-neutral-1500">시</span>
-        <ChevronDown
-          size={20}
-          strokeWidth={2.5}
-          className="text-neutral-1500"
-          onClick={toggleHourDropdown}
-        />
-
-        {showHourDropdown && (
-          <div className="absolute bottom-0 flex justify-center px-4">
-            <div className="max-h-80 w-32 overflow-hidden rounded-2xl bg-white shadow-lg">
-              <div className="max-h-80 overflow-y-auto">
-                {hours.map((hour) => (
-                  <button
-                    key={hour}
-                    onClick={() => {
-                      onTimeChange(hour, selectedMinute);
-                      setShowHourDropdown(false);
-                    }}
-                    disabled={!isValidHour(hour)}
-                    className={`w-full px-4 py-3 text-center text-xl font-medium transition-colors ${
-                      selectedHour === hour
-                        ? 'mx-1 my-1 rounded-xl bg-red-500 text-white'
-                        : 'hover:bg-gray-50'
-                    } ${!isValidHour(hour) ? 'cursor-not-allowed text-gray-300' : ''}`}
-                  >
-                    {hour}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      <Image
-        src="/icons/colon.svg"
-        alt="colon-icon"
-        width={24}
-        height={24}
-        className="text-neutral-500"
+      <TimeUnit
+        value={selectedHour}
+        unit="시"
+        options={hours}
+        isOpen={showHourDropdown}
+        onToggle={() => setShowHourDropdown(!showHourDropdown)}
+        onSelect={(hour) => {
+          onTimeChange(hour, selectedMinute);
+          setShowHourDropdown(false);
+        }}
+        dropdownRef={hourDropdownRef}
       />
 
-      <div className="flex items-center justify-center gap-2 border-b-1 border-neutral-300 py-2 pr-1 pl-5">
-        <div className="mr-4 flex items-center gap-2 body-1 font-semibold text-neutral-500">
-          {selectedHour}
-        </div>
-        <span className="body-1 font-semibold text-neutral-1500">분</span>
-        <ChevronDown
-          size={20}
-          strokeWidth={2.5}
-          className="text-neutral-1500"
-          onClick={toggleMinuteDropdown}
-        />
-      </div>
-      {showMinuteDropdown && (
-        <div className="absolute flex justify-center px-4">
-          <div className="max-h-80 w-32 overflow-hidden rounded-2xl bg-white shadow-lg">
-            <div className="max-h-80 overflow-y-auto">
-              {minutes.map((minute) => (
-                <button
-                  key={minute}
-                  onClick={() => {
-                    onTimeChange(selectedHour, minute);
-                    setShowMinuteDropdown(false);
-                  }}
-                  className={`w-full px-4 py-3 text-center text-xl font-medium transition-colors ${
-                    selectedMinute === minute
-                      ? 'mx-1 my-1 rounded-xl bg-red-500 text-white'
-                      : 'hover:bg-gray-50'
-                  }`}
-                >
-                  {minute}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+      <div className="mx-2 text-neutral-1500">:</div>
+
+      <TimeUnit
+        value={selectedMinute}
+        unit="분"
+        options={minutes}
+        isOpen={showMinuteDropdown}
+        onToggle={() => setShowMinuteDropdown(!showMinuteDropdown)}
+        onSelect={(minute) => {
+          onTimeChange(selectedHour, minute);
+          setShowMinuteDropdown(false);
+        }}
+        dropdownRef={minuteDropdownRef}
+      />
     </div>
   );
 };
+
+interface TimeUnitProps {
+  value: string;
+  unit: string;
+  options: string[];
+  isOpen: boolean;
+  onToggle: () => void;
+  onSelect: (val: string) => void;
+  dropdownRef: React.RefObject<HTMLDivElement | null>;
+}
+
+const TimeUnit = ({
+  value,
+  unit,
+  options,
+  isOpen,
+  onToggle,
+  onSelect,
+  dropdownRef,
+}: TimeUnitProps) => (
+  <div
+    ref={dropdownRef}
+    className="relative flex items-center justify-center gap-2 border-b-1 border-neutral-300 py-2 pr-1 pl-5"
+  >
+    <div
+      className={cn(
+        'mr-4 flex items-center gap-2 body-1 font-semibold text-neutral-500',
+        value !== '00' && 'text-neutral-1600'
+      )}
+    >
+      {value}
+    </div>
+    <span className="body-1 font-semibold text-neutral-1500">{unit}</span>
+    <ChevronDown
+      size={20}
+      strokeWidth={2.5}
+      className="cursor-pointer text-neutral-1500 transition-transform duration-150 active:scale-95"
+      onClick={onToggle}
+    />
+
+    {isOpen && (
+      <div className="absolute top-13 right-0 z-10 max-h-60 w-35 overflow-hidden overflow-y-auto rounded-lg bg-white shadow-lg">
+        {options.map((option) => (
+          <button
+            key={option}
+            onClick={() => onSelect(option)}
+            className="w-full rounded-lg px-3 py-2 text-left body-3 font-semibold transition-all duration-150 select-none hover:bg-gray-50 active:scale-[0.98] active:bg-orange-500 active:text-neutral-100"
+          >
+            {option}
+          </button>
+        ))}
+      </div>
+    )}
+  </div>
+);
 
 export default DateTimePicker;
