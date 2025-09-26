@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { Copy, X } from 'lucide-react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 import BottomSheet from '@/app/_components/ui/BottomSheet';
@@ -71,7 +72,7 @@ const CreateSuccessPage = () => {
     <div className="relative flex h-[100dvh] flex-col p-4">
       <div className="w-full">
         <X
-          onClick={() => router.push('/')}
+          onClick={() => router.push('/meetings/sAmCHo')}
           size={32}
           className="ml-auto cursor-pointer text-orange-800"
         />
@@ -84,7 +85,7 @@ const CreateSuccessPage = () => {
           showConfetti
         />
         <div className="flex w-full justify-between border-b border-neutral-300 p-4">
-          <p className="label-1 font-medium text-neutral-1300">bit.ly/hqKUS6Bo1gKgBQ47</p>
+          <p className="label-3 font-medium text-neutral-1300">momuzzi.site/meetings/sAmCHo</p>
           <Copy
             onClick={copyUrlToClipboard}
             size={20}
@@ -103,8 +104,8 @@ const CreateSuccessPage = () => {
       </div>
 
       {showBottomSheet && (
-        <BottomSheet title="요청하기" showCloseButton onClose={toggleBottomSheet}>
-          <div className="flex flex-1 justify-around p-4">
+        <BottomSheet title="공유하기" showCloseButton onClose={toggleBottomSheet}>
+          <div className="flex flex-1 justify-around py-3">
             {SHARE_OPTIONS.map((option) => (
               <button
                 type="button"
@@ -112,7 +113,14 @@ const CreateSuccessPage = () => {
                 onClick={() => handleShareButtonClick(option.id)}
                 className="flex flex-col items-center justify-center gap-3"
               >
-                <div className="h-15 w-15 rounded-full bg-neutral-300" />
+                <div className="overflow-hidden rounded-full">
+                  <Image
+                    src={`/images/avatar/chocolate.svg`}
+                    alt="카카오톡 공유"
+                    width={60}
+                    height={60}
+                  />
+                </div>
                 <span className="font-semibold text-neutral-900">{option.label}</span>
               </button>
             ))}
