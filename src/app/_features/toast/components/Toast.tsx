@@ -4,25 +4,24 @@ import { useEffect, useState } from 'react';
 
 import { cva, type VariantProps } from 'class-variance-authority';
 
-import CloseIcon from '@/app/_components/icon/toast/CloseIcon';
-import ErrorIcon from '@/app/_components/icon/toast/ErrorIcon';
-import InfoIcon from '@/app/_components/icon/toast/InfoIcon';
-import SuccessIcon from '@/app/_components/icon/toast/SuccessIcon';
-import WarningIcon from '@/app/_components/icon/toast/WarningIcon';
+import ErrorIcon from '@/app/_components/icons/toast/ErrorIcon';
+import InfoIcon from '@/app/_components/icons/toast/InfoIcon';
+import SuccessIcon from '@/app/_components/icons/toast/SuccessIcon';
+import WarningIcon from '@/app/_components/icons/toast/WarningIcon';
 import { cn } from '@/app/_lib/cn';
 
 import type { Toast as ToastType } from '../types';
 
 const toastVariants = cva(
-  'pointer-events-auto relative flex w-full items-center justify-between gap-2 overflow-hidden rounded-lg border p-4 shadow-lg transition-all',
+  'pointer-events-auto relative flex w-full gap-3 overflow-hidden rounded-[1.25rem] px-6 py-4 shadow-lg transition-all',
   {
     variants: {
       variant: {
-        success: 'border-green-200 bg-green-50 text-green-800',
-        error: 'border-red-200 bg-red-50 text-red-800',
-        warning: 'border-yellow-200 bg-yellow-50 text-yellow-800',
-        info: 'border-blue-200 bg-blue-50 text-blue-800',
-        loading: 'border-gray-200 bg-gray-50 text-gray-800',
+        success: 'bg-white text-neutral-1500 ',
+        error: 'border border-red-200 bg-red-50 text-red-800',
+        warning: 'border border-yellow-200 bg-yellow-50 text-yellow-800',
+        info: 'border border-blue-200 bg-blue-50 text-blue-800',
+        loading: ' border border-gray-200 bg-gray-50 text-gray-800',
       },
     },
     defaultVariants: {
@@ -113,7 +112,7 @@ const Toast = ({ toast, onClose }: ToastProps) => {
       <div className={cn(toastVariants({ variant: toast.type }))}>
         {/* 아이콘 영역 */}
         <div className={cn('flex-shrink-0', !toast.showIcon && 'hidden')}>
-          {toast.type === 'success' && <SuccessIcon />}
+          {toast.type === 'success' && <SuccessIcon className="h-8 w-8" />}
           {toast.type === 'error' && <ErrorIcon />}
           {toast.type === 'warning' && <WarningIcon />}
           {toast.type === 'info' && <InfoIcon />}
@@ -122,19 +121,11 @@ const Toast = ({ toast, onClose }: ToastProps) => {
         {/* 메시지 영역 ReactNode 또는 string */}
         <div className="flex-1">
           {typeof toast.message === 'string' ? (
-            <p className="text-sm font-medium">{toast.message}</p>
+            <p className="body-3 font-semibold whitespace-pre-line">{toast.message}</p>
           ) : (
             toast.message
           )}
         </div>
-
-        {/* 닫기 버튼 */}
-        <button
-          onClick={handleClose}
-          className="ml-4 inline-flex flex-shrink-0 justify-center rounded-md text-sm hover:opacity-70 focus:outline-none"
-        >
-          <CloseIcon />
-        </button>
 
         {/* 진행 바 */}
         {toast.showProgress && toast.duration && toast.duration > 0 && (

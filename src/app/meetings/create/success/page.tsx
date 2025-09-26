@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 
 import BottomSheet from '@/app/_components/ui/BottomSheet';
 import Button from '@/app/_components/ui/Button';
+import { useToast } from '@/app/_features/toast';
 import { exhaustiveCheck } from '@/app/_utils/typeGuards';
 import { SHARE_OPTIONS } from '@/app/meetings/create/_models/constants';
 import { ShareType } from '@/app/meetings/create/_models/types';
@@ -16,6 +17,8 @@ import ResultCard from '@/app/survey/_components/ResultCard';
 // const CreateSuccessPage = ({ ... }) => {
 const CreateSuccessPage = () => {
   const [showBottomSheet, setShowBottomSheet] = useState(false);
+
+  const { success: successToast } = useToast();
 
   const router = useRouter();
 
@@ -28,6 +31,10 @@ const CreateSuccessPage = () => {
     // todo: 모임 링크로 교체
     navigator.clipboard.writeText('bit.ly/hqKUS6Bo1gKgBQ47');
     // todo: 토스트 표시
+    successToast('참여 링크가 복사되었어요.\n 공유해서 참여를 독촉해보세요.', {
+      preventDuplicate: true,
+      position: 'top',
+    });
   };
 
   const toggleBottomSheet = () => {
@@ -40,10 +47,18 @@ const CreateSuccessPage = () => {
         copyUrlToClipboard();
         break;
       case 'kakao':
+        successToast('카카오톡 공유 준비중!', {
+          preventDuplicate: true,
+          position: 'top',
+        });
         // todo: 카카오톡 공유
         // shareToKakaoTalk()
         break;
       case 'sms':
+        successToast('SMS 공유 준비중!', {
+          preventDuplicate: true,
+          position: 'top',
+        });
         // todo: SMS 방법 무엇일까? 템플릿 클립보드 복사일까?
         // shareViaSms()
         break;

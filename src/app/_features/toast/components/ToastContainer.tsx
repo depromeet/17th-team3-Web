@@ -24,7 +24,7 @@ const ToastContainer = () => {
       {topToasts.length > 0 && (
         <div
           className={cn(
-            'fixed top-0 flex max-h-screen w-full flex-col-reverse p-4',
+            'fixed top-0 z-50 flex max-h-screen w-full flex-col-reverse p-4',
             'pointer-events-none',
             `max-w-[${MAX_WIDTH}]`
           )}
@@ -44,7 +44,7 @@ const ToastContainer = () => {
       {bottomToasts.length > 0 && (
         <div
           className={cn(
-            'fixed bottom-0 flex max-h-screen w-full flex-col-reverse p-4',
+            'fixed bottom-0 z-50 flex max-h-screen w-full flex-col-reverse p-4',
             'pointer-events-none',
             `max-w-[${MAX_WIDTH}]`
           )}

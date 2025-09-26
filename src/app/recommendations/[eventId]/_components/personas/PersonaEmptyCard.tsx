@@ -1,6 +1,7 @@
 import { Copy } from 'lucide-react';
 
 import Button from '@/app/_components/ui/Button';
+import { useToast } from '@/app/_features/toast';
 import { cn } from '@/app/_lib/cn';
 
 interface EmptyPersonaCardProps {
@@ -9,6 +10,12 @@ interface EmptyPersonaCardProps {
 }
 
 const EmptyPersonaCard = ({ cardRef, className }: EmptyPersonaCardProps) => {
+  const { success: successToast } = useToast();
+  const onClickCopyLink = () => {
+    successToast('참여 링크가 복사되었어요!\n 공유해서 참여를 독촉해보세요.', {
+      preventDuplicate: true,
+    });
+  };
   return (
     <div
       ref={cardRef}
@@ -20,7 +27,11 @@ const EmptyPersonaCard = ({ cardRef, className }: EmptyPersonaCardProps) => {
     >
       <p className="subheading-1 font-bold text-orange-800">아직 참여하지 않았어요</p>
       <div className="flex w-full flex-col items-center justify-center gap-4 px-3">
-        <Button theme="orange" className="gap-2 bg-orange-700 py-3 label-1 font-semibold">
+        <Button
+          theme="orange"
+          className="gap-2 bg-orange-700 py-3 label-1 font-semibold"
+          onClick={onClickCopyLink}
+        >
           <Copy className="h-4 w-4" absoluteStrokeWidth />
           <span>링크 복사해서 공유하기</span>
         </Button>
