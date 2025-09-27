@@ -194,7 +194,9 @@ const TimeUnit = ({
   dropdownRef,
 }: TimeUnitProps) => (
   <div
+    role="presentation"
     ref={dropdownRef}
+    onClick={onToggle}
     className="relative flex items-center justify-center gap-2 border-b-1 border-neutral-300 py-2 pr-1 pl-5"
   >
     <div
@@ -210,7 +212,7 @@ const TimeUnit = ({
       size={20}
       strokeWidth={2.5}
       className="cursor-pointer text-neutral-1500 transition-transform duration-150 active:scale-95"
-      onClick={onToggle}
+      // onClick={onToggle}
     />
 
     {isOpen && (
