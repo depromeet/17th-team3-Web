@@ -7,9 +7,6 @@
     -webkit-text-size-adjust: 100%;
     touch-action: manipulation;
     font-family: 'Pretendard', sans-serif;
-    overflow: hidden;
-    position: fixed;
-    width: 100%;
   }
 
   /* input type=search 브라우저 기본 UI 표시하지 않음 */
