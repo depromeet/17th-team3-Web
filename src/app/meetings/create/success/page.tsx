@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import BottomSheet from '@/app/_components/ui/BottomSheet';
 import Button from '@/app/_components/ui/Button';
 import { useToast } from '@/app/_features/toast';
+import { useCopyToClipboard } from '@/app/_hooks/useCopyToClipboard';
 import { exhaustiveCheck } from '@/app/_utils/typeGuards';
 import { SHARE_OPTIONS } from '@/app/meetings/create/_models/constants';
 import { ShareType } from '@/app/meetings/create/_models/types';
@@ -23,15 +24,10 @@ const CreateSuccessPage = () => {
 
   const router = useRouter();
 
-  const copyUrlToClipboard = () => {
-    // todo: URL 조건 처리
-    // if (meetingId && typeof window === 'undefined') {
-    if (typeof window === 'undefined') {
-      return;
-    }
-    // todo: 모임 링크로 교체
-    navigator.clipboard.writeText('momuzzi.site/meetings/sAmCHo');
-    // todo: 토스트 표시
+  const { copy } = useCopyToClipboard();
+
+  const handleUrlCopy = () => {
+    copy('momuzzi.site/meetings/sAmCHo'); // todo: meetingId로 교체
     successToast('참여 링크가 복사되었어요.\n 공유해서 참여를 독촉해보세요.', {
       preventDuplicate: true,
       position: 'top',
@@ -45,7 +41,7 @@ const CreateSuccessPage = () => {
   const handleShareButtonClick = (shareType: ShareType) => {
     switch (shareType) {
       case 'url':
-        copyUrlToClipboard();
+        handleUrlCopy();
         break;
       case 'kakao':
         successToast('카카오톡 공유 준비중!', {
@@ -86,12 +82,7 @@ const CreateSuccessPage = () => {
         />
         <div className="flex w-full justify-between border-b border-neutral-300 p-4">
           <p className="label-3 font-medium text-neutral-1300">momuzzi.site/meetings/sAmCHo</p>
-          <Copy
-            onClick={copyUrlToClipboard}
-            size={20}
-            className="text-orange-500"
-            strokeWidth={2}
-          />
+          <Copy onClick={handleUrlCopy} size={20} className="text-orange-500" strokeWidth={2} />
         </div>
       </div>
 
