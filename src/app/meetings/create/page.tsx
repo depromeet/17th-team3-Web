@@ -51,7 +51,7 @@ const CreatePage = () => {
 
   const renderStepForm = () => {
     switch (currentStep) {
-      case 1:
+      case 4:
         return (
           <NameStep onNext={(value: string) => handleNext('name', value)} onCancel={handleCancel} />
         );
@@ -69,7 +69,7 @@ const CreatePage = () => {
             onCancel={handleCancel}
           />
         );
-      case 4:
+      case 1:
         return <DateTimeStep onNext={handleDateTimeNext} onCancel={handleCancel} />;
       default:
         return null;
