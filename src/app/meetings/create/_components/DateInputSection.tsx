@@ -12,21 +12,21 @@ import { cn } from '@/app/_lib/cn';
 import 'dayjs/locale/ko';
 
 interface DateInputSectionProps {
-  dateValue: string | null;
-  dateLabel?: string;
+  date: string | null;
+  label?: string;
   onDateClick: (date: string | null) => void;
 }
 
 const DateInputSection = ({
-  dateValue,
-  dateLabel = '날짜 선택하기',
+  date,
+  label = '날짜 선택하기',
   onDateClick,
 }: DateInputSectionProps) => {
   const [showCalendar, setShowCalendar] = useState(false);
 
   const handleDateSelect = () => {
-    if (dateValue) {
-      onDateClick(dateValue);
+    if (date) {
+      onDateClick(date);
       setShowCalendar(false);
     }
   };
@@ -38,11 +38,11 @@ const DateInputSection = ({
           onClick={() => setShowCalendar(true)}
           className={cn(
             'flex w-full items-center gap-3 border-b-1 border-b-neutral-300 px-3 py-3 body-1 font-semibold text-neutral-500',
-            dateValue && 'text-gray-1600'
+            date && 'text-gray-1600'
           )}
         >
           <CalendarPlus2 size={24} strokeWidth={2.5} className="text-neutral-500" />
-          {dateValue || dateLabel}
+          {date || label}
         </button>
       </div>
 
@@ -50,7 +50,7 @@ const DateInputSection = ({
         <BottomSheet onClose={() => setShowCalendar(false)}>
           <div className="flex flex-col items-center justify-center gap-6">
             <DatePicker
-              value={dateValue}
+              value={date}
               onChange={onDateClick}
               minDate={new Date()}
               locale="ko"
@@ -61,7 +61,7 @@ const DateInputSection = ({
               monthLabelFormat="YYYY MM월"
               styles={calendarStyle}
             />
-            <Button onClick={handleDateSelect} status={!dateValue ? 'disabled' : 'normal'}>
+            <Button onClick={handleDateSelect} status={!date ? 'disabled' : 'normal'}>
               선택
             </Button>
           </div>
