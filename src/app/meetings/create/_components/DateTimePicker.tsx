@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 
 import { DatePicker } from '@mantine/dates';
 import { CalendarPlus2, ChevronDown, Clock } from 'lucide-react';
 
 import BottomSheet from '@/app/_components/ui/BottomSheet';
 import Button from '@/app/_components/ui/Button';
+import { useClickOutside } from '@/app/_hooks/useClickOutside';
 import { cn } from '@/app/_lib/cn';
 
 import 'dayjs/locale/ko';
@@ -117,28 +118,12 @@ const TimePicker = ({
   const hourDropdownRef = useRef<HTMLDivElement>(null);
   const minuteDropdownRef = useRef<HTMLDivElement>(null);
 
+  useClickOutside(hourDropdownRef, () => setShowHourDropdown(false));
+  useClickOutside(minuteDropdownRef, () => setShowMinuteDropdown(false));
+
   const hours = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
   const minutes = ['00', '10', '20', '30', '40', '50'];
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        hourDropdownRef.current &&
-        !hourDropdownRef.current.contains(event.target as HTMLDivElement)
-      ) {
-        setShowHourDropdown(false);
-      }
-      if (
-        minuteDropdownRef.current &&
-        !minuteDropdownRef.current.contains(event.target as HTMLDivElement)
-      ) {
-        setShowMinuteDropdown(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
   return (
     <div className="flex w-full items-center gap-2 p-3">
       <Clock size={24} strokeWidth={2.5} className="text-neutral-500" />
