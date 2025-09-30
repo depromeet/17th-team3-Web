@@ -169,7 +169,6 @@ const SurveyFunnel = ({ role, initial, onComplete }: SurveyFunnelProps) => {
           totalSteps={SURVEY_TOTAL_STEPS}
           onBack={handleBack}
           className="background-2"
-          navClassName="bg-white/90 backdrop-blur shadow-sm"
         >
           <SurveyReviewStep
             roleLabel={context.role}

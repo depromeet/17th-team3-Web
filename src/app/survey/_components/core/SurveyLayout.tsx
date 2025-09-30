@@ -17,13 +17,12 @@ interface SurveyLayoutProps {
   children: React.ReactNode;
   /** 레이이웃 className 커스텀(옵션) */
   className?: string;
-  navClassName?: string; // 👈 추가
 }
 
 /**
  * SurveyLayout
  * - 상단 네비 + 스텝 인디케이터 + 본문 컨테이너
- * - meetings/create와 동일한 상단 구성을 재사용
+ * - meetings/create와 동일한 상단 구성을 재사용 'h-[100dvh]'
  */
 const SurveyLayout = ({
   stepValue,
@@ -32,21 +31,15 @@ const SurveyLayout = ({
   title = '',
   children,
   className,
-  navClassName,
 }: SurveyLayoutProps) => {
   return (
-    <div className={cn('flex min-h-screen flex-col background-1', className)}>
-      <TopNavigation
-        title={title}
-        showBackButton
-        onLeftClick={onBack}
-        className={cn('bg-inherit', navClassName)} // 👈 여기서 덮어쓰기
-      />
+    <div className={cn('relative flex h-[100dvh] flex-col background-1', className)}>
+      <TopNavigation title={title} showBackButton onLeftClick={onBack} />
       <div className="flex items-center justify-center px-4 py-1.5">
         <StepIndicator value={stepValue} total={totalSteps} />
       </div>
       {/* 본문 영역 */}
-      <main className="flex min-h-0 flex-1 flex-col">{children}</main>
+      {children}
     </div>
   );
 };
