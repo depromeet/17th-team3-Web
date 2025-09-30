@@ -33,13 +33,13 @@ const SurveyLayout = ({
   className,
 }: SurveyLayoutProps) => {
   return (
-    <div className={cn('relative flex h-[100dvh] flex-col background-1', className)}>
+    <div className={cn('relative flex min-h-dvh flex-col background-1', className)}>
       <TopNavigation title={title} showBackButton onLeftClick={onBack} />
       <div className="flex items-center justify-center px-4 py-1.5">
         <StepIndicator value={stepValue} total={totalSteps} />
       </div>
       {/* 본문 영역 */}
-      {children}
+      <div className="flex min-h-0 flex-1 flex-col px-5">{children}</div>
     </div>
   );
 };

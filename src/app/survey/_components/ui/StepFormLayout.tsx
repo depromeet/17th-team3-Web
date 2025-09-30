@@ -23,7 +23,7 @@ const StepFormLayout = ({
   nextButtonText = '다음 단계로',
 }: StepFormLayoutProps) => {
   return (
-    <main className="flex flex-1 flex-col px-5">
+    <main className="flex flex-1 flex-col">
       <div className="pt-4 pb-8">
         <TitleGroup title={title} description={description} />
       </div>
