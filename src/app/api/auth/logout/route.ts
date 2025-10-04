@@ -1,15 +1,10 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
-/**
- * 로그아웃 처리
- * - accessToken, refreshToken 쿠키 삭제
- */
 export async function POST() {
   try {
     const cookieStore = await cookies();
 
-    // 쿠키 삭제
     cookieStore.delete('accessToken');
     cookieStore.delete('refreshToken');
 
