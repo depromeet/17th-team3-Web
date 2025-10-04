@@ -1,10 +1,11 @@
 'use client';
 
 import Image from 'next/image';
-// import Link from 'next/link';
+import Link from 'next/link';
 
 import { Heading, Text } from '@/app/_components/typography';
 import Button from '@/app/_components/ui/Button';
+import { meetingService } from '@/app/meetings/_services';
 
 const HomePage = () => {
   // todo: 제거 필요 (상단 'use client' 포함)
@@ -16,10 +17,8 @@ const HomePage = () => {
   };
 
   const createMeeting = async () => {
-    const response = await fetch(`/api/meetings`, {
-      method: 'POST',
-    });
-    console.log(response);
+    const data = meetingService.getList(String(123));
+    console.log(data);
   };
 
   return (
@@ -39,9 +38,9 @@ const HomePage = () => {
         <Text className="text-neutral-1400">아직 진행 중인 식당 추천이 없어요</Text>
       </div>
       <div className="px-5 pt-3 pb-6">
-        {/* <Link href="/meetings/create/"> */}
-        <Button onClick={createMeeting}>새로운 모임 만들고 식당 추천 받기</Button>
-        {/* </Link> */}
+        <Link href="/meetings/create/">
+          <Button onClick={createMeeting}>새로운 모임 만들고 식당 추천 받기</Button>
+        </Link>
       </div>
     </div>
   );
