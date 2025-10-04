@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
+// import Link from 'next/link';
 
 import { Heading, Text } from '@/app/_components/typography';
 import Button from '@/app/_components/ui/Button';
@@ -13,6 +13,13 @@ const HomePage = () => {
       method: 'POST',
       // credentials: 'include', -> 동일 Origin이기 때문에 생략해도 문제가 없음 (명시성을 위해 포함시킬지 결정 필요)
     });
+  };
+
+  const createMeeting = async () => {
+    const response = await fetch(`/api/meetings`, {
+      method: 'POST',
+    });
+    console.log(response);
   };
 
   return (
@@ -32,9 +39,9 @@ const HomePage = () => {
         <Text className="text-neutral-1400">아직 진행 중인 식당 추천이 없어요</Text>
       </div>
       <div className="px-5 pt-3 pb-6">
-        <Link href="/meetings/create/">
-          <Button>새로운 모임 만들고 식당 추천 받기</Button>
-        </Link>
+        {/* <Link href="/meetings/create/"> */}
+        <Button onClick={createMeeting}>새로운 모임 만들고 식당 추천 받기</Button>
+        {/* </Link> */}
       </div>
     </div>
   );

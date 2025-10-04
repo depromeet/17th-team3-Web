@@ -13,7 +13,7 @@ export const GET = async (request: NextRequest) => {
   const code = searchParams.get('code');
 
   if (!code) {
-    return NextResponse.json({ error: 'code 파라미터가 없습니다.' }, { status: 400 });
+    return NextResponse.json({ error: 'code 파라미터가 없습니다' }, { status: 400 });
   }
 
   try {
@@ -40,9 +40,9 @@ export const GET = async (request: NextRequest) => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('백엔드 에러 응답: ', errorText);
+      console.error('백엔드 에러 응답:', errorText);
       return NextResponse.json(
-        { error: '백엔드 인증 실패', errorText },
+        { error: '백엔드 인증에 실패했습니다', details: errorText },
         { status: response.status }
       );
     }
@@ -50,7 +50,7 @@ export const GET = async (request: NextRequest) => {
     const { accessToken, refreshToken } = await response.json();
 
     if (!accessToken || !refreshToken) {
-      return NextResponse.json({ error: '토큰이 응답에 없습니다' }, { status: 500 });
+      return NextResponse.json({ error: '토큰이 응답에 포함되지 않았습니다' }, { status: 500 });
     }
 
     const cookieStore = await cookies();
