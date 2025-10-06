@@ -1,93 +1,64 @@
-import { cookies } from 'next/headers';
-
-interface ApiClientOptions extends Omit<RequestInit, 'method' | 'body'> {
-  method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
-  params?: Record<string, string | number | boolean | null | undefined>;
-  body?: any;
-}
-
 /**
- * 백엔드 API 호출 유틸리티
- * - 쿠키에서 accessToken 자동 추출
- * - Authorization 헤더 자동 주입
- * - Query Parameter 자동 생성
- *
- * @param path - API 경로 (예: '/meetings', '/user/me')
- * @param options - fetch 옵션 (method, params, body 등)
- * @returns fetch Response 객체
- * @throws 토큰이 없으면 Unauthorized 에러 발생
+ * Client Component에서 사용 (API Routes 호출)
+ * - credentials: 'include'로 쿠키 자동 전달
  */
-export const apiClient = async (path: string, options?: ApiClientOptions): Promise<Response> => {
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get('accessToken')?.value;
 
-  if (!accessToken) {
-    throw new Error('인증 토큰이 없습니다');
-  }
+'use client';
 
-  const backendUrl = new URL(`${process.env.NEXT_PUBLIC_API_URL}${path}`);
+import { ApiOptions, Method } from '@/app/_models/api';
+
+const callApiRoute = async (
+  path: string,
+  method: Method,
+  options?: ApiOptions
+): Promise<Response> => {
+  const url = new URL(path, window.location.origin);
 
   if (options?.params) {
     Object.entries(options.params).forEach(([key, value]) => {
       if (value !== null && value !== undefined) {
-        backendUrl.searchParams.set(key, String(value));
+        url.searchParams.set(key, String(value));
       }
     });
   }
-
-  const body =
-    options?.body && typeof options.body === 'object'
-      ? JSON.stringify(options.body)
-      : options?.body;
-
-  return fetch(String(backendUrl), {
-    method: options?.method || 'GET',
-    ...options,
-    body,
+  return fetch(String(url), {
+    method,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
       ...options?.headers,
     },
+    credentials: 'include',
+    body: options?.body ? JSON.stringify(options.body) : undefined,
   });
 };
 
-/**
- * HTTP 메서드별 헬퍼 함수
- */
 export const api = {
   /**
    * @example
-   * await api.get('/meetings', { params: { userId: 123 } });
+   * - await api.get('/apapi/meetings?userId=123') || await api.get('/meetings', { params: { userId: 123 } });
    */
-  get: (path: string, options?: Omit<ApiClientOptions, 'method'>) =>
-    apiClient(path, { ...options, method: 'GET' }),
-
+  get: (path: string, options?: Omit<ApiOptions, 'body'>) => callApiRoute(path, 'GET', options),
   /**
    * @example
-   * await api.post('/meetings', { body: { name: '저녁 모무찌' } });
+   * await api.post('/api/meetings', { body: { name: '새로운 모무찌' } });
    */
-  post: (path: string, options?: Omit<ApiClientOptions, 'method'>) =>
-    apiClient(path, { ...options, method: 'POST' }),
-
+  post: (path: string, options?: ApiOptions) => callApiRoute(path, 'POST', options),
   /**
    * @example
-   * await api.put('/meetings/1', { body: { name: '수정된 모무찌' } });
+   * await api.put('/api/meetings/1', { body: { name: '수정된 모무찌' } });
    */
-  put: (path: string, options?: Omit<ApiClientOptions, 'method'>) =>
-    apiClient(path, { ...options, method: 'PUT' }),
-
+  put: (path: string, options?: ApiOptions) => callApiRoute(path, 'PUT', options),
   /**
    * @example
-   * await api.patch('/meetings/1', { body: { name: '수정된 모무찌' } });
+   * await api.patch('/api/meetings/1', { body: { name: '수정된 모무찌' } });
    */
-  patch: (path: string, options?: Omit<ApiClientOptions, 'method'>) =>
-    apiClient(path, { ...options, method: 'PATCH' }),
-
+  patch: (path: string, options?: ApiOptions) => callApiRoute(path, 'PATCH', options),
   /**
    * @example
-   * await api.delete('/meetings/1');
+   * await api.delete('/api/meetings/1');
+   * @description
+   * HTTP 명세상으로는 body를 허용하지만, 관례를 고려해 제외함
    */
-  delete: (path: string, options?: Omit<ApiClientOptions, 'method'>) =>
-    apiClient(path, { ...options, method: 'DELETE' }),
+  delete: (path: string, options?: Omit<ApiOptions, 'body'>) =>
+    callApiRoute(path, 'DELETE', options),
 };

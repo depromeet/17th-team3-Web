@@ -6,23 +6,18 @@
 
 import { cookies } from 'next/headers';
 
-type Method = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+import { ApiOptions, Method } from '@/app/_models/api';
 
-interface ServerApiOptions extends Omit<RequestInit, 'method' | 'body'> {
-  params?: Record<string, string | number | boolean | null | undefined>;
-  body?: any;
-}
-
-export const serverApi = async (
+export const callBackendApi = async (
   path: string,
-  method?: Method,
-  options?: ServerApiOptions
+  method: Method,
+  options?: ApiOptions
 ): Promise<Response> => {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get('accessToken')?.value;
 
   if (!accessToken) {
-    throw new Error('인증 토큰이 없습니다');
+    return new Response(JSON.stringify({ error: '인증 토큰이 없습니다' }), { status: 401 });
   }
 
   const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}${path}`);
@@ -39,8 +34,8 @@ export const serverApi = async (
     method,
     headers: {
       'Content-Type': 'application/json',
-      ...options?.headers,
       Authorization: `Bearer ${accessToken}`,
+      ...options?.headers,
     },
     body: options?.body ? JSON.stringify(options.body) : undefined,
   });
@@ -49,30 +44,30 @@ export const serverApi = async (
 export const backendApi = {
   /**
    * @example
-   * - await api.get('/meetings?userId=123') || await api.get('/meetings', { params: { userId: 123 } });
+   * - await backendApi.get('/meetings?userId=123') || await backendApi.get('/meetings', { params: { userId: 123 } });
    */
-  get: (path: string, options?: Omit<ServerApiOptions, 'body'>) => serverApi(path, 'GET', options),
+  get: (path: string, options?: Omit<ApiOptions, 'body'>) => callBackendApi(path, 'GET', options),
   /**
    * @example
-   * await api.post('/meetings', { body: { name: '새로운 모무찌' } });
+   * await backendApi.post('/meetings', { body: { name: '새로운 모무찌' } });
    */
-  post: (path: string, options?: ServerApiOptions) => serverApi(path, 'POST', options),
+  post: (path: string, options?: ApiOptions) => callBackendApi(path, 'POST', options),
   /**
    * @example
-   * await api.put('/meetings/1', { body: { name: '수정된 모무찌' } });
+   * await backendApi.put('/meetings/1', { body: { name: '수정된 모무찌' } });
    */
-  put: (path: string, options?: ServerApiOptions) => serverApi(path, 'PUT', options),
+  put: (path: string, options?: ApiOptions) => callBackendApi(path, 'PUT', options),
   /**
    * @example
-   * await api.patch('/meetings/1', { body: { name: '수정된 모무찌' } });
+   * await backendApi.patch('/meetings/1', { body: { name: '수정된 모무찌' } });
    */
-  patch: (path: string, options?: ServerApiOptions) => serverApi(path, 'PATCH', options),
+  patch: (path: string, options?: ApiOptions) => callBackendApi(path, 'PATCH', options),
   /**
    * @example
-   * await api.delete('/meetings/1');
+   * await backendApi.delete('/meetings/1');
    * @description
    * HTTP 명세상으로는 body를 허용하지만, 관례를 고려해 제외함
    */
-  delete: (path: string, options?: Omit<ServerApiOptions, 'body'>) =>
-    serverApi(path, 'DELETE', options),
+  delete: (path: string, options?: Omit<ApiOptions, 'body'>) =>
+    callBackendApi(path, 'DELETE', options),
 };
