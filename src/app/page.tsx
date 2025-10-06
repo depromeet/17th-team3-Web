@@ -17,7 +17,7 @@ const HomePage = () => {
   };
 
   const createMeeting = async () => {
-    const data = meetingService.getList(String(123));
+    const data = await meetingService.getList(String(123));
     console.log(data);
   };
 

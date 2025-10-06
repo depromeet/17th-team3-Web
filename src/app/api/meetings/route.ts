@@ -1,20 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { api } from '@/app/_lib/apiClient';
+import { backendApi } from '@/app/_lib/apiServer';
 
 export const GET = async (request: NextRequest) => {
   try {
     const { searchParams } = request.nextUrl;
     const userId = searchParams.get('userId');
 
-    const response = await api.get('/meetings', {
+    const response = await backendApi.get('/meetings', {
       params: { userId },
     });
 
     if (response.status === 401) {
       return NextResponse.json({ error: '인증이 만료되었습니다' }, { status: 401 });
     }
-    fetch('asdf', { method: 'GET' });
+
     if (!response.ok) {
       return NextResponse.json(
         { error: '모임 조회 중 오류가 발생했습니다' },

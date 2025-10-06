@@ -66,7 +66,7 @@ export const backendApi = {
    * @example
    * await backendApi.delete('/meetings/1');
    * @description
-   * HTTP 명세상으로는 body를 허용하지만, 관례를 고려해 제외함
+   * HTTP 명세상 body 허용하지만 RESTful 관례상 제외
    */
   delete: (path: string, options?: Omit<ApiOptions, 'body'>) =>
     callBackendApi(path, 'DELETE', options),

@@ -1,6 +1,10 @@
+import { api } from '@/app/_lib/apiClient';
+
 export const meetingService = {
   getList: async (userId: string) => {
-    const response = await fetch(`/api/meetings?userId=${userId}`, { method: 'GET' });
+    const response = await api.get(`/meetings`, {
+      params: { userId },
+    });
     return response.json();
   },
 };

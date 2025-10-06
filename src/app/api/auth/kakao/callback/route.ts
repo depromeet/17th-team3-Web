@@ -1,6 +1,8 @@
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
+// import { backendApi } from '@/app/_lib/apiServer';
+
 /**
  * 카카오 OAuth 콜백 처리
  * - 클라이언트에게 파라미터로 code를 받아 백엔드에 전달
@@ -18,14 +20,9 @@ export const GET = async (request: NextRequest) => {
 
   try {
     // 백엔드에 code 전달하여 토큰 요청
-    // todo: 백엔드 인증 에러 확인 후 주석 비활성화
-    // const response = await fetch(
-    //   `https://api/proxy/api/v1/auth/kakao-login?code=${code}`,
-    //   // `https://api.momuzzi.site/api/v1/auth/kakao-login?code=${code}`,
-    //   {
-    //     method: 'GET',
-    //   }
-    // );
+    // const response = await backendApi.get('/auth/kakao-login', {
+    //   params: { code },
+    // });
 
     // 임시 fetch Response 객체
     const response = {

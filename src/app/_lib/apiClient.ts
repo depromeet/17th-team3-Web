@@ -12,7 +12,7 @@ const callApiRoute = async (
   method: Method,
   options?: ApiOptions
 ): Promise<Response> => {
-  const url = new URL(path, window.location.origin);
+  const url = new URL('api' + path, window.location.origin);
 
   if (options?.params) {
     Object.entries(options.params).forEach(([key, value]) => {
@@ -27,7 +27,7 @@ const callApiRoute = async (
       'Content-Type': 'application/json',
       ...options?.headers,
     },
-    credentials: 'include',
+    credentials: 'include', // 동일 Origin이기 때문에 생략해도 문제가 없음 / 명시성을 위해 포함
     body: options?.body ? JSON.stringify(options.body) : undefined,
   });
 };
@@ -57,7 +57,7 @@ export const api = {
    * @example
    * await api.delete('/api/meetings/1');
    * @description
-   * HTTP 명세상으로는 body를 허용하지만, 관례를 고려해 제외함
+   * HTTP 명세상 body 허용하지만 RESTful 관례상 제외
    */
   delete: (path: string, options?: Omit<ApiOptions, 'body'>) =>
     callApiRoute(path, 'DELETE', options),
