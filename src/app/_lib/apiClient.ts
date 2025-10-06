@@ -15,7 +15,7 @@ interface ApiClientOptions extends Omit<RequestInit, 'method' | 'body'> {
  * @param path - API 경로 (예: '/meetings', '/user/me')
  * @param options - fetch 옵션 (method, params, body 등)
  * @returns fetch Response 객체
- * @throws 토큰이 없으면 Unauthorized 발생
+ * @throws 토큰이 없으면 Unauthorized 에러 발생
  */
 export const apiClient = async (path: string, options?: ApiClientOptions): Promise<Response> => {
   const cookieStore = await cookies();
@@ -25,7 +25,6 @@ export const apiClient = async (path: string, options?: ApiClientOptions): Promi
     throw new Error('인증 토큰이 없습니다');
   }
 
-  // URL 생성 및 Query Parameter 추가
   const backendUrl = new URL(`${process.env.NEXT_PUBLIC_API_URL}${path}`);
 
   if (options?.params) {
@@ -36,20 +35,19 @@ export const apiClient = async (path: string, options?: ApiClientOptions): Promi
     });
   }
 
-  // body가 객체면 JSON.stringify
   const body =
     options?.body && typeof options.body === 'object'
       ? JSON.stringify(options.body)
       : options?.body;
 
-  return fetch(backendUrl.toString(), {
+  return fetch(String(backendUrl), {
     method: options?.method || 'GET',
     ...options,
     body,
     headers: {
       'Content-Type': 'application/json',
-      ...options?.headers,
       Authorization: `Bearer ${accessToken}`,
+      ...options?.headers,
     },
   });
 };
