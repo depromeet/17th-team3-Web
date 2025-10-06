@@ -14,17 +14,17 @@ interface LoginButtonProps {
   provider?: 'kakao';
 }
 
-const LoginButton = ({ provider = 'kakao' }: LoginButtonProps) => {
-  const providerConfig = {
-    kakao: {
-      text: '카카오톡으로 시작하기',
-      icon: '/icons/kakao-icon.svg',
-      className: 'bg-yellow-400',
-      redirectUrl: `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URL)}`,
-    },
-  };
+const PROVIDER_CONFIG = {
+  kakao: {
+    text: '카카오톡으로 시작하기',
+    icon: '/icons/kakao-icon.svg',
+    className: 'bg-yellow-400',
+    redirectUrl: `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URL)}`,
+  },
+};
 
-  const config = providerConfig[provider];
+const LoginButton = ({ provider = 'kakao' }: LoginButtonProps) => {
+  const config = PROVIDER_CONFIG[provider];
 
   const handleLogin = () => {
     window.location.href = config.redirectUrl;
