@@ -25,6 +25,7 @@ const HomePage = () => {
     <div className="flex h-[100dvh] flex-col background-2">
       <div className="flex flex-col gap-2 px-8 pt-16 pb-3">
         <button onClick={handleLogout}>로그아웃 테스트 버튼</button>
+        <button onClick={createMeeting}>모임 조회 테스트 버튼</button>
         <Image src={'/images/mumozzi-home-sm.svg'} alt="모무찌 작은 로고" width={36} height={36} />
         <Heading level="h2">우리 어디서 모무찌?</Heading>
       </div>

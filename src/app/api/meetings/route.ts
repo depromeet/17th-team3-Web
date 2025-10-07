@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { backendApi } from '@/app/_lib/apiServer';
+import { ApiErrorResponse } from '@/app/_models/api';
 
 export const GET = async (request: NextRequest) => {
   try {
+    console.log('==================GET: /api/meetings================');
     const { searchParams } = request.nextUrl;
     const userId = searchParams.get('userId');
 
@@ -11,21 +13,18 @@ export const GET = async (request: NextRequest) => {
       params: { userId },
     });
 
-    if (response.status === 401) {
-      return NextResponse.json({ error: '인증이 만료되었습니다' }, { status: 401 });
-    }
+    console.log(`==================zxcvzxcv${response.status}================`);
 
     if (!response.ok) {
-      return NextResponse.json(
-        { error: '모임 조회 중 오류가 발생했습니다' },
-        { status: response.status }
-      );
+      const error = (await response.json()) as ApiErrorResponse;
+      // error -> 인터셉터 withTokenRefresh의 JSON.stringify({ errorMessage: '인증이 만료되었습니다. 다시 로그인해주세요', shouldLogout: true })
+      return NextResponse.json(error, { status: response.status });
     }
 
     const data = await response.json();
     return NextResponse.json(data);
   } catch (error) {
     console.error('모임 조회 중 에러:', error);
-    return NextResponse.json({ error: '모임 조회 중 오류가 발생했습니다' }, { status: 500 });
+    return NextResponse.json({ errorMessage: '모임 조회 중 오류가 발생했습니다' }, { status: 500 });
   }
 };

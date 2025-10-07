@@ -8,36 +8,51 @@ import { cookies } from 'next/headers';
 
 import { ApiOptions, Method } from '@/app/_models/api';
 
+import { withTokenRefresh } from './apiInterceptors';
+
 export const callBackendApi = async (
   path: string,
   method: Method,
   options?: ApiOptions
 ): Promise<Response> => {
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get('accessToken')?.value;
+  console.log('==================callBackendApi11111================');
+  return withTokenRefresh(async (newToken?: string) => {
+    console.log('==================callBackendApi22222================');
+    const cookieStore = await cookies();
+    // const accessToken = cookieStore.get('accessToken')?.value;
+    const accessToken = newToken || cookieStore.get('accessToken')?.value;
 
-  if (!accessToken) {
-    return new Response(JSON.stringify({ error: '인증 토큰이 없습니다' }), { status: 401 });
-  }
+    if (!accessToken) {
+      return new Response(JSON.stringify({ errorMessage: '인증 토큰이 없습니다' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
 
-  const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}${path}`);
+    const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}${path}`);
 
-  if (options?.params) {
-    Object.entries(options.params).forEach(([key, value]) => {
-      if (value !== null && value !== undefined) {
-        url.searchParams.set(key, String(value));
-      }
-    });
-  }
+    if (options?.params) {
+      Object.entries(options.params).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+          url.searchParams.set(key, String(value));
+        }
+      });
+    }
 
-  return fetch(String(url), {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
-      ...options?.headers,
-    },
-    body: options?.body ? JSON.stringify(options.body) : undefined,
+    // return fetch(String(url), {
+    //   method,
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     Authorization: `Bearer ${accessToken}`,
+    //     ...options?.headers,
+    //   },
+    //   body: options?.body ? JSON.stringify(options.body) : undefined,
+    // });
+    return {
+      ok: true,
+      status: 200,
+      json: async () => ({ data: [{ 1: 'a', 2: 'b', 3: 'c' }] }),
+    } as Response;
   });
 };
 

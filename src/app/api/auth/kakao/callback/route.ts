@@ -15,7 +15,7 @@ export const GET = async (request: NextRequest) => {
   const code = searchParams.get('code');
 
   if (!code) {
-    return NextResponse.json({ error: 'code 파라미터가 없습니다' }, { status: 400 });
+    return NextResponse.json({ errorMessage: 'code 파라미터가 없습니다' }, { status: 400 });
   }
 
   try {
@@ -32,11 +32,10 @@ export const GET = async (request: NextRequest) => {
         accessToken: 'mock-access-token-abc123',
         refreshToken: 'mock-refresh-token-xyz789',
       }),
-      text: async () => 'Mock Response Text',
     };
 
     if (!response.ok) {
-      const errorText = await response.text();
+      const errorText = await response.json();
       console.error('백엔드 에러 응답:', errorText);
       return NextResponse.json(
         { error: '백엔드 인증에 실패했습니다', details: errorText },
@@ -47,7 +46,10 @@ export const GET = async (request: NextRequest) => {
     const { accessToken, refreshToken } = await response.json();
 
     if (!accessToken || !refreshToken) {
-      return NextResponse.json({ error: '토큰이 응답에 포함되지 않았습니다' }, { status: 500 });
+      return NextResponse.json(
+        { errorMessage: '토큰이 응답에 포함되지 않았습니다' },
+        { status: 500 }
+      );
     }
 
     const cookieStore = await cookies();
@@ -58,7 +60,8 @@ export const GET = async (request: NextRequest) => {
       secure: process.env.NODE_ENV === 'production', // 로컬 환경: http
       sameSite: 'lax',
       path: '/',
-      maxAge: 3600, // todo: 백엔드 토큰 만료시간 확인 후 수정
+      // maxAge: 3600, // todo: 백엔드 토큰 만료시간 확인 후 수정
+      maxAge: 10, // todo: 백엔드 토큰 만료시간 확인 후 수정
     });
 
     // 리프레시 토큰 쿠키 설정 (임시: 7일)
@@ -67,12 +70,16 @@ export const GET = async (request: NextRequest) => {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
-      maxAge: 604800, // todo: 백엔드 토큰 만료시간 확인 후 수정
+      // maxAge: 604800, // todo: 백엔드 토큰 만료시간 확인 후 수정
+      maxAge: 30, // todo: 백엔드 토큰 만료시간 확인 후 수정
     });
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('카카오 로그인 처리 중 에러:', error);
-    return NextResponse.json({ error: '로그인 처리 중 오류가 발생했습니다' }, { status: 500 });
+    return NextResponse.json(
+      { errorMessage: '로그인 처리 중 오류가 발생했습니다' },
+      { status: 500 }
+    );
   }
 };
