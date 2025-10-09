@@ -1,11 +1,9 @@
-import { api } from '@/app/_lib/apiClient';
+import { api } from '@/app/_lib/api';
 
-export const meetingService = {
+export const meetingsApi = {
   getList: async (userId: string) => {
-    const response = await api.get('/meetings', {
+    return await api.get('/meetings', {
       params: { userId },
     });
-
-    return await response.json();
   },
 };

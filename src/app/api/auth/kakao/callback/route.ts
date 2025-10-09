@@ -1,9 +1,7 @@
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { backendApi } from '@/app/_lib/apiServer';
-
-// import { backendApi } from '@/app/_lib/apiServer';
+const BACKEND_API = process.env.NEXT_PUBLIC_API_URL!;
 
 /**
  * 카카오 OAuth 콜백 처리
@@ -21,20 +19,15 @@ export const GET = async (request: NextRequest) => {
   }
 
   try {
-    // 백엔드에 code 전달하여 토큰 요청
-    const response = await backendApi.get('/auth/kakao-login', {
-      params: { code },
-    });
+    const url = new URL(`${BACKEND_API}/auth/kakao-login`);
+    url.searchParams.set('code', code);
 
-    // 임시 fetch Response 객체
-    // const response = {
-    //   ok: true,
-    //   status: 200,
-    //   json: async () => ({
-    //     accessToken: 'mock-access-token-abc123',
-    //     refreshToken: 'mock-refresh-token-xyz789',
-    //   }),
-    // };
+    const response = await fetch(String(url), {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
     if (!response.ok) {
       const errorText = await response.json();
@@ -45,7 +38,7 @@ export const GET = async (request: NextRequest) => {
       );
     }
 
-    const { accessToken, refreshToken } = await response.json();
+    const { data: { accessToken, refreshToken } = {} } = await response.json();
 
     if (!accessToken || !refreshToken) {
       return NextResponse.json(
@@ -56,24 +49,22 @@ export const GET = async (request: NextRequest) => {
 
     const cookieStore = await cookies();
 
-    // 액세스 토큰 쿠키 설정 (임시: 1시간)
+    // 액세스 토큰 쿠키 설정
     cookieStore.set('accessToken', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // 로컬 환경: http
       sameSite: 'lax',
       path: '/',
-      // maxAge: 3600, // todo: 백엔드 토큰 만료시간 확인 후 수정
-      maxAge: 10, // todo: 백엔드 토큰 만료시간 확인 후 수정
+      maxAge: 3600,
     });
 
-    // 리프레시 토큰 쿠키 설정 (임시: 7일)
+    // 리프레시 토큰 쿠키 설정
     cookieStore.set('refreshToken', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
-      // maxAge: 604800, // todo: 백엔드 토큰 만료시간 확인 후 수정
-      maxAge: 30, // todo: 백엔드 토큰 만료시간 확인 후 수정
+      maxAge: 604800,
     });
 
     return NextResponse.json({ success: true });

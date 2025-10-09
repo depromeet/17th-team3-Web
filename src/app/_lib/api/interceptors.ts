@@ -1,12 +1,10 @@
 /**
- * API 인터셉터 유틸리티 (API Routes 전용)
+ * API 인터셉터 유틸리티
  * - 액세스 토큰 만료 시, 리프레시 토큰으로 갱신
- * - 401/403 발생 시 자동 재시도
+ * - 401 발생 시 자동 재시도
  */
 
-// import { cookies } from 'next/headers';
-
-import { ApiErrorResponse } from '@/app/_models/api';
+import { FetchErrorResponse } from '@/app/_models/api';
 
 /**
  * refreshToken을 사용하여 accessToken, refreshToken 갱신
@@ -28,10 +26,8 @@ export const refreshTokens = async (): Promise<
     const refreshToken = cookieStore.get('refreshToken')?.value;
 
     if (!refreshToken) {
-      console.error('리프레시 토큰이 없습니다');
       return null;
     }
-    console.log('==================refreshTokens================', refreshToken);
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/reissue-token`, {
@@ -85,23 +81,17 @@ export const refreshTokens = async (): Promise<
 export const withTokenRefresh = async (
   fetchFn: (token?: string) => Promise<Response>
 ): Promise<Response> => {
-  console.log('==================withTokenRefresh================', fetchFn);
   const response = await fetchFn();
 
-  // 401/403 발생 시 토큰 갱신 시도
-  // todo: 403 -> 갱신 또는 로그아웃 결정 필요
-  console.log('==================withTokenRefresh2222222================', response);
   if (response.status === 401) {
     const newTokens = await refreshTokens();
-    console.log('==================withTokenRefresh33333333================', newTokens);
 
-    // RT 만료 시
     if (!newTokens) {
       return new Response(
         JSON.stringify({
           errorMessage: '인증이 만료되었습니다. 다시 로그인해주세요',
           shouldLogout: true,
-        } as ApiErrorResponse),
+        } as FetchErrorResponse),
         { status: 401 }
       );
     }

@@ -1,1 +1,1 @@
-export { exchangeCodeForCookie, logout } from './authApi';
+export { exchangeCodeForCookie, logout } from './exchangeCodeForCookie';
