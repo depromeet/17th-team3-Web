@@ -74,6 +74,7 @@ const request = async <T>(
 
     if (!response.ok) {
       throw new Error(`API 요청에 실패했습니다: ${response.status}`);
+      // todo: 갱신 실패 시, 로그아웃
     }
 
     const responseText = await response.text();
@@ -89,6 +90,7 @@ const request = async <T>(
 
     if (!response.ok) {
       throw new Error(`API 요청에 실패했습니다: ${response.status}`);
+      // todo: 갱신 실패 시, 로그아웃
     }
 
     const responseText = await response.text();
