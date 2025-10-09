@@ -12,7 +12,9 @@ const callApiRoute = async (
   method: Method,
   options?: ApiOptions
 ): Promise<Response> => {
-  const url = new URL('api' + path, window.location.origin);
+  const isReturnPath = ['/auth/kakao/callback'];
+  const isReturn = isReturnPath.includes(path);
+  const url = new URL(`${isReturn ? `api/${path}` : `api/proxy/${path}`}`, window.location.origin);
 
   if (options?.params) {
     Object.entries(options.params).forEach(([key, value]) => {
@@ -21,6 +23,7 @@ const callApiRoute = async (
       }
     });
   }
+
   return fetch(String(url), {
     method,
     headers: {

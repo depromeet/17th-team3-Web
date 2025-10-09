@@ -1,6 +1,8 @@
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
+import { backendApi } from '@/app/_lib/apiServer';
+
 // import { backendApi } from '@/app/_lib/apiServer';
 
 /**
@@ -20,19 +22,19 @@ export const GET = async (request: NextRequest) => {
 
   try {
     // 백엔드에 code 전달하여 토큰 요청
-    // const response = await backendApi.get('/auth/kakao-login', {
-    //   params: { code },
-    // });
+    const response = await backendApi.get('/auth/kakao-login', {
+      params: { code },
+    });
 
     // 임시 fetch Response 객체
-    const response = {
-      ok: true,
-      status: 200,
-      json: async () => ({
-        accessToken: 'mock-access-token-abc123',
-        refreshToken: 'mock-refresh-token-xyz789',
-      }),
-    };
+    // const response = {
+    //   ok: true,
+    //   status: 200,
+    //   json: async () => ({
+    //     accessToken: 'mock-access-token-abc123',
+    //     refreshToken: 'mock-refresh-token-xyz789',
+    //   }),
+    // };
 
     if (!response.ok) {
       const errorText = await response.json();

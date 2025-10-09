@@ -4,7 +4,7 @@
  * - 401/403 발생 시 자동 재시도
  */
 
-import { cookies } from 'next/headers';
+// import { cookies } from 'next/headers';
 
 import { ApiErrorResponse } from '@/app/_models/api';
 
@@ -12,57 +12,64 @@ import { ApiErrorResponse } from '@/app/_models/api';
  * refreshToken을 사용하여 accessToken, refreshToken 갱신
  * @returns 새로운 accessToken, refreshToken 또는 실패 시 null
  */
-export const refreshTokens = async (): Promise<{
-  newAccessToken: string;
-  newRefreshToken: string;
-} | null> => {
-  const cookieStore = await cookies();
-  const refreshToken = cookieStore.get('refreshToken')?.value;
+export const refreshTokens = async (): Promise<
+  | {
+      newAccessToken: string;
+      newRefreshToken: string;
+    }
+  | null
+  | undefined
+> => {
+  const isServer = typeof window === 'undefined';
 
-  if (!refreshToken) {
-    console.error('리프레시 토큰이 없습니다');
-    return null;
-  }
-  console.log('==================refreshTokens================', refreshToken);
+  if (isServer) {
+    const { cookies } = await import('next/headers');
+    const cookieStore = await cookies();
+    const refreshToken = cookieStore.get('refreshToken')?.value;
 
-  try {
-    // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/reissue-token`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     Authorization: `Bearer ${refreshToken}`,
-    //   },
-    // });
+    if (!refreshToken) {
+      console.error('리프레시 토큰이 없습니다');
+      return null;
+    }
+    console.log('==================refreshTokens================', refreshToken);
 
-    // if (!response.ok) {
-    //   console.error('토큰 갱신 실패:', response.status);
-    //   return null;
-    // }
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/reissue-token`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${refreshToken}`,
+        },
+      });
 
-    // const { accessToken: newAccessToken, refreshToken: newRefreshToken } = await response.json();
-    const newAccessToken = 'new-access-token-abc123';
-    const newRefreshToken = 'new-refresh-token-xyz789';
+      if (!response.ok) {
+        console.error('토큰 갱신 실패:', response.status);
+        return null;
+      }
 
-    cookieStore.set('accessToken', newAccessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 10,
-    });
+      const { accessToken: newAccessToken, refreshToken: newRefreshToken } = await response.json();
 
-    cookieStore.set('refreshToken', newRefreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 30,
-    });
+      cookieStore.set('accessToken', newAccessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 10,
+      });
 
-    return { newAccessToken, newRefreshToken };
-  } catch (error) {
-    console.error('토큰 갱신 중 에러 발생:', error);
-    return null;
+      cookieStore.set('refreshToken', newRefreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 30,
+      });
+
+      return { newAccessToken, newRefreshToken };
+    } catch (error) {
+      console.error('토큰 갱신 중 에러 발생:', error);
+      return null;
+    }
   }
 };
 
