@@ -47,7 +47,7 @@ export const refreshTokens = async (): Promise<{
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         path: '/',
-        maxAge: 10,
+        maxAge: 3600,
       });
 
       cookieStore.set('refreshToken', newRefreshToken, {
@@ -55,7 +55,7 @@ export const refreshTokens = async (): Promise<{
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         path: '/',
-        maxAge: 30,
+        maxAge: 604800,
       });
 
       return { newAccessToken, newRefreshToken };
