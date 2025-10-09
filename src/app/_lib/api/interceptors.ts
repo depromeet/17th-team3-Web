@@ -10,14 +10,10 @@ import { FetchErrorResponse } from '@/app/_models/api';
  * refreshToken을 사용하여 accessToken, refreshToken 갱신
  * @returns 새로운 accessToken, refreshToken 또는 실패 시 null
  */
-export const refreshTokens = async (): Promise<
-  | {
-      newAccessToken: string;
-      newRefreshToken: string;
-    }
-  | null
-  | undefined
-> => {
+export const refreshTokens = async (): Promise<{
+  newAccessToken: string;
+  newRefreshToken: string;
+} | null> => {
   const isServer = typeof window === 'undefined';
 
   if (isServer) {
@@ -34,8 +30,8 @@ export const refreshTokens = async (): Promise<
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${refreshToken}`,
         },
+        body: JSON.stringify({ refreshToken }),
       });
 
       if (!response.ok) {
@@ -43,7 +39,8 @@ export const refreshTokens = async (): Promise<
         return null;
       }
 
-      const { accessToken: newAccessToken, refreshToken: newRefreshToken } = await response.json();
+      const { data: { accessToken: newAccessToken, refreshToken: newRefreshToken } = {} } =
+        await response.json();
 
       cookieStore.set('accessToken', newAccessToken, {
         httpOnly: true,
@@ -67,6 +64,8 @@ export const refreshTokens = async (): Promise<
       return null;
     }
   }
+
+  return null;
 };
 
 /**
