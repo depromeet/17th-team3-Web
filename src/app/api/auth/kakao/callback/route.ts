@@ -49,7 +49,6 @@ export const GET = async (request: NextRequest) => {
 
     const cookieStore = await cookies();
 
-    // 액세스 토큰 쿠키 설정
     cookieStore.set('accessToken', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // 로컬 환경: http
@@ -58,7 +57,6 @@ export const GET = async (request: NextRequest) => {
       maxAge: 3600,
     });
 
-    // 리프레시 토큰 쿠키 설정
     cookieStore.set('refreshToken', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
