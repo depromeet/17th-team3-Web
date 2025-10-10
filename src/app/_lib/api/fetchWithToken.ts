@@ -100,11 +100,11 @@ const request = async <T>(
 
 export const api = {
   get: <T>(path: string, options?: FetchOptions) => request<T>('GET', path, options),
-  post: <T>(path: string, body?: any, options?: FetchOptions) =>
+  post: <T, B>(path: string, body?: B, options?: FetchOptions<B>) =>
     request<T>('POST', path, { ...options, body }),
-  put: <T>(path: string, body?: any, options?: FetchOptions) =>
+  put: <T, B>(path: string, body?: B, options?: FetchOptions) =>
     request<T>('PUT', path, { ...options, body }),
-  delete: <T>(path: string, options?: FetchOptions) => request<T>('DELETE', path, options),
-  patch: <T>(path: string, body?: any, options?: FetchOptions) =>
+  patch: <T, B>(path: string, body?: B, options?: FetchOptions) =>
     request<T>('PATCH', path, { ...options, body }),
+  delete: <T>(path: string, options?: FetchOptions) => request<T>('DELETE', path, options),
 };
