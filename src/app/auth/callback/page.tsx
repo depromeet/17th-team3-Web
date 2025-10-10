@@ -5,7 +5,7 @@ import { Suspense, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { useAuthParams } from '@/app/auth/_hooks/useAuthParams';
-import { exchangeCodeForCookie } from '@/app/auth/_services/authService';
+import { exchangeCodeForCookie } from '@/app/auth/_services';
 
 const CallbackContent = () => {
   const { code, error } = useAuthParams();
