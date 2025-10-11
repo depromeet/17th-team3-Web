@@ -19,10 +19,10 @@ const toQueryString = (params?: Record<string, any>): string => {
   return query ? `?${query}` : '';
 };
 
-const request = async <T>(
+const request = async <T, B = unknown>(
   method: HTTPMethod,
   path: string,
-  options: FetchOptions = {}
+  options: FetchOptions<B> = {}
 ): Promise<T> => {
   const isServer = typeof window === 'undefined';
 
@@ -101,10 +101,10 @@ const request = async <T>(
 export const api = {
   get: <T>(path: string, options?: FetchOptions) => request<T>('GET', path, options),
   post: <T, B>(path: string, body?: B, options?: FetchOptions<B>) =>
-    request<T>('POST', path, { ...options, body }),
+    request<T, B>('POST', path, { ...options, body }),
   put: <T, B>(path: string, body?: B, options?: FetchOptions) =>
-    request<T>('PUT', path, { ...options, body }),
+    request<T, B>('PUT', path, { ...options, body }),
   patch: <T, B>(path: string, body?: B, options?: FetchOptions) =>
-    request<T>('PATCH', path, { ...options, body }),
+    request<T, B>('PATCH', path, { ...options, body }),
   delete: <T>(path: string, options?: FetchOptions) => request<T>('DELETE', path, options),
 };

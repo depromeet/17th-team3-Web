@@ -9,3 +9,18 @@ export interface FetchErrorResponse {
   errorMessage: string;
   shouldLogout?: boolean;
 }
+
+export interface SuccessResponse<T> {
+  data: T;
+  error: null;
+}
+
+export interface ErrorResponse {
+  data: null;
+  error: {
+    name: string;
+    code: string;
+    message: string;
+    detail: unknown;
+  };
+}
