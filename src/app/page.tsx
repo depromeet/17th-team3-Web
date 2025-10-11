@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 import { Heading, Text } from '@/app/_components/typography';
 import Button from '@/app/_components/ui/Button';
-import { meetingsApi } from '@/app/meetings/_services';
+import { meetingsApi } from '@/app/_services/meetings';
 
 const HomePage = () => {
   const handleLogout = async () => {
@@ -15,7 +15,7 @@ const HomePage = () => {
   };
 
   const createMeeting = async () => {
-    const data = await meetingsApi.getList(String(123));
+    const data = await meetingsApi.getMeetings();
     console.log(data);
   };
 
