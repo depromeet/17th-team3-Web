@@ -52,10 +52,16 @@ const request = async <T, B = unknown>(
       const accessToken = newToken || cookieStore.get('accessToken')?.value;
 
       if (!accessToken) {
-        return new Response(JSON.stringify({ errorMessage: '인증 토큰이 없습니다' }), {
-          status: 401,
-          headers: { 'Content-Type': 'application/json' },
-        });
+        return new Response(
+          JSON.stringify({
+            errorMessage: '인증 토큰이 없습니다',
+            shouldLogout: true,
+          }),
+          {
+            status: 401,
+            headers: { 'Content-Type': 'application/json' },
+          }
+        );
       }
 
       const headersWithAuth = {
@@ -73,8 +79,28 @@ const request = async <T, B = unknown>(
     });
 
     if (!response.ok) {
-      throw new Error(`API 요청에 실패했습니다: ${response.status}`);
-      // todo: 갱신 실패 시, 로그아웃
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch {
+        errorData = { errorMessage: '알 수 없는 에러가 발생했습니다.' };
+      }
+
+      if (response.status === 401 && errorData.shouldLogout) {
+        const { redirect } = await import('next/navigation');
+        const cookieStore = await cookies();
+
+        cookieStore.delete('accessToken');
+        cookieStore.delete('refreshToken');
+
+        redirect('/login');
+      }
+
+      throw {
+        status: response.status,
+        message: errorData.errorMessage || 'API 요청 실패',
+        data: errorData,
+      };
     }
 
     const responseText = await response.text();
@@ -89,8 +115,24 @@ const request = async <T, B = unknown>(
     });
 
     if (!response.ok) {
-      throw new Error(`API 요청에 실패했습니다: ${response.status}`);
-      // todo: 갱신 실패 시, 로그아웃
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch {
+        errorData = { errorMessage: 'Unknown error' };
+      }
+
+      if (response.status === 401 && errorData.shouldLogout) {
+        const { logout } = await import('@/app/_services/auth');
+        await logout();
+        throw new Error('인증이 만료되었습니다. 다시 로그인해주세요.');
+      }
+
+      throw {
+        status: response.status,
+        message: errorData.errorMessage || 'API 요청 실패',
+        data: errorData,
+      };
     }
 
     const responseText = await response.text();

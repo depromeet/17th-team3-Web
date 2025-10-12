@@ -9,13 +9,11 @@ export const meetingsApi = {
       name: '오늘 뭐먹을건데',
       attendeeNickname: '나야 혁준',
       attendeeCount: 10,
-      stationId: 1, // 지하철역 API?
-      endAt: '2025-10-15T09:00:00.000Z', // 형식 정의 필요
+      stationId: 1,
+      endAt: '2025-10-15T09:00:00.000Z',
     };
-
     return api.post('/meetings', mockForm);
   },
-
   // 모임 초대 토큰 생성
   getMeetingToken: (meetingId: string) => api.post(`/meetings/${meetingId}/invite-token`),
   // 모임 참여
