@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 const AUTH_PAGES = ['/login'];
-const PROTECTED_ROUTES = ['/', '/meetings'];
+const PROTECTED_ROUTES = ['/meetings'];
 
 const middleware = (req: NextRequest) => {
   if (req.nextUrl.pathname === '/healthz') {
@@ -13,7 +13,8 @@ const middleware = (req: NextRequest) => {
   const accessToken = req.cookies.get('accessToken')?.value;
   const { pathname } = req.nextUrl;
 
-  const isProtected = PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
+  const isProtected =
+    pathname === '/' || PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
 
   if (isProtected && !accessToken) {
     return NextResponse.redirect(new URL('/login', req.url));
