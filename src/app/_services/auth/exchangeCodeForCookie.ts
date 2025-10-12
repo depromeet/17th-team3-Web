@@ -14,15 +14,3 @@ export const exchangeCodeForCookie = async (code: string) => {
     throw new Error(`쿠키 교환에 실패하였습니다: ${response.status}`);
   }
 };
-
-// 로그아웃 처리 (쿠키 삭제)
-export const logout = async () => {
-  const response = await fetch('/api/auth/logout', {
-    method: 'POST',
-    credentials: 'include',
-  });
-
-  if (!response.ok) {
-    throw new Error('로그아웃에 실패하였습니다');
-  }
-};
