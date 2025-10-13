@@ -49,7 +49,7 @@ const handler = async (
     });
 
     if (!response.ok) {
-      const errorData = (await response.json()) as FetchErrorResponse;
+      const errorData = await response.json();
       return NextResponse.json(errorData, { status: response.status });
     }
 

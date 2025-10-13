@@ -5,17 +5,12 @@ export interface FetchOptions<B = unknown> extends Omit<RequestInit, 'method' | 
   body?: B;
 }
 
-export interface FetchErrorResponse {
-  errorMessage: string;
-  shouldLogout?: boolean;
-}
-
-export interface SuccessResponse<T> {
+export interface ApiSuccessResponse<T> {
   data: T;
   error: null;
 }
 
-export interface ErrorResponse {
+export interface ApiErrorResponse {
   data: null;
   error: {
     name: string;
@@ -23,4 +18,11 @@ export interface ErrorResponse {
     message: string;
     detail: unknown;
   };
+}
+
+export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
+
+export interface FetchErrorResponse {
+  errorMessage: string;
+  shouldLogout?: boolean;
 }

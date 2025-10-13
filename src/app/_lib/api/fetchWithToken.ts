@@ -74,7 +74,6 @@ const request = async <T, B = unknown>(
         method,
         headers: headersWithAuth,
         body,
-        cache: 'no-store',
       });
     });
 
@@ -83,10 +82,10 @@ const request = async <T, B = unknown>(
       try {
         errorData = await response.json();
       } catch {
-        errorData = { errorMessage: '알 수 없는 에러가 발생했습니다.' };
+        errorData = { error: { message: '알 수 없는 에러가 발생했습니다.' } };
       }
 
-      if (response.status === 401 && errorData.shouldLogout) {
+      if (response.status === 401) {
         const { redirect } = await import('next/navigation');
         const cookieStore = await cookies();
 
@@ -98,7 +97,7 @@ const request = async <T, B = unknown>(
 
       throw {
         status: response.status,
-        message: errorData.errorMessage || 'API 요청 실패',
+        message: errorData.error?.message,
         data: errorData,
       };
     }
@@ -119,18 +118,22 @@ const request = async <T, B = unknown>(
       try {
         errorData = await response.json();
       } catch {
-        errorData = { errorMessage: 'Unknown error' };
+        errorData = { errorMessage: '알 수 없는 에러가 발생했습니다.' };
       }
 
       if (response.status === 401 && errorData.shouldLogout) {
         const { logout } = await import('@/app/_services/auth');
         await logout();
-        throw new Error('인증이 만료되었습니다. 다시 로그인해주세요.');
+        throw {
+          status: 401,
+          message: '인증이 만료되었습니다. 다시 로그인해주세요.',
+          data: errorData,
+        };
       }
 
       throw {
         status: response.status,
-        message: errorData.errorMessage || 'API 요청 실패',
+        message: errorData.errorMessage,
         data: errorData,
       };
     }

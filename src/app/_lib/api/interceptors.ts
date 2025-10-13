@@ -69,7 +69,7 @@ export const refreshTokens = async (): Promise<{
 };
 
 /**
- * 401/403 응답 시 자동으로 토큰 갱신 후 재시도
+ * 401 응답 시 자동으로 토큰 갱신 후 재시도
  * @param fetchFn - 실행할 fetch 함수
  * @returns Response 객체
  * @example
