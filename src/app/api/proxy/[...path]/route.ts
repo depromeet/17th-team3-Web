@@ -2,7 +2,6 @@ import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { withTokenRefresh } from '@/app/_lib/api';
-import { FetchErrorResponse } from '@/app/_models/api';
 
 const BACKEND_API = process.env.NEXT_PUBLIC_API_URL!;
 
