@@ -5,19 +5,77 @@ import type { NextRequest } from 'next/server';
 const AUTH_PAGES = ['/login'];
 const PROTECTED_ROUTES = ['/meetings'];
 
-const middleware = (req: NextRequest) => {
+const refreshTokens = async (
+  refreshToken: string
+): Promise<{ newAccessToken: string; newRefreshToken: string } | null> => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/reissue-token`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ refreshToken }),
+    });
+
+    if (!response.ok) {
+      console.error('토큰 갱신 실패:', response.status);
+      return null;
+    }
+
+    const { data: { accessToken: newAccessToken, refreshToken: newRefreshToken } = {} } =
+      await response.json();
+
+    return { newAccessToken, newRefreshToken };
+  } catch (error) {
+    console.error('토큰 갱신 중 에러 발생:', error);
+    return null;
+  }
+};
+
+const middleware = async (req: NextRequest) => {
   if (req.nextUrl.pathname === '/healthz') {
     return NextResponse.next();
   }
 
   const accessToken = req.cookies.get('accessToken')?.value;
+  const refreshToken = req.cookies.get('refreshToken')?.value;
   const { pathname } = req.nextUrl;
 
   const isProtected =
     pathname === '/' || PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
 
-  if (isProtected && !accessToken) {
-    return NextResponse.redirect(new URL('/login', req.url));
+  if (isProtected) {
+    if (!accessToken && refreshToken) {
+      const newTokens = await refreshTokens(refreshToken);
+
+      if (newTokens) {
+        const response = NextResponse.next();
+        response.cookies.set('accessToken', newTokens.newAccessToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          path: '/',
+          maxAge: 3600,
+        });
+        response.cookies.set('refreshToken', newTokens.newRefreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          path: '/',
+          maxAge: 604800,
+        });
+        return response;
+      }
+
+      const response = NextResponse.redirect(new URL('/login', req.url));
+      response.cookies.delete('accessToken');
+      response.cookies.delete('refreshToken');
+      return response;
+    }
+
+    if (!accessToken) {
+      return NextResponse.redirect(new URL('/login', req.url));
+    }
   }
 
   if (AUTH_PAGES.includes(pathname) && accessToken) {
