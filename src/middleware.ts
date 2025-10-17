@@ -5,33 +5,6 @@ import type { NextRequest } from 'next/server';
 const AUTH_PAGES = ['/login'];
 const PROTECTED_ROUTES = ['/meetings'];
 
-const refreshTokens = async (
-  refreshToken: string
-): Promise<{ newAccessToken: string; newRefreshToken: string } | null> => {
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/reissue-token`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ refreshToken }),
-    });
-
-    if (!response.ok) {
-      console.error('토큰 갱신 실패:', response.status);
-      return null;
-    }
-
-    const { data: { accessToken: newAccessToken, refreshToken: newRefreshToken } = {} } =
-      await response.json();
-
-    return { newAccessToken, newRefreshToken };
-  } catch (error) {
-    console.error('토큰 갱신 중 에러 발생:', error);
-    return null;
-  }
-};
-
 const middleware = async (req: NextRequest) => {
   if (req.nextUrl.pathname === '/healthz') {
     return NextResponse.next();
@@ -45,7 +18,7 @@ const middleware = async (req: NextRequest) => {
     pathname === '/' || PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
 
   if (isProtected) {
-    if (!accessToken && refreshToken) {
+    if ((!accessToken || isTokenExpired(accessToken)) && refreshToken) {
       const newTokens = await refreshTokens(refreshToken);
 
       if (newTokens) {
@@ -87,6 +60,42 @@ const middleware = async (req: NextRequest) => {
 
 export const config = {
   matcher: ['/((?!_next/static|_next/image|favicon.ico|images|uploads|pdf|api).*)'],
+};
+
+const isTokenExpired = (token: string): boolean => {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.exp * 1000 < Date.now() + 5 * 60 * 1000;
+  } catch {
+    return true;
+  }
+};
+
+const refreshTokens = async (
+  refreshToken: string
+): Promise<{ newAccessToken: string; newRefreshToken: string } | null> => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/reissue-token`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ refreshToken }),
+    });
+
+    if (!response.ok) {
+      console.error('토큰 갱신 실패:', response.status);
+      return null;
+    }
+
+    const { data: { accessToken: newAccessToken, refreshToken: newRefreshToken } = {} } =
+      await response.json();
+
+    return { newAccessToken, newRefreshToken };
+  } catch (error) {
+    console.error('토큰 갱신 중 에러 발생:', error);
+    return null;
+  }
 };
 
 export default middleware;

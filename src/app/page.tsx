@@ -15,7 +15,8 @@ const HomePage = () => {
   };
 
   const createMeeting = async () => {
-    const data = await meetingsApi.getMeetings();
+    const data = await meetingsApi.getMeetingToken(String(3));
+    // const data = await meetingsApi.getMeetings();
     console.log(data);
   };
 
@@ -38,7 +39,7 @@ const HomePage = () => {
       </div>
       <div className="px-5 pt-3 pb-6">
         <Link href="/meetings/create/">
-          <Button onClick={createMeeting}>새로운 모임 만들고 식당 추천 받기</Button>
+          <Button>새로운 모임 만들고 식당 추천 받기</Button>
         </Link>
       </div>
     </div>
