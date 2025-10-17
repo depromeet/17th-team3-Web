@@ -26,3 +26,11 @@ export interface FetchErrorResponse {
   errorMessage: string;
   shouldLogout?: boolean;
 }
+
+export interface ApiError {
+  status: number;
+  message: string;
+  code?: string;
+  name?: string;
+  detail?: unknown;
+}

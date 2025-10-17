@@ -4,7 +4,7 @@
  * - 클라이언트: 쿠키를 통한 /api/proxy 프록시 경유
  */
 
-import { FetchOptions, HTTPMethod } from '@/app/_models/api';
+import { ApiError, FetchOptions, HTTPMethod } from '@/app/_models/api';
 
 const BACKEND_API = process.env.NEXT_PUBLIC_API_URL!;
 
@@ -85,7 +85,10 @@ const request = async <T, B = unknown>(
         errorData = { error: { message: '알 수 없는 에러가 발생했습니다.' } };
       }
 
-      if (response.status === 401) {
+      const errorMessage = errorData.error?.message || errorData.errorMessage || 'API 요청 실패';
+      const { shouldLogout } = errorData;
+
+      if (response.status === 401 && shouldLogout) {
         const { redirect } = await import('next/navigation');
         const cookieStore = await cookies();
 
@@ -97,9 +100,11 @@ const request = async <T, B = unknown>(
 
       throw {
         status: response.status,
-        message: errorData.error?.message,
-        data: errorData,
-      };
+        message: errorMessage,
+        code: errorData.error?.code,
+        name: errorData.error?.name,
+        detail: errorData.error?.detail,
+      } as ApiError;
     }
 
     const responseText = await response.text();
@@ -121,21 +126,20 @@ const request = async <T, B = unknown>(
         errorData = { errorMessage: '알 수 없는 에러가 발생했습니다.' };
       }
 
+      const errorMessage = errorData.error?.message || errorData.errorMessage || 'API 요청 실패';
+
       if (response.status === 401 && errorData.shouldLogout) {
         const { logout } = await import('@/app/_services/auth');
         await logout();
-        throw {
-          status: 401,
-          message: '인증이 만료되었습니다. 다시 로그인해주세요.',
-          data: errorData,
-        };
       }
 
       throw {
         status: response.status,
-        message: errorData.errorMessage,
-        data: errorData,
-      };
+        message: errorMessage,
+        code: errorData.error?.code,
+        name: errorData.error?.name,
+        detail: errorData.error?.detail,
+      } as ApiError;
     }
 
     const responseText = await response.text();
