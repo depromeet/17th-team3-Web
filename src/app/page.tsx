@@ -91,6 +91,9 @@ const HomePage = () => {
           <Button>새로운 모임 만들고 식당 추천 받기</Button>
         </Link>
       </div> */}
+      <div className="flex flex-col gap-2 px-8 pt-16 pb-3">
+        <Image src={'/images/momuzzi-wordmark.svg'} alt="모무찌 작은 로고" width={36} height={36} />
+      </div>
       <div>
         <div className="flex gap-3 p-5">
           <Image
