@@ -51,7 +51,7 @@ const middleware = async (req: NextRequest) => {
     }
   }
 
-  if (AUTH_PAGES.includes(pathname) && accessToken) {
+  if (AUTH_PAGES.includes(pathname) && accessToken && !isTokenExpired(accessToken)) {
     return NextResponse.redirect(new URL('/', req.url));
   }
 
@@ -74,6 +74,9 @@ const isTokenExpired = (token: string): boolean => {
 const refreshTokens = async (
   refreshToken: string
 ): Promise<{ newAccessToken: string; newRefreshToken: string } | null> => {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort('갱신 요청 타임아웃(3초) 에러'), 3000);
+
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/reissue-token`, {
       method: 'POST',
@@ -81,6 +84,7 @@ const refreshTokens = async (
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ refreshToken }),
+      signal: controller.signal,
     });
 
     if (!response.ok) {
@@ -95,6 +99,8 @@ const refreshTokens = async (
   } catch (error) {
     console.error('토큰 갱신 중 에러 발생:', error);
     return null;
+  } finally {
+    clearTimeout(timeoutId);
   }
 };
 
