@@ -5,4 +5,7 @@ export type AvatarVariantKey =
   | 'orange'
   | 'grape'
   | 'chocolate'
-  | 'milk';
+  | 'milk'
+  | 'mint'
+  | 'sweetPotato'
+  | 'pistachio';

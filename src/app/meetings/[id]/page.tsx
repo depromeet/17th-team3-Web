@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import PersonFillIcon from '@/app/_components/icons/PersonFillIcon';
 import { Heading } from '@/app/_components/typography';
-import AvatarChip from '@/app/_components/ui/AvatarChip';
+import AvatarIcon from '@/app/_components/ui/AvatarIcon';
 import Button from '@/app/_components/ui/Button';
 import { cn } from '@/app/_lib/cn';
 
@@ -65,12 +65,11 @@ const MeetingPage = () => {
 
           <div className="flex flex-col gap-4">
             <div className="no-scrollbar no-scrollbar::-webkit-scrollbar flex gap-3 overflow-x-auto pb-4">
-              <AvatarChip variant="grape" name="팔도비빔면너무좋아" isMarquee />
-              <AvatarChip variant="default" name="진혁이" isMarquee />
-              <AvatarChip variant="chocolate" name="나는야오빠주인공" isMarquee />
-              <AvatarChip variant="orange" name="빵빠라빵" isMarquee />
-              <AvatarChip variant="empty" />
-              <AvatarChip variant="empty" />
+              <AvatarIcon variant="grape" />
+              <AvatarIcon variant="default" />
+              <AvatarIcon variant="chocolate" />
+              <AvatarIcon variant="orange" />
+              <AvatarIcon variant="mint" />
             </div>
 
             <Button
