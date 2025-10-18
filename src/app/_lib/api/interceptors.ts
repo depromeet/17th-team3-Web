@@ -4,7 +4,10 @@
  * - 401 발생 시 자동 재시도
  */
 
-import { FetchErrorResponse } from '@/app/_models/api';
+interface FetchErrorResponse {
+  errorMessage: string;
+  shouldLogout?: boolean;
+}
 
 /**
  * refreshToken을 사용하여 accessToken, refreshToken 갱신
@@ -69,7 +72,7 @@ export const refreshTokens = async (): Promise<{
 };
 
 /**
- * 401/403 응답 시 자동으로 토큰 갱신 후 재시도
+ * 401 응답 시 자동으로 토큰 갱신 후 재시도
  * @param fetchFn - 실행할 fetch 함수
  * @returns Response 객체
  * @example

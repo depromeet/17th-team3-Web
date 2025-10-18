@@ -4,7 +4,7 @@
  * - 클라이언트: 쿠키를 통한 /api/proxy 프록시 경유
  */
 
-import { FetchOptions, HTTPMethod } from '@/app/_models/api';
+import { ApiError, ApiSuccessResponse, FetchOptions, HTTPMethod } from '@/app/_models/api';
 
 const BACKEND_API = process.env.NEXT_PUBLIC_API_URL!;
 
@@ -52,10 +52,16 @@ const request = async <T, B = unknown>(
       const accessToken = newToken || cookieStore.get('accessToken')?.value;
 
       if (!accessToken) {
-        return new Response(JSON.stringify({ errorMessage: '인증 토큰이 없습니다' }), {
-          status: 401,
-          headers: { 'Content-Type': 'application/json' },
-        });
+        return new Response(
+          JSON.stringify({
+            errorMessage: '인증 토큰이 없습니다',
+            shouldLogout: true,
+          }),
+          {
+            status: 401,
+            headers: { 'Content-Type': 'application/json' },
+          }
+        );
       }
 
       const headersWithAuth = {
@@ -68,17 +74,37 @@ const request = async <T, B = unknown>(
         method,
         headers: headersWithAuth,
         body,
-        cache: 'no-store',
       });
     });
 
     if (!response.ok) {
-      throw new Error(`API 요청에 실패했습니다: ${response.status}`);
-      // todo: 갱신 실패 시, 로그아웃
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch {
+        errorData = { error: { message: '알 수 없는 에러가 발생했습니다.' } };
+      }
+
+      const errorMessage = errorData.error?.message || errorData.errorMessage || 'API 요청 실패';
+      const { shouldLogout } = errorData;
+
+      if (response.status === 401 && shouldLogout) {
+        const { redirect } = await import('next/navigation');
+
+        redirect('/login');
+      }
+
+      throw {
+        status: response.status,
+        message: errorMessage,
+        code: errorData.error?.code,
+        name: errorData.error?.name,
+        detail: errorData.error?.detail,
+      } as ApiError;
     }
 
-    const responseText = await response.text();
-    return responseText ? (JSON.parse(responseText) as T) : (undefined as T);
+    const data = (await response.json()) as ApiSuccessResponse<T>;
+    return data.data;
   } else {
     const response = await fetch(`/api/proxy${url}`, {
       ...options,
@@ -89,12 +115,31 @@ const request = async <T, B = unknown>(
     });
 
     if (!response.ok) {
-      throw new Error(`API 요청에 실패했습니다: ${response.status}`);
-      // todo: 갱신 실패 시, 로그아웃
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch {
+        errorData = { errorMessage: '알 수 없는 에러가 발생했습니다.' };
+      }
+
+      const errorMessage = errorData.error?.message || errorData.errorMessage || 'API 요청 실패';
+
+      if (response.status === 401 && errorData.shouldLogout) {
+        const { logout } = await import('@/app/_services/auth');
+        await logout();
+      }
+
+      throw {
+        status: response.status,
+        message: errorMessage,
+        code: errorData.error?.code,
+        name: errorData.error?.name,
+        detail: errorData.error?.detail,
+      } as ApiError;
     }
 
-    const responseText = await response.text();
-    return responseText ? (JSON.parse(responseText) as T) : (undefined as T);
+    const data = (await response.json()) as ApiSuccessResponse<T>;
+    return data.data;
   }
 };
 
