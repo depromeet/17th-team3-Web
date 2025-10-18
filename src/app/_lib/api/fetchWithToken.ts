@@ -90,10 +90,6 @@ const request = async <T, B = unknown>(
 
       if (response.status === 401 && shouldLogout) {
         const { redirect } = await import('next/navigation');
-        const cookieStore = await cookies();
-
-        cookieStore.delete('accessToken');
-        cookieStore.delete('refreshToken');
 
         redirect('/login');
       }
