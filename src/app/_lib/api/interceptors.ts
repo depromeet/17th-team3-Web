@@ -4,7 +4,10 @@
  * - 401 발생 시 자동 재시도
  */
 
-import { FetchErrorResponse } from '@/app/_models/api';
+interface FetchErrorResponse {
+  errorMessage: string;
+  shouldLogout?: boolean;
+}
 
 /**
  * refreshToken을 사용하여 accessToken, refreshToken 갱신

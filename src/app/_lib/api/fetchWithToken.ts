@@ -4,7 +4,7 @@
  * - 클라이언트: 쿠키를 통한 /api/proxy 프록시 경유
  */
 
-import { ApiError, FetchOptions, HTTPMethod } from '@/app/_models/api';
+import { ApiError, ApiSuccessResponse, FetchOptions, HTTPMethod } from '@/app/_models/api';
 
 const BACKEND_API = process.env.NEXT_PUBLIC_API_URL!;
 
@@ -103,8 +103,8 @@ const request = async <T, B = unknown>(
       } as ApiError;
     }
 
-    const responseText = await response.text();
-    return responseText ? (JSON.parse(responseText) as T) : (undefined as T);
+    const data = (await response.json()) as ApiSuccessResponse<T>;
+    return data.data;
   } else {
     const response = await fetch(`/api/proxy${url}`, {
       ...options,
@@ -138,8 +138,8 @@ const request = async <T, B = unknown>(
       } as ApiError;
     }
 
-    const responseText = await response.text();
-    return responseText ? (JSON.parse(responseText) as T) : (undefined as T);
+    const data = (await response.json()) as ApiSuccessResponse<T>;
+    return data.data;
   }
 };
 
