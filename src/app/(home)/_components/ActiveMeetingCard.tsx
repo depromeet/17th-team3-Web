@@ -17,6 +17,7 @@ interface Meeting {
 
 interface ActiveMeetingCardProps {
   meeting: Meeting;
+  onClick?: () => void;
 }
 
 // TODO: API 연동 후 실제 아바타 데이터로 교체
@@ -27,11 +28,17 @@ const MOCK_AVATARS = [
   '/images/avatar/milk.svg',
 ];
 
-const ActiveMeetingCard = ({ meeting }: ActiveMeetingCardProps) => {
+const ActiveMeetingCard = ({ meeting, onClick }: ActiveMeetingCardProps) => {
   const { name, attendeeCount } = meeting;
 
   return (
-    <div className="rounded-3xl border-[1.5px] border-orange-200 p-3 pt-4 background-3">
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={onClick}
+      className="rounded-3xl border-[1.5px] border-orange-200 p-3 pt-4 select-none background-3"
+    >
       <div className="flex flex-col gap-3 px-2">
         <div className="flex justify-between">
           <div className="flex items-center gap-1 border-b border-b-neutral-300 pr-2">

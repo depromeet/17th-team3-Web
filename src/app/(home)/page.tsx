@@ -34,7 +34,7 @@ const HomePage = () => {
 
   return (
     <div className="no-scrollbar flex h-[100dvh] flex-col overflow-auto bg-neutral-100">
-      <header className="px-5 pt-9 pb-5">
+      <header className="px-5 pt-9 pb-5 select-none">
         <Image src="/images/momuzzi-wordmark.svg" alt="모무찌 작은 로고" width={72} height={26} />
         {/* TODO: 앱 전환 후, 프로필 아이콘 추가 */}
       </header>
@@ -47,7 +47,7 @@ const HomePage = () => {
             {activeMeetings.length > 0 ? (
               activeMeetings.map((meeting) => (
                 <div key={meeting.id} className="min-w-[320px] shrink-0 snap-center">
-                  <ActiveMeetingCard meeting={meeting} />
+                  <ActiveMeetingCard meeting={meeting} onClick={() => console.log('1111')} />
                 </div>
               ))
             ) : (
@@ -62,7 +62,11 @@ const HomePage = () => {
           <div className="flex flex-col gap-3 px-5 pb-20">
             {endedMeetings.length > 0 ? (
               endedMeetings.map((meeting) => (
-                <EndedMeetingCard key={meeting.id} meeting={meeting} />
+                <EndedMeetingCard
+                  key={meeting.id}
+                  meeting={meeting}
+                  onClick={() => console.log('2222')}
+                />
               ))
             ) : (
               <p className="mx-auto px-5 py-[1.25rem] body-3 leading-6 font-medium text-neutral-800">
