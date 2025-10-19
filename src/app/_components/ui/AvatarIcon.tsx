@@ -50,7 +50,7 @@ const AVATAR_VARIANTS: Record<AvatarVariantKey, AvatarVariantMeta> = {
   },
 } as const;
 
-type AvatorIconProps = {
+type AvatarIconProps = {
   variant: AvatarVariantKey;
   className?: string;
 };
@@ -62,7 +62,7 @@ type AvatorIconProps = {
  * @description - 기본 크기는 48px * 48px 입니다.
  * @description - 컴포넌트 크기는 80px을 넘어갈 경우 아이콘 해상도가 낮아집니다.
  */
-const AvatarIcon = ({ variant, className }: AvatorIconProps) => {
+const AvatarIcon = ({ variant, className }: AvatarIconProps) => {
   const iconSrc = AVATAR_VARIANTS[variant];
   return (
     <div
