@@ -1,8 +1,11 @@
 'use client';
 
+import { useState } from 'react';
+
 import Image from 'next/image';
 
 import {
+  ActionButton,
   ActiveMeetingCard,
   EmptyActiveMeetingCard,
   EndedMeetingCard,
@@ -10,24 +13,18 @@ import {
 } from '@/app/(home)/_components';
 import FloatingActionButton from '@/app/_components/ui/FloatingActionButton';
 
-// import { meetingsApi } from '@/app/_services/meetings';
-
-interface Meeting {
-  id: number;
-  name: string;
-  hostUserId: number;
-  attendeeCount: number;
-  isClosed: boolean;
-  stationId: number;
-  endAt: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import type { Meeting } from './_models/types';
 
 const HomePage = () => {
-  // const createMeeting = async () => {
-  //   const data = await meetingsApi.getMeetings();
-  // };
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleCreateMeeting = () => {
+    setIsMenuOpen(false);
+  };
+
+  const handleJoinMeeting = () => {
+    setIsMenuOpen(false);
+  };
 
   const activeMeetings = MOCK_DATA.filter((meeting) => !meeting.isClosed);
   const endedMeetings = MOCK_DATA.filter((meeting) => meeting.isClosed);
@@ -77,7 +74,27 @@ const HomePage = () => {
         </section>
       </main>
 
-      <FloatingActionButton />
+      {isMenuOpen && <div className="fixed inset-0 z-9 bg-black/70" aria-hidden="true" />}
+      {isMenuOpen && (
+        <div className="fixed right-5 bottom-30 z-99 flex flex-col items-end gap-4">
+          <ActionButton
+            icon="/icons/peoples.svg"
+            label="모임 생성하기"
+            onClick={handleCreateMeeting}
+          />
+          <ActionButton
+            icon="/icons/green-arrow.svg"
+            label="초대받은 모임 참여하기"
+            onClick={handleJoinMeeting}
+          />
+          <ActionButton
+            icon="/icons/arrow.svg"
+            label="내 취향으로 추천 받기"
+            onClick={handleCreateMeeting}
+          />
+        </div>
+      )}
+      <FloatingActionButton isOpen={isMenuOpen} onClick={() => setIsMenuOpen(!isMenuOpen)} />
     </div>
   );
 };

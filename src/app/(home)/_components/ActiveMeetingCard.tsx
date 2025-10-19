@@ -37,7 +37,7 @@ const ActiveMeetingCard = ({ meeting, onClick }: ActiveMeetingCardProps) => {
       tabIndex={0}
       onClick={onClick}
       onKeyDown={onClick}
-      className="rounded-3xl border-[1.5px] border-orange-200 p-3 pt-4 select-none background-3"
+      className="cursor-pointer rounded-3xl border-[1.5px] border-orange-200 p-3 pt-4 select-none background-3"
     >
       <div className="flex flex-col gap-3 px-2">
         <div className="flex justify-between">

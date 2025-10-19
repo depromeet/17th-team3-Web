@@ -36,7 +36,7 @@ const EndedMeetingCard = ({ meeting, onClick }: EndedMeetingCardProps) => {
       tabIndex={0}
       onClick={onClick}
       onKeyDown={onClick}
-      className="flex flex-col gap-3 rounded-2xl bg-gray-100 p-4 select-none"
+      className="flex cursor-pointer flex-col gap-3 rounded-2xl bg-gray-100 p-4 select-none"
     >
       <div className="flex flex-col gap-1">
         <div className="flex justify-between">
