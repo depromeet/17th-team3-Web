@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -13,6 +13,7 @@ import {
   SectionHeader,
 } from '@/app/(home)/_components';
 import FloatingActionButton from '@/app/_components/ui/FloatingActionButton';
+import { meetingsApi } from '@/app/_services/meetings';
 
 import type { Meeting } from './_models/types';
 
@@ -24,6 +25,16 @@ const HomePage = () => {
     router.push('/meetings/create');
     setIsMenuOpen(false);
   };
+
+  useEffect(() => {
+    const getStations = async () => {
+      const stations = await meetingsApi.getMeetings();
+
+      console.log(stations);
+    };
+
+    getStations();
+  }, []);
 
   const handleJoinMeeting = () => {
     setIsMenuOpen(false);

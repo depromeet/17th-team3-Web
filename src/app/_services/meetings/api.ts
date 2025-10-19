@@ -1,4 +1,5 @@
 import { api } from '@/app/_lib/api';
+import { Station } from '@/app/meetings/create/_models/types';
 
 export const meetingsApi = {
   // 사용자 모임 목록 조회
@@ -8,14 +9,15 @@ export const meetingsApi = {
     const mockForm = {
       name: '오늘 뭐먹을건데',
       attendeeNickname: '나야 혁준',
-      attendeeCount: 10,
+      attendeeCount: 7,
       stationId: 1,
-      endAt: '2025-10-15T09:00:00.000Z',
+      endAt: '2025-10-15T09:00:00',
     };
     return api.post('/meetings', mockForm);
   },
   // 모임 초대 토큰 생성
   getMeetingToken: (meetingId: string) => api.post(`/meetings/${meetingId}/invite-token`),
+  getStations: () => api.get<Station[]>(`/stations`),
   // 모임 참여
   joinMeeting: (meetingId: string, attendeeNickname: string) =>
     api.post('/meetings/join', { meetingId, attendeeNickname }),

@@ -23,21 +23,15 @@ import { MEMBERS_SIZE } from './_models/constants';
 const CreatePage = () => {
   const router = useRouter();
 
-  // 폼 데이터
   const [name, setName] = useState('');
   const [members, setMembers] = useState(MEMBERS_SIZE.MIN);
   const [selectedStation, setSelectedStation] = useState<Station | null>(null);
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
 
-  // UI 상태
   const [showConfirm, setShowConfirm] = useState(false);
   const [showLocationSheet, setShowLocationSheet] = useState(false);
   const [searchValue, setSearchValue] = useState('');
-
-  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
-  };
 
   const toggleLocationSheet = useCallback(() => {
     setShowLocationSheet((prev) => !prev);
@@ -49,44 +43,24 @@ const CreatePage = () => {
     setSearchValue('');
   }, []);
 
-  /**
-   * 검색어 초기화 핸들러
-   */
   const handleSearchClear = useCallback(() => {
     setSearchValue('');
   }, []);
 
-  /**
-   * 날짜 선택 핸들러
-   */
   const handleDateClick = useCallback((date: string) => {
     setSelectedDate(date);
   }, []);
 
-  /**
-   * 시간 선택 핸들러
-   * - 시와 분이 모두 선택된 경우에만 저장
-   */
-  const handleTimeClick = useCallback((hour: string | null, minute: string | null) => {
-    if (hour && minute) {
-      setSelectedTime(`${hour}:${minute}`);
+  const handleTimeClick = useCallback((hour: string | null) => {
+    if (hour) {
+      setSelectedTime(hour);
     }
   }, []);
 
-  /**
-   * 폼 유효성 검증
-   * - 모임 이름이 입력되고 에러가 없어야 함
-   * - 장소, 날짜, 시간이 모두 선택되어야 함
-   * - 모임 인원이 최소 인원 이상이어야 함
-   */
   const isFormValid =
     name.trim() && selectedStation && selectedDate && selectedTime && members >= MEMBERS_SIZE.MIN;
 
-  /**
-   * 모임 생성 제출 핸들러
-   * - 폼 유효성 검증 후 데이터 전송 (현재는 콘솔 출력)
-   * - 성공 페이지로 이동
-   */
+  console.log(selectedDate, selectedTime);
   const handleSubmit = () => {
     if (!isFormValid) return;
 
@@ -109,7 +83,6 @@ const CreatePage = () => {
   return (
     <div className="relative flex h-[100dvh] flex-col background-1">
       <TopNavigation showBackButton onLeftClick={handleCancel} />
-
       <header className="flex flex-col gap-3 px-5 pt-2 pb-8">
         <Badge>모임 만들기</Badge>
         <Heading as="h1">{`모임 이름과 내용을\n작성해 주세요`}</Heading>
@@ -151,6 +124,7 @@ const CreatePage = () => {
             onDateClick={handleDateClick}
             onTimeClick={handleTimeClick}
           />
+
           <div className="flex items-center justify-center rounded-sm bg-orange-500/[0.08] p-3 label-2 text-xs font-medium text-neutral-700">
             식당 추천 시간까지 모임원의 식사 취향 설문이 가능합니다.
           </div>
