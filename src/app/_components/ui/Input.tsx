@@ -50,8 +50,8 @@ const Input = ({
           onChange={onChange}
           placeholder={placeholder}
           className={cn(
-            'text-gray-1600 w-full py-3 body-1 font-semibold transition-all duration-200',
-            'border-b-neutral-300 placeholder:text-neutral-500 focus:border-b-orange-500 focus:outline-none',
+            'w-full pt-3 pb-2 body-2 font-semibold text-neutral-1500 transition-all duration-200',
+            'border-b-neutral-300 placeholder:text-neutral-400 focus:border-b-orange-500 focus:outline-none',
             'border-b-1 focus:border-b-2',
             shouldClearButton && 'pr-10',
             isSearchType && 'pl-11',

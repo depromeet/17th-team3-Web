@@ -9,3 +9,8 @@ export interface CreateMeetingForm {
   date: string;
   time: string;
 }
+
+export interface Station {
+  id: number;
+  name: string;
+}
