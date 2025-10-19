@@ -27,10 +27,6 @@ const MOCK_AVATARS = [
   '/images/avatar/milk.svg',
 ];
 
-/**
- * 진행 중인 모임 카드 컴포넌트
- * @param meeting - 모임 정보
- */
 const ActiveMeetingCard = ({ meeting }: ActiveMeetingCardProps) => {
   const { name, attendeeCount } = meeting;
 

@@ -43,10 +43,12 @@ const HomePage = () => {
         {/* 진행 중인 모임 */}
         <section className="py-2">
           <SectionHeader title="진행 중인 모임" icon="/images/avatar/orange.svg" />
-          <div className="px-5 pb-5">
+          <div className="no-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-5">
             {activeMeetings.length > 0 ? (
               activeMeetings.map((meeting) => (
-                <ActiveMeetingCard key={meeting.id} meeting={meeting} />
+                <div key={meeting.id} className="min-w-[320px] shrink-0 snap-center">
+                  <ActiveMeetingCard meeting={meeting} />
+                </div>
               ))
             ) : (
               <EmptyActiveMeetingCard />
