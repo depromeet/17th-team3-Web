@@ -17,7 +17,7 @@ const ActionButton = ({ icon, label, onClick }: ActionButtonProps) => {
         className="flex h-15 w-15 cursor-pointer items-center justify-center rounded-full bg-white"
         aria-label={label}
       >
-        <Image alt="" src={icon} width={40} height={40} />
+        <Image alt={`${label} 아이콘`} src={icon} width={40} height={40} />
       </button>
     </div>
   );
