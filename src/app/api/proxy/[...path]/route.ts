@@ -2,7 +2,6 @@ import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { withTokenRefresh } from '@/app/_lib/api';
-import { FetchErrorResponse } from '@/app/_models/api';
 
 const BACKEND_API = process.env.NEXT_PUBLIC_API_URL!;
 
@@ -49,7 +48,7 @@ const handler = async (
     });
 
     if (!response.ok) {
-      const errorData = (await response.json()) as FetchErrorResponse;
+      const errorData = await response.json();
       return NextResponse.json(errorData, { status: response.status });
     }
 

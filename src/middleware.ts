@@ -2,27 +2,106 @@ import { NextResponse } from 'next/server';
 
 import type { NextRequest } from 'next/server';
 
-// 예: 인증/리다이렉트/헤더 주입 등
-const middleware = (req: NextRequest) => {
-  // 예시: 헬스체크 경로 패스
+const AUTH_PAGES = ['/login'];
+const PROTECTED_ROUTES = ['/meetings'];
+
+const middleware = async (req: NextRequest) => {
   if (req.nextUrl.pathname === '/healthz') {
     return NextResponse.next();
   }
 
-  // 예시: 프리뷰 쿠키 확인, 또는 간단한 A/B 헤더 주입
-  // const res = NextResponse.next();
-  // res.headers.set('x-app-version', process.env.NEXT_PUBLIC_VERSION ?? 'dev');
-  // return res;
+  const accessToken = req.cookies.get('accessToken')?.value;
+  const refreshToken = req.cookies.get('refreshToken')?.value;
+  const { pathname } = req.nextUrl;
+
+  const isProtected =
+    pathname === '/' || PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
+
+  if (isProtected) {
+    if ((!accessToken || isTokenExpired(accessToken)) && refreshToken) {
+      const newTokens = await refreshTokens(refreshToken);
+
+      if (newTokens) {
+        const response = NextResponse.next();
+        response.cookies.set('accessToken', newTokens.newAccessToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          path: '/',
+          maxAge: 3600,
+        });
+        response.cookies.set('refreshToken', newTokens.newRefreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          path: '/',
+          maxAge: 604800,
+        });
+        return response;
+      }
+
+      const response = NextResponse.redirect(new URL('/login', req.url));
+      response.cookies.delete('accessToken');
+      response.cookies.delete('refreshToken');
+      return response;
+    }
+
+    if (!accessToken) {
+      return NextResponse.redirect(new URL('/login', req.url));
+    }
+  }
+
+  if (AUTH_PAGES.includes(pathname) && accessToken && !isTokenExpired(accessToken)) {
+    return NextResponse.redirect(new URL('/', req.url));
+  }
 
   return NextResponse.next();
 };
 
-// 정교한 매칭: 정적/이미지/파비콘/빌드 아티팩트 제외
 export const config = {
-  matcher: [
-    // API 예외 처리: 필요 시 '!/api/:path*' 추가
-    '/((?!_next/static|_next/image|favicon.ico|images|uploads|pdf).*)',
-  ],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|images|uploads|pdf|api).*)'],
+};
+
+const isTokenExpired = (token: string): boolean => {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.exp * 1000 < Date.now() + 5 * 60 * 1000;
+  } catch {
+    return true;
+  }
+};
+
+const refreshTokens = async (
+  refreshToken: string
+): Promise<{ newAccessToken: string; newRefreshToken: string } | null> => {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort('갱신 요청 타임아웃(3초) 에러'), 3000);
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/reissue-token`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ refreshToken }),
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      console.error('토큰 갱신 실패:', response.status);
+      return null;
+    }
+
+    const { data: { accessToken: newAccessToken, refreshToken: newRefreshToken } = {} } =
+      await response.json();
+
+    return { newAccessToken, newRefreshToken };
+  } catch (error) {
+    console.error('토큰 갱신 중 에러 발생:', error);
+    return null;
+  } finally {
+    clearTimeout(timeoutId);
+  }
 };
 
 export default middleware;
