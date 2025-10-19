@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import {
   ActionButton,
@@ -17,8 +18,10 @@ import type { Meeting } from './_models/types';
 
 const HomePage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const router = useRouter();
 
   const handleCreateMeeting = () => {
+    router.push('/meetings/create');
     setIsMenuOpen(false);
   };
 
