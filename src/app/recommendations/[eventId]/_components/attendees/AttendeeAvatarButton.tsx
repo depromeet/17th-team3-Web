@@ -1,7 +1,4 @@
-import Image from 'next/image';
-
-import AvatarChip from '@/app/_components/ui/AvatarChip';
-import MarqueeText from '@/app/_features/MarqueeText';
+import AvatarIcon from '@/app/_components/ui/AvatarIcon';
 import { cn } from '@/app/_lib/cn';
 import { Attendee } from '@/app/recommendations/[eventId]/_models/attendee';
 
@@ -23,11 +20,9 @@ const AttendeeAvatarButton = ({
 }: AttendeeAvatarButtonProps) => {
   return (
     <button ref={buttonRef} type="button" onClick={onClick} className={className}>
-      <AvatarChip
+      <AvatarIcon
         variant={attendee.avatarThemeKey}
         className={cn('cursor-pointer', isActive ? 'scale-115' : 'opacity-30')}
-        name={attendee.name}
-        isMarquee={isActive}
       />
     </button>
   );

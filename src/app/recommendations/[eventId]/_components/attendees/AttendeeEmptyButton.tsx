@@ -1,4 +1,4 @@
-import AvatarChip from '@/app/_components/ui/AvatarChip';
+import AvatarIcon from '@/app/_components/ui/AvatarIcon';
 import { cn } from '@/app/_lib/cn';
 
 interface EmptyAttendeeButtonProps {
@@ -16,7 +16,7 @@ const EmptyAttendeeButton = ({
 }: EmptyAttendeeButtonProps) => {
   return (
     <button ref={buttonRef} type="button" onClick={onClick} className={className}>
-      <AvatarChip variant="empty" className={cn(isActive ? 'scale-115' : 'opacity-60')} />
+      <AvatarIcon variant="default" className={cn(isActive ? 'scale-115' : 'opacity-60')} />
     </button>
   );
 };
