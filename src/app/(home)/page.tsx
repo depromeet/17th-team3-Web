@@ -12,36 +12,44 @@ import {
   EndedMeetingCard,
   SectionHeader,
 } from '@/app/(home)/_components';
+import { Meeting } from '@/app/(home)/_models/types';
 import FloatingActionButton from '@/app/_components/ui/FloatingActionButton';
+import { useToast } from '@/app/_features/toast';
 import { meetingsApi } from '@/app/_services/meetings';
 
-import type { Meeting } from './_models/types';
-
 const HomePage = () => {
+  const [meetings, setMeetings] = useState<Meeting[]>([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const { success: toast } = useToast();
+
   const router = useRouter();
+
+  useEffect(() => {
+    const getMeetings = async () => {
+      try {
+        const meetings = await meetingsApi.getMeetings();
+        setMeetings(meetings);
+      } catch (error) {
+        console.error('모임 조회 중 에러: ', error);
+      }
+    };
+
+    getMeetings();
+  }, []);
 
   const handleCreateMeeting = () => {
     router.push('/meetings/create');
     setIsMenuOpen(false);
   };
 
-  useEffect(() => {
-    const getStations = async () => {
-      const stations = await meetingsApi.getMeetings();
-
-      console.log(stations);
-    };
-
-    getStations();
-  }, []);
-
-  const handleJoinMeeting = () => {
+  const handleComingSoon = () => {
+    toast('아직 준비 중인 기능이에요!', { preventDuplicate: true, position: 'top' });
     setIsMenuOpen(false);
   };
 
-  const activeMeetings = MOCK_DATA.filter((meeting) => !meeting.isClosed);
-  const endedMeetings = MOCK_DATA.filter((meeting) => meeting.isClosed);
+  const activeMeetings = meetings.filter((meeting) => !meeting.isClosed);
+  const endedMeetings = meetings.filter((meeting) => meeting.isClosed);
 
   return (
     <div className="no-scrollbar flex h-[100dvh] flex-col overflow-auto bg-neutral-100">
@@ -105,12 +113,12 @@ const HomePage = () => {
           <ActionButton
             icon="/icons/green-arrow.svg"
             label="초대받은 모임 참여하기"
-            onClick={handleJoinMeeting}
+            onClick={handleComingSoon}
           />
           <ActionButton
             icon="/icons/arrow.svg"
             label="내 취향으로 추천 받기"
-            onClick={handleCreateMeeting}
+            onClick={handleComingSoon}
           />
         </div>
       )}
@@ -118,75 +126,5 @@ const HomePage = () => {
     </div>
   );
 };
-
-// TODO: API 연동 후 실제 데이터로 교체
-const MOCK_DATA: Meeting[] = [
-  {
-    id: 1,
-    name: '저녁 모무찌',
-    hostUserId: 123,
-    attendeeCount: 3,
-    isClosed: true,
-    stationId: 1,
-    endAt: '2024-12-31T18:00:00',
-    createdAt: '2024-12-25T10:00:00',
-    updatedAt: '2024-12-25T15:30:00',
-  },
-  {
-    id: 2,
-    name: '저녁 모무찌2',
-    hostUserId: 123,
-    attendeeCount: 6,
-    isClosed: true,
-    stationId: 1,
-    endAt: '2024-12-31T18:00:00',
-    createdAt: '2024-12-25T10:00:00',
-    updatedAt: '2024-12-25T15:30:00',
-  },
-  {
-    id: 3,
-    name: '저녁 모무찌3',
-    hostUserId: 123,
-    attendeeCount: 8,
-    isClosed: false,
-    stationId: 1,
-    endAt: '2024-12-31T18:00:00',
-    createdAt: '2024-12-25T10:00:00',
-    updatedAt: '2024-12-25T15:30:00',
-  },
-  {
-    id: 4,
-    name: '저녁 모무찌4',
-    hostUserId: 123,
-    attendeeCount: 10,
-    isClosed: true,
-    stationId: 1,
-    endAt: '2024-12-31T18:00:00',
-    createdAt: '2024-12-25T10:00:00',
-    updatedAt: '2024-12-25T15:30:00',
-  },
-  {
-    id: 5,
-    name: '저녁 모무찌555',
-    hostUserId: 123,
-    attendeeCount: 5,
-    isClosed: false,
-    stationId: 1,
-    endAt: '2024-12-31T18:00:00',
-    createdAt: '2024-12-25T10:00:00',
-    updatedAt: '2024-12-25T15:30:00',
-  },
-  {
-    id: 6,
-    name: '저녁 모무찌666',
-    hostUserId: 123,
-    attendeeCount: 77,
-    isClosed: false,
-    stationId: 1,
-    endAt: '2024-12-31T18:00:00',
-    createdAt: '2024-12-25T10:00:00',
-    updatedAt: '2024-12-25T15:30:00',
-  },
-];
 
 export default HomePage;

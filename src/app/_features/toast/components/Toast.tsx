@@ -8,6 +8,7 @@ import ErrorIcon from '@/app/_components/icons/toast/ErrorIcon';
 import InfoIcon from '@/app/_components/icons/toast/InfoIcon';
 import SuccessIcon from '@/app/_components/icons/toast/SuccessIcon';
 import WarningIcon from '@/app/_components/icons/toast/WarningIcon';
+import { useToast } from '@/app/_features/toast';
 import { cn } from '@/app/_lib/cn';
 
 import type { Toast as ToastType } from '../types';
@@ -119,7 +120,7 @@ const Toast = ({ toast, onClose }: ToastProps) => {
         </div>
 
         {/* 메시지 영역 ReactNode 또는 string */}
-        <div className="flex-1">
+        <div className="flex flex-1 items-center">
           {typeof toast.message === 'string' ? (
             <p className="body-3 font-semibold whitespace-pre-line">{toast.message}</p>
           ) : (

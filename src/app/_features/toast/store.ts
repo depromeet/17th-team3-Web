@@ -11,7 +11,7 @@ import { create } from 'zustand';
 
 import type { Toast, ToastMessage, ToastOptions, ToastState } from './types';
 
-const DEFAULT_DURATION = 4000;
+const DEFAULT_DURATION = 2500;
 const DEFAULT_POSITION = 'bottom';
 
 /**

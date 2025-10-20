@@ -1,9 +1,10 @@
+import { Meeting } from '@/app/(home)/_models/types';
 import { api } from '@/app/_lib/api';
 import { Station } from '@/app/meetings/create/_models/types';
 
 export const meetingsApi = {
   // 사용자 모임 목록 조회
-  getMeetings: () => api.get('/meetings'),
+  getMeetings: () => api.get<Meeting[]>('/meetings'),
   // 모임 생성
   createMeeting: () => {
     const mockForm = {
