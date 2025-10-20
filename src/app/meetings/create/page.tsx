@@ -60,7 +60,6 @@ const CreatePage = () => {
   const isFormValid =
     name.trim() && selectedStation && selectedDate && selectedTime && members >= MEMBERS_SIZE.MIN;
 
-  console.log(selectedDate, selectedTime);
   const handleSubmit = () => {
     if (!isFormValid) return;
 
@@ -81,14 +80,16 @@ const CreatePage = () => {
   };
 
   return (
-    <div className="relative flex h-[100dvh] flex-col background-1">
+    <div className="relative flex h-[100dvh] flex-col overflow-y-auto background-1">
+      {/* <div className="fixed w-full bg-white"> */}
       <TopNavigation showBackButton onLeftClick={handleCancel} />
+      {/* </div> */}
       <header className="flex flex-col gap-3 px-5 pt-2 pb-8">
         <Badge>모임 만들기</Badge>
         <Heading as="h1">{`모임 이름과 내용을\n작성해 주세요`}</Heading>
       </header>
 
-      <main className="no-scrollbar flex flex-1 flex-col gap-8 overflow-y-auto px-5 pb-6">
+      <main className="no-scrollbar flex flex-1 flex-col gap-8 px-5 pb-6">
         <FormSection label="모임 이름">
           <Input
             value={name}
