@@ -1,6 +1,7 @@
 import { STEP_KEYS, type StepKey } from './types';
 
 export const SURVEY_TOTAL_STEPS = 5; // Name / Prefer / Dislike / Review / Complete
+export const MAX_SELECT_COUNT = 5;
 
 /** 숫자 스텝 인덱스(1-base) ↔ 스텝키 매핑 유틸 */
 export const stepIndexToKey = (i: number): StepKey => {

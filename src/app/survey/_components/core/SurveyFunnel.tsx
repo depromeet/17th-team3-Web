@@ -1,22 +1,26 @@
 'use client';
 
+import { useState } from 'react';
+
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 import { FOOD_MAP } from '@/app/_constants/menu';
 import SurveyLayout from '@/app/survey/_components/core/SurveyLayout';
 import KoreanFollowUpStep from '@/app/survey/_components/step/KoreanFollowUpStep';
-import SurveyCuisineStep from '@/app/survey/_components/step/SurveyCuisineStep';
+// import SurveyCuisineStep from '@/app/survey/_components/step/SurveyCuisineStep';
+import SurveyCuisineStepV2 from '@/app/survey/_components/step/SurveyCuisineStepV2';
 import SurveyNameStep from '@/app/survey/_components/step/SurveyNameStep';
 import SurveyReviewStep from '@/app/survey/_components/step/SurveyReviewStep';
 import { useSurveyFunnel } from '@/app/survey/_hooks/useSurveyFunnel';
 import {
+  MAX_SELECT_COUNT,
   SURVEY_TOTAL_STEPS,
   stepKeyToIndex,
   getPrevStepKey,
   ANY_ID,
 } from '@/app/survey/_models/constants';
-import { CUISINE_OPTIONS, type Option } from '@/app/survey/_models/option';
+import { CUISINE_OPTIONS, CUISINE_DETAIL_MAP, type Option } from '@/app/survey/_models/option';
 import { type RoleLabel, type SurveyResult } from '@/app/survey/_models/types';
 
 import type { ChipOption } from '@/app/survey/_components/ui/ChipGroupMultiSelect';
@@ -54,6 +58,13 @@ const toChipOptions = (opts: ReadonlyArray<Option>): ChipOption[] =>
     };
   });
 
+// CUISINE_DETAIL_MAP 포함한 전체 목록
+const ALL_CUISINE_OPTIONS: Option[] = [
+  ...CUISINE_OPTIONS,
+  ...Object.values(CUISINE_DETAIL_MAP).flat(),
+];
+console.log(ALL_CUISINE_OPTIONS);
+
 // 선택된 id 목록에서 원본 옵션 추출
 const pickOptions = (ids: string[], all: ReadonlyArray<Option>) =>
   all.filter((o) => ids.includes(o.id));
@@ -79,6 +90,8 @@ const SurveyFunnel = ({ role, initial, onComplete }: SurveyFunnelProps) => {
   const { step, context, history } = useSurveyFunnel({ ...initial, role });
   const stepValue = stepKeyToIndex(step); // 1-based step index
   const router = useRouter(); // 라우터 훅 사용
+
+  const [isSkipModalOpen, setIsSkipModalOpen] = useState(false);
 
   // 공통 뒤로가기 핸들러
   const handleBack = () => {
@@ -107,60 +120,76 @@ const SurveyFunnel = ({ role, initial, onComplete }: SurveyFunnelProps) => {
       );
 
     case 'PreferCuisine': {
-      const options = toChipOptions(CUISINE_OPTIONS);
+      const handleSkipClick = () => {
+        setIsSkipModalOpen(true);
+      };
+
+      const confirmSkip = () => {
+        setIsSkipModalOpen(false);
+        // 건너뛰기 → 빈 배열로 결과 페이지 이동
+        history.push('Review', (prev) => ({ ...prev, preferCuisineIds: [] }));
+      };
+
+      const cancelSkip = () => {
+        setIsSkipModalOpen(false);
+      };
+
       return (
-        <SurveyLayout stepValue={stepValue} totalSteps={SURVEY_TOTAL_STEPS} onBack={handleBack}>
-          <SurveyCuisineStep
-            title={`어떤 종류의 음식을\n선호하시나요?`}
-            roleLabel={context.role}
-            options={options}
+        <SurveyLayout
+          stepValue={stepValue}
+          totalSteps={SURVEY_TOTAL_STEPS}
+          onBack={handleBack}
+          showNextButton
+          onRightClick={handleSkipClick}
+          rightLabel="건너뛰기"
+        >
+          <SurveyCuisineStepV2
+            title={`좋아하는 음식을\n최대 5개까지 선택해주세요`}
             defaultSelectedIds={context.preferCuisineIds}
-            exclusiveIds={[ANY_ID]}
-            onCancel={handleBack}
             onNext={(ids) => {
-              // '다 괜찮아요' 선택 시 → 단독 유지
-              const nextIds = ids.includes(ANY_ID) ? [ANY_ID] : ids;
-              history.push('DislikeCuisine', (prev) => ({ ...prev, preferCuisineIds: nextIds }));
+              const nextIds = ids.includes(ANY_ID) ? [ANY_ID] : ids.slice(0, MAX_SELECT_COUNT);
+              history.push('Review', (prev) => ({ ...prev, preferCuisineIds: nextIds }));
             }}
-          />
-        </SurveyLayout>
-      );
-    }
-
-    case 'DislikeCuisine': {
-      // 선호가 '다 괜찮아요'라면 전체 허용 → 제외 없음
-      const excluded = context.preferCuisineIds.includes(ANY_ID) ? [] : context.preferCuisineIds;
-      const dislikeCandidates: Option[] = [
-        CUISINE_OPTIONS.find((o) => o.id === ANY_ID)!, // 항상 존재
-        ...CUISINE_OPTIONS.filter((o) => o.id !== ANY_ID && !excluded.includes(o.id)),
-      ];
-      const options = toChipOptions(dislikeCandidates);
-
-      return (
-        <SurveyLayout stepValue={stepValue} totalSteps={SURVEY_TOTAL_STEPS} onBack={handleBack}>
-          <SurveyCuisineStep
-            title={`혹시 피하는 종류의 음식이\n있나요?`}
-            roleLabel={context.role}
-            options={options}
-            defaultSelectedIds={context.dislikeCuisineIds}
-            exclusiveIds={[ANY_ID]}
             onCancel={handleBack}
-            onNext={(ids) =>
-              history.push('Review', (prev) => ({ ...prev, dislikeCuisineIds: ids }))
-            }
           />
+
+          {/* 🔹 건너뛰기 확인 모달 */}
+          {isSkipModalOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+              <div className="w-[90%] max-w-md rounded-xl bg-white p-6 text-center">
+                <h2 className="mb-3 text-lg font-semibold">설문을 건너뛸까요?</h2>
+                <p className="mb-4 text-sm text-gray-600">
+                  건너뛰면 선호 음식이 저장되지 않습니다.
+                </p>
+                <div className="flex justify-center gap-3">
+                  <button
+                    onClick={cancelSkip}
+                    className="rounded-lg bg-gray-200 px-4 py-2 text-sm font-semibold"
+                  >
+                    취소
+                  </button>
+                  <button
+                    onClick={confirmSkip}
+                    className="rounded-lg bg-orange-500 px-4 py-2 text-sm font-semibold text-white"
+                  >
+                    확인
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </SurveyLayout>
       );
     }
 
     case 'Review': {
-      const prefer = pickOptions(context.preferCuisineIds, CUISINE_OPTIONS).map((o) => ({
+      const prefer = pickOptions(context.preferCuisineIds, ALL_CUISINE_OPTIONS).map((o) => ({
         ...o,
-        iconSrc: FOOD_MAP[ID_TO_FOOD_KEY[o.id]]?.imageSrc,
+        iconSrc: FOOD_MAP[ID_TO_FOOD_KEY[o.id.split(':')[1]] as keyof typeof FOOD_MAP]?.imageSrc,
       }));
-      const dislike = pickOptions(context.dislikeCuisineIds, CUISINE_OPTIONS).map((o) => ({
+      const dislike = pickOptions(context.dislikeCuisineIds, ALL_CUISINE_OPTIONS).map((o) => ({
         ...o,
-        iconSrc: FOOD_MAP[ID_TO_FOOD_KEY[o.id]]?.imageSrc,
+        iconSrc: FOOD_MAP[ID_TO_FOOD_KEY[o.id.split(':')[1]] as keyof typeof FOOD_MAP]?.imageSrc,
       }));
 
       return (
