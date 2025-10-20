@@ -74,7 +74,7 @@ const Chip = ({
 
       <span className="flex items-center gap-1">
         {/* 아이콘: 크기 통일 */}
-        {startIcon && <span className="inline-flex h-6 w-6 shrink-0">{startIcon}</span>}
+        {/* {startIcon && <span className="inline-flex h-6 w-6 shrink-0">{startIcon}</span>} */}
         <Text
           className={cn(
             'body-3 leading-6 font-semibold',

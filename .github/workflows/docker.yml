@@ -2,8 +2,8 @@ name: Build & Deploy Docker
 
 on:
   push:
-    branches: [ main ] # main 브랜치에서만 실행
-    tags: [ 'v*' ] # 태그 push 시 실행 (선택)
+    branches: [main] # main 브랜치에서만 실행
+    tags: ['v*'] # 태그 push 시 실행 (선택)
   workflow_dispatch: {} # 수동 실행 지원
 
 concurrency:
@@ -81,7 +81,6 @@ jobs:
 
       - name: Show image digest
         run: echo "Pushed digest ${{ steps.build.outputs.digest }}"
-
 
   deploy-prod:
     name: Deploy to PROD (self-hosted)
