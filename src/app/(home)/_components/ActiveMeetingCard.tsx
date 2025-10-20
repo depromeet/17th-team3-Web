@@ -30,9 +30,7 @@ const ActiveMeetingCard = ({ meeting, onClick }: ActiveMeetingCardProps) => {
           <div className="flex justify-between">
             <div className="flex items-center gap-1 border-b-1 border-b-neutral-300 pr-2">
               <Clock size={14} strokeWidth={3} className="text-orange-300" />
-              <p className="label-1 text-[14px] font-medium text-orange-600">
-                {CountdownDisplay(endAt)}
-              </p>
+              <CountdownDisplay endAt={endAt} />
             </div>
             <ChevronRight size={24} className="text-orange-500" />
           </div>

@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from 'react';
 
-const CountdownDisplay = (endAt: string) => {
+interface CountdownDisplay {
+  endAt: string;
+}
+
+const CountdownDisplay = ({ endAt }: CountdownDisplay) => {
   const [timeLeft, setTimeLeft] = useState('');
 
   useEffect(() => {
@@ -35,7 +39,7 @@ const CountdownDisplay = (endAt: string) => {
     return () => clearInterval(interval);
   }, [endAt]);
 
-  return <span className="text-orange-500">{timeLeft}</span>;
+  return <span className="label-1 font-medium text-orange-600">{timeLeft}</span>;
 };
 
 export default CountdownDisplay;
