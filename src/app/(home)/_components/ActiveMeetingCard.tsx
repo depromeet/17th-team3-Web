@@ -1,5 +1,10 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+
 import { CalendarDays, Check, ChevronRight, Clock, MapPin } from 'lucide-react';
 
+import CountdownDisplay from '@/app/(home)/_components/CountdownDisplay';
 import { Meeting } from '@/app/(home)/_models/types';
 import StepIndicator from '@/app/_components/ui/StepIndicator';
 import { formatDateTime } from '@/app/_utils/format';
@@ -25,7 +30,9 @@ const ActiveMeetingCard = ({ meeting, onClick }: ActiveMeetingCardProps) => {
           <div className="flex justify-between">
             <div className="flex items-center gap-1 border-b-1 border-b-neutral-300 pr-2">
               <Clock size={14} strokeWidth={3} className="text-orange-300" />
-              <p className="label-1 text-[14px] font-medium text-orange-600">1일 00:02:30</p>
+              <p className="label-1 text-[14px] font-medium text-orange-600">
+                {CountdownDisplay(endAt)}
+              </p>
             </div>
             <ChevronRight size={24} className="text-orange-500" />
           </div>
