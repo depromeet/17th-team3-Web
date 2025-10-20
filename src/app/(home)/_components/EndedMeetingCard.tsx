@@ -1,18 +1,7 @@
 import { ChevronRight } from 'lucide-react';
 
+import { Meeting } from '@/app/(home)/_models/types';
 import AvatarList from '@/app/_components/ui/AvatarList';
-
-interface Meeting {
-  id: number;
-  name: string;
-  hostUserId: number;
-  attendeeCount: number;
-  isClosed: boolean;
-  stationId: number;
-  endAt: string;
-  createdAt: string;
-  updatedAt: string;
-}
 
 interface EndedMeetingCardProps {
   meeting: Meeting;
@@ -28,7 +17,7 @@ const MOCK_AVATARS = [
 ];
 
 const EndedMeetingCard = ({ meeting, onClick }: EndedMeetingCardProps) => {
-  const { name, stationId, attendeeCount } = meeting;
+  const { name, stationName, attendeeCount, endAt } = meeting;
 
   return (
     <div
@@ -45,8 +34,7 @@ const EndedMeetingCard = ({ meeting, onClick }: EndedMeetingCardProps) => {
         </div>
 
         <div className="flex items-center gap-2 label-2 font-medium text-neutral-800">
-          {/* TODO: stationId를 stationName으로 변환 */}
-          <p>{stationId}</p>
+          <p>{stationName}</p>
           <div className="h-[3px] w-[3px] rounded-full bg-neutral-800" />
           {/* TODO: endAt 데이터 포맷팅 */}
           <p>2025.09.03(수) 오후 6:00</p>

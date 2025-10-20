@@ -1,35 +1,15 @@
 import { CalendarDays, Check, ChevronRight, Clock, MapPin } from 'lucide-react';
 
-import AvatarList from '@/app/_components/ui/AvatarList';
+import { Meeting } from '@/app/(home)/_models/types';
 import StepIndicator from '@/app/_components/ui/StepIndicator';
-
-interface Meeting {
-  id: number;
-  name: string;
-  hostUserId: number;
-  attendeeCount: number;
-  isClosed: boolean;
-  stationId: number;
-  endAt: string;
-  createdAt: string;
-  updatedAt: string;
-}
 
 interface ActiveMeetingCardProps {
   meeting: Meeting;
   onClick?: () => void;
 }
 
-// TODO: API 연동 후 실제 아바타 데이터로 교체
-const MOCK_AVATARS = [
-  '/images/avatar/chocolate.svg',
-  '/images/avatar/grape.svg',
-  '/images/avatar/orange.svg',
-  '/images/avatar/milk.svg',
-];
-
 const ActiveMeetingCard = ({ meeting, onClick }: ActiveMeetingCardProps) => {
-  const { name, attendeeCount } = meeting;
+  const { name, stationName, attendeeCount, endAt } = meeting;
 
   return (
     <div
@@ -58,7 +38,7 @@ const ActiveMeetingCard = ({ meeting, onClick }: ActiveMeetingCardProps) => {
               <MapPin size={16} strokeWidth={2} className="text-neutral-400" />
               <p className="label-2 leading-[22px] text-neutral-600">만나는 장소</p>
             </div>
-            <p className="label-2 text-neutral-1200">강남역</p>
+            <p className="label-2 text-neutral-1200">{stationName}역</p>
           </div>
 
           <div className="flex items-center justify-between">

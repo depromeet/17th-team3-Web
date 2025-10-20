@@ -4,7 +4,7 @@ export interface Meeting {
   hostUserId: number;
   attendeeCount: number;
   isClosed: boolean;
-  stationId: number;
+  stationName: string;
   endAt: string;
   createdAt: string;
   updatedAt: string;
