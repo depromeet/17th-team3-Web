@@ -475,4 +475,15 @@
     )
   );
 }
+
+@utility gathering-card {
+  background: var(
+    --Gathering-Card,
+    linear-gradient(
+      180deg,
+      var(--Saturated-Yellow-Yellow50, #fffdf5) 20%,
+      var(--Saturated-Orange-Orange50, #fff7f5) 100%
+    )
+  );
+}
 /* 그 외 전역 리셋/유틸은 기존 그대로 두면 됩니다 */
