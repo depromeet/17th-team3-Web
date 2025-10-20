@@ -44,15 +44,15 @@ const LocationBottomSheet = ({
   if (!isOpen) return null;
 
   return (
-    <BottomSheet title="장소 선택" showCloseButton onClose={onClose}>
-      <div className="flex h-120 flex-col gap-2">
+    <BottomSheet title="모임 장소" showCloseButton onClose={onClose}>
+      <div className="flex h-150 flex-col gap-2">
         <Input
           type="search"
           value={searchValue}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSearchChange(e.target.value)}
           onClear={onSearchClear}
           showClearButton
-          placeholder="지하철역을 검색해주세요"
+          placeholder="지하철역으로 검색"
         />
 
         {filteredStations.length > 0 && (

@@ -81,10 +81,10 @@ const CreatePage = () => {
 
   return (
     <div className="relative flex h-[100dvh] flex-col overflow-y-auto background-1">
-      {/* <div className="fixed w-full bg-white"> */}
-      <TopNavigation showBackButton onLeftClick={handleCancel} />
-      {/* </div> */}
-      <header className="flex flex-col gap-3 px-5 pt-2 pb-8">
+      <div className="fixed w-full bg-white">
+        <TopNavigation showBackButton onLeftClick={handleCancel} />
+      </div>
+      <header className="mt-16 flex flex-col gap-3 px-5 pt-2 pb-8">
         <Badge>모임 만들기</Badge>
         <Heading as="h1">{`모임 이름과 내용을\n작성해 주세요`}</Heading>
       </header>

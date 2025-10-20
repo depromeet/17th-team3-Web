@@ -48,8 +48,12 @@ const HomePage = () => {
     setIsMenuOpen(false);
   };
 
-  const activeMeetings = meetings.filter((meeting) => !meeting.isClosed);
-  const endedMeetings = meetings.filter((meeting) => meeting.isClosed);
+  const activeMeetings = meetings
+    .filter((meeting) => !meeting.isClosed)
+    .sort((a, b) => new Date(b.endAt).getTime() - new Date(a.endAt).getTime());
+  const endedMeetings = meetings
+    .filter((meeting) => meeting.isClosed)
+    .sort((a, b) => new Date(b.endAt).getTime() - new Date(a.endAt).getTime());
 
   return (
     <div className="no-scrollbar flex h-[100dvh] flex-col overflow-auto bg-neutral-100">
