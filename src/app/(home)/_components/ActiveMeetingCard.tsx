@@ -2,6 +2,7 @@ import { CalendarDays, Check, ChevronRight, Clock, MapPin } from 'lucide-react';
 
 import { Meeting } from '@/app/(home)/_models/types';
 import StepIndicator from '@/app/_components/ui/StepIndicator';
+import { formatDateTime } from '@/app/_utils/format';
 
 interface ActiveMeetingCardProps {
   meeting: Meeting;
@@ -46,7 +47,7 @@ const ActiveMeetingCard = ({ meeting, onClick }: ActiveMeetingCardProps) => {
               <CalendarDays size={16} strokeWidth={2} className="text-neutral-400" />
               <p className="label-2 leading-[22px] text-neutral-600">설문 종료 일시</p>
             </div>
-            <p className="label-2 text-neutral-1200">2025.09.03(수) 오후 6:00</p>
+            <p className="label-2 text-neutral-1200">{formatDateTime(endAt)}</p>
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@ import { ChevronRight } from 'lucide-react';
 
 import { Meeting } from '@/app/(home)/_models/types';
 import AvatarList from '@/app/_components/ui/AvatarList';
+import { formatDateTime } from '@/app/_utils/format';
 
 interface EndedMeetingCardProps {
   meeting: Meeting;
@@ -36,8 +37,7 @@ const EndedMeetingCard = ({ meeting, onClick }: EndedMeetingCardProps) => {
         <div className="flex items-center gap-2 label-2 font-medium text-neutral-800">
           <p>{stationName}</p>
           <div className="h-[3px] w-[3px] rounded-full bg-neutral-800" />
-          {/* TODO: endAt 데이터 포맷팅 */}
-          <p>2025.09.03(수) 오후 6:00</p>
+          <p>{formatDateTime(endAt)}</p>
         </div>
       </div>
 
