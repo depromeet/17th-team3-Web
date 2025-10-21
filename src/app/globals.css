@@ -379,6 +379,8 @@
     )
   );
   background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 @utility type-gradient {
   background: var(
@@ -392,7 +394,6 @@
   background-clip: text;
   color: transparent;
 }
-
 @utility result-text-gradient {
   background: linear-gradient(
     135deg,
