@@ -1,5 +1,6 @@
 import { MantineProvider } from '@mantine/core';
 import Image from 'next/image';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 
 import ScaledStage from '@/app/_components/layout/ScaledStage';
 import { ToastProvider } from '@/app/_features/toast';
@@ -47,7 +48,9 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
             />
           }
         >
-          <MantineProvider>{children}</MantineProvider>
+          <MantineProvider>
+            <NuqsAdapter>{children}</NuqsAdapter>
+          </MantineProvider>
         </ScaledStage>
         <ToastProvider />
       </body>
