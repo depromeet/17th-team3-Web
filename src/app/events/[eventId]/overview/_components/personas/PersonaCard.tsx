@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 import { FOOD_MAP, FoodKey } from '@/app/_constants/menu';
 import { cn } from '@/app/_lib/cn';
-import { Attendee } from '@/app/recommendations/[eventId]/_models/attendee';
+import { Attendee } from '@/app/events/[eventId]/overview/_models/attendee';
 
 interface PersonaCardProps {
   index: number;

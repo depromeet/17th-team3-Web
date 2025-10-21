@@ -4,11 +4,11 @@ import { useState } from 'react';
 
 import { AnimatePresence } from 'framer-motion';
 
-import FanToSingleAnimation from '@/app/recommendations/[eventId]/result/_components/animations/FanToSingleAnimation';
-import { RestaurantCarousel } from '@/app/recommendations/[eventId]/result/_components/animations/RestaurantCarouselAnimation';
-import TransitioningAnimation from '@/app/recommendations/[eventId]/result/_components/animations/TransitioningAnimation';
-import { AnimationPhase } from '@/app/recommendations/[eventId]/result/_models/animation';
-import { Restaurant, Surveys } from '@/app/recommendations/[eventId]/result/_models/result';
+import FanToSingleAnimation from '@/app/events/[eventId]/result_refact/_components/animations/FanToSingleAnimation';
+import { RestaurantCarousel } from '@/app/events/[eventId]/result_refact/_components/animations/RestaurantCarouselAnimation';
+import TransitioningAnimation from '@/app/events/[eventId]/result_refact/_components/animations/TransitioningAnimation';
+import { AnimationPhase } from '@/app/events/[eventId]/result_refact/_models/animation';
+import { Restaurant, Surveys } from '@/app/events/[eventId]/result_refact/_models/result';
 
 import { CardStackAnimation } from './animations/CardStackAnimation';
 

@@ -6,7 +6,7 @@ import { motion, useAnimate } from 'framer-motion';
 import Image from 'next/image';
 
 import { cn } from '@/app/_lib/cn';
-import { Surveys } from '@/app/recommendations/[eventId]/result/_models/result';
+import { Surveys } from '@/app/events/[eventId]/result_refact/_models/result';
 
 const surveyKeyMap = {
   preferredCuisineList: '음식 종류',

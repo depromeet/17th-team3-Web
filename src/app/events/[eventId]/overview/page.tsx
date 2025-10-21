@@ -1,7 +1,7 @@
 import { Flame, MapPin } from 'lucide-react';
 
-import RecommendationsClient from '@/app/recommendations/[eventId]/_components/RecommendationsClient';
-import { attendeesMockData } from '@/app/recommendations/[eventId]/_mocks/attendees.mock';
+import { attendeesMockData } from '@/app/events/[eventId]/overview/_mocks/attendees.mock';
+import RecommendationsClient from '@/app/events/[eventId]/overview/RecommendationsClient';
 
 interface IconChipProps {
   icon: React.ReactNode;
@@ -17,11 +17,13 @@ const IconChip = ({ icon, label }: IconChipProps) => {
   );
 };
 
-interface RecommendationsPageProps {
+//--------------------------------Page--------------------------------
+
+interface OverviewPageProps {
   params: Promise<{ eventId: string }>;
 }
 
-const RecommendationsPage = async ({ params }: RecommendationsPageProps) => {
+const OverviewPage = async ({ params }: OverviewPageProps) => {
   const { eventId: _eventId } = await params;
 
   const remainingAttendeesCount =
@@ -48,4 +50,4 @@ const RecommendationsPage = async ({ params }: RecommendationsPageProps) => {
     </div>
   );
 };
-export default RecommendationsPage;
+export default OverviewPage;

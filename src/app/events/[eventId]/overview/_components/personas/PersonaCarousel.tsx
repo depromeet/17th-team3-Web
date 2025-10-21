@@ -1,7 +1,7 @@
-import PersonaCard from '@/app/recommendations/[eventId]/_components/personas/PersonaCard';
-import EmptyPersonaCard from '@/app/recommendations/[eventId]/_components/personas/PersonaEmptyCard';
-import { useSnapSync } from '@/app/recommendations/[eventId]/_context/SnapSyncContext';
-import { Attendee } from '@/app/recommendations/[eventId]/_models/attendee';
+import PersonaCard from '@/app/events/[eventId]/overview/_components/personas/PersonaCard';
+import EmptyPersonaCard from '@/app/events/[eventId]/overview/_components/personas/PersonaEmptyCard';
+import { useSnapSync } from '@/app/events/[eventId]/overview/_context/SnapSyncContext';
+import { Attendee } from '@/app/events/[eventId]/overview/_models/attendee';
 
 const CarouselEdgeSpacer = () => {
   return <div className={`w-5 shrink-0`} />;

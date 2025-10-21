@@ -1,6 +1,6 @@
 import AvatarIcon from '@/app/_components/ui/AvatarIcon';
 import { cn } from '@/app/_lib/cn';
-import { Attendee } from '@/app/recommendations/[eventId]/_models/attendee';
+import { Attendee } from '@/app/events/[eventId]/overview/_models/attendee';
 
 interface AttendeeAvatarButtonProps {
   index: number;

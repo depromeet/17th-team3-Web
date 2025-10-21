@@ -7,8 +7,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 
 import TopNavigation from '@/app/_components/layout/TopNavigation';
 import { cn } from '@/app/_lib/cn';
-import RestaurantCarouselCard from '@/app/recommendations/[eventId]/result/_components/RestaurantCarouselCard';
-import { Restaurant } from '@/app/recommendations/[eventId]/result/_models/result';
+import RestaurantCarouselCard from '@/app/events/[eventId]/result_refact/_components/RestaurantCarouselCard';
+import { Restaurant } from '@/app/events/[eventId]/result_refact/_models/result';
 
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';

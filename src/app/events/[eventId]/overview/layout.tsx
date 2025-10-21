@@ -1,9 +1,9 @@
 import TopNavigation from '@/app/_components/layout/TopNavigation';
 
-interface RecommendationsLayoutProps {
+interface OverviewLayoutProps {
   children: React.ReactNode;
 }
-const RecommendationsLayout = ({ children }: RecommendationsLayoutProps) => {
+const OverviewLayout = ({ children }: OverviewLayoutProps) => {
   return (
     <div className="flex flex-1 flex-col background-2">
       <TopNavigation title="" showBackButton />
@@ -12,4 +12,4 @@ const RecommendationsLayout = ({ children }: RecommendationsLayoutProps) => {
   );
 };
 
-export default RecommendationsLayout;
+export default OverviewLayout;

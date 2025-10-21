@@ -3,10 +3,10 @@
 import { useRouter } from 'next/navigation';
 
 import Button from '@/app/_components/ui/Button';
-import AttendeeReel from '@/app/recommendations/[eventId]/_components/attendees/AttendeeReel';
-import PersonaCarousel from '@/app/recommendations/[eventId]/_components/personas/PersonaCarousel';
-import { SnapSyncProvider } from '@/app/recommendations/[eventId]/_context/SnapSyncContext';
-import { AttendeesData } from '@/app/recommendations/[eventId]/_models/attendee';
+import AttendeeReel from '@/app/events/[eventId]/overview/_components/attendees/AttendeeReel';
+import PersonaCarousel from '@/app/events/[eventId]/overview/_components/personas/PersonaCarousel';
+import { SnapSyncProvider } from '@/app/events/[eventId]/overview/_context/SnapSyncContext';
+import { AttendeesData } from '@/app/events/[eventId]/overview/_models/attendee';
 
 interface RecommendationsClientProps {
   attendeesData: AttendeesData;

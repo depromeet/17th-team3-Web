@@ -1,4 +1,4 @@
-import { AttendeesData } from '@/app/recommendations/[eventId]/_models/attendee';
+import { AttendeesData } from '@/app/events/[eventId]/overview/_models/attendee';
 
 /**
  * 참석자 목데이터

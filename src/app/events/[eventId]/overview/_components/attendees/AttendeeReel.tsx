@@ -1,8 +1,8 @@
 import { cn } from '@/app/_lib/cn';
-import AttendeeAvatarButton from '@/app/recommendations/[eventId]/_components/attendees/AttendeeAvatarButton';
-import EmptyAttendeeButton from '@/app/recommendations/[eventId]/_components/attendees/AttendeeEmptyButton';
-import { useSnapSync } from '@/app/recommendations/[eventId]/_context/SnapSyncContext';
-import { Attendee } from '@/app/recommendations/[eventId]/_models/attendee';
+import AttendeeAvatarButton from '@/app/events/[eventId]/overview/_components/attendees/AttendeeAvatarButton';
+import EmptyAttendeeButton from '@/app/events/[eventId]/overview/_components/attendees/AttendeeEmptyButton';
+import { useSnapSync } from '@/app/events/[eventId]/overview/_context/SnapSyncContext';
+import { Attendee } from '@/app/events/[eventId]/overview/_models/attendee';
 
 const AttendeeReel = () => {
   const { attendeesData, activeAttendeeId, navigateToAttendee, attendeeAvatarRefs } = useSnapSync();

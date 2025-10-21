@@ -12,7 +12,7 @@ import React, {
   ReactNode,
 } from 'react';
 
-import { AttendeesData } from '@/app/recommendations/[eventId]/_models/attendee';
+import { AttendeesData } from '@/app/events/[eventId]/overview/_models/attendee';
 
 const INTERSECTION_OBSERVER_THRESHOLDS = [0.5, 0.6, 0.7];
 const SCROLL_ANIMATION_BACKUP_TIMEOUT = 400;

@@ -1,4 +1,4 @@
-import { Restaurant, Surveys } from '@/app/recommendations/[eventId]/result/_models/result';
+import { Restaurant, Surveys } from '@/app/events/[eventId]/result_refact/_models/result';
 
 export const mockSurveysData: Surveys = {
   preferredCuisineList: ['한식', '중식', '일식', '양식', '분식'],

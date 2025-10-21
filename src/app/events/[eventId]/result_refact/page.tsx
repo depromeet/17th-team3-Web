@@ -1,8 +1,8 @@
-import ResultClient from '@/app/recommendations/[eventId]/result/_components/ResultClient';
+import ResultClient from '@/app/events/[eventId]/result_refact/_components/ResultClient';
 import {
   mockRestaurantsData,
   mockSurveysData,
-} from '@/app/recommendations/[eventId]/result/_mocks/results.mock';
+} from '@/app/events/[eventId]/result_refact/_mocks/results.mock';
 
 interface RecommendationsResultPageProps {
   params: Promise<{ eventId: string }>;
