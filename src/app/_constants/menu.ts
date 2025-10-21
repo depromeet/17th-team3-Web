@@ -6,11 +6,6 @@ export const FOOD_MAP_CONSTANT = {
   western: { name: '양식', imageSrc: `${IMAGE_PATH}/양식.svg` },
   japanese: { name: '일식', imageSrc: `${IMAGE_PATH}/일식.svg` },
   southeast: { name: '동남아 음식', imageSrc: `${IMAGE_PATH}/태국 음식.svg` },
-  // mexican: { name: '멕시칸', imageSrc: `${IMAGE_PATH}/멕시칸.svg` },
-  // // vietnamese: { name: '베트남 음식', imageSrc: `${IMAGE_PATH}/베트남 음식.svg` },
-  // indian: { name: '인도 음식', imageSrc: `${IMAGE_PATH}/인도 음식.svg` },
-  // thai: { name: '태국 음식', imageSrc: `${IMAGE_PATH}/태국 음식.svg` },
-  // bunsik: { name: '분식', imageSrc: `${IMAGE_PATH}/분식.svg` },
 } as const;
 
 export type FoodKey = keyof typeof FOOD_MAP_CONSTANT;
