@@ -21,8 +21,8 @@ const SurveyNameStep = ({
   onNext,
   onCancel,
   initialValue = '',
-  title = '당신의 이름을 알려주세요',
-  description = '닉네임은 언제든지 변경할 수 있어요.',
+  title = '사용하실 프로필과\n이름을 알려주세요',
+  description = '',
 }: SurveyNameStepProps) => {
   const [name, setName] = useState(initialValue);
   const [isError, setIsError] = useState(false);

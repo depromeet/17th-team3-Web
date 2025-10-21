@@ -393,12 +393,9 @@
     )
   );
   background-clip: text;
-<<<<<<< HEAD
   color: transparent;
-=======
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
->>>>>>> 75e5b42 ([Design] title-gradient 유틸에 webkit 텍스트 그라데이션 지원 추가)
 }
 @utility type-gradient {
   background: var(

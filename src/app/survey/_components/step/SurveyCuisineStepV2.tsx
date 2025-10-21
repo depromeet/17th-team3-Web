@@ -8,6 +8,7 @@ import { FOOD_MAP } from '@/app/_constants/menu';
 import ChipGroupMultiSelect, {
   type ChipOption,
 } from '@/app/survey/_components/ui/ChipGroupMultiSelect';
+import FoodConfirmModal from '@/app/survey/_components/ui/FoodConfirmModal';
 import StepFormLayout from '@/app/survey/_components/ui/StepFormLayout';
 import { MAX_SELECT_COUNT, ANY_ID } from '@/app/survey/_models/constants';
 import {
@@ -25,6 +26,14 @@ const ID_TO_FOOD_KEY: Record<string, keyof typeof FOOD_MAP> = {
   chinese: 'chinese',
   western: 'western',
   southeast: 'southeast',
+};
+
+const LABEL_TO_FOOD_KEY: Record<string, keyof typeof FOOD_MAP> = {
+  한식: 'korean',
+  중식: 'chinese',
+  양식: 'western',
+  일식: 'japanese',
+  '동남아 음식': 'southeast',
 };
 
 /** Option[] → ChipOption[] 변환 */
@@ -117,32 +126,28 @@ const SurveyCuisineStepV2 = ({ title, defaultSelectedIds = [], onNext, onCancel 
 
       {/* 선택 확인 모달 */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="w-[90%] max-w-md rounded-xl bg-white p-6">
-            <h2 className="mb-3 text-center text-lg font-semibold">이대로 선택할까요?</h2>
-            <p className="mb-4 text-center text-sm text-gray-700">
-              선택한 음식 종류:
-              <br />
-              <span className="font-medium text-orange-700">
-                {selectedLabels.join(', ') || '선택 없음'}
-              </span>
-            </p>
-            <div className="mt-4 flex justify-center gap-3">
-              <button
-                onClick={cancelModal}
-                className="rounded-lg bg-gray-200 px-4 py-2 text-sm font-semibold"
-              >
-                다시 선택
-              </button>
-              <button
-                onClick={confirmNext}
-                className="rounded-lg bg-orange-500 px-4 py-2 text-sm font-semibold text-white"
-              >
-                확인
-              </button>
-            </div>
-          </div>
-        </div>
+        <FoodConfirmModal
+          open={isModalOpen}
+          title="이대로 저장할까요?"
+          subtitle="저장하면 수정할 수 없어요."
+          selectedFoods={selectedIds.map((id) => {
+            const [, category] = id.split(':');
+            const categoryLabel =
+              CUISINE_CATEGORY_LABELS[category as keyof typeof CUISINE_CATEGORY_LABELS];
+            const iconSrc = FOOD_MAP[category as keyof typeof FOOD_MAP].imageSrc;
+            const detailLabel = CUISINE_DETAIL_MAP[
+              category as keyof typeof CUISINE_DETAIL_MAP
+            ].find((d) => d.id === id)?.label;
+
+            return {
+              categoryLabel,
+              iconSrc,
+              detailLabel: detailLabel ?? '',
+            };
+          })}
+          onCancel={cancelModal}
+          onConfirm={confirmNext}
+        />
       )}
     </>
   );
