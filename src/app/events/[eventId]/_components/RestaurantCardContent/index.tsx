@@ -25,23 +25,23 @@ const RestaurantCardContent = ({
 }: RestaurantCardContentProps) => {
   const router = useRouter();
 
-  const themeClassNames = CARD_UI[theme]; //themeClassNames는 CARD_UI에 정의된 테마 클래스 이름들을 가져옴
+  const ui = CARD_UI[theme]; //ui는 CARD_UI에 정의된 테마 클래스 이름들을 가져옴
 
   return (
-    <div className={cn('flex flex-col', themeClassNames.root, className)}>
+    <div className={cn('flex flex-col', ui.root, className)}>
       {theme === 'lightCompact' && (
         <RestaurantImageGallery
           images={place.photos}
-          containerClassName={themeClassNames.gallery}
-          imageClassName={themeClassNames.galleryImage}
+          containerClassName={ui.gallery}
+          imageClassName={ui.galleryImage}
           isScrollable={true}
           imagePriority={imagePriority}
         />
       )}
       <div className="mb-1 flex w-full items-center justify-between gap-4">
-        <span className={themeClassNames.title}>{place.name}</span>
+        <span className={ui.title}>{place.name}</span>
         <button type="button" className="pl-2">
-          <Send className={themeClassNames.sendIcon} />
+          <Send className={ui.sendIcon} />
         </button>
       </div>
 
@@ -52,27 +52,22 @@ const RestaurantCardContent = ({
             fill="currentColor"
             strokeWidth={1.5}
             absoluteStrokeWidth
-            className={themeClassNames.metaIcon}
+            className={ui.metaIcon}
           />
-          <span className={cn('label-2 font-medium', themeClassNames.metaText)}>
+          <span className={cn('label-2 font-medium', ui.metaText)}>
             {place.rating} ({place.userRatingsTotal})
           </span>
         </div>
         <div className="flex flex-grow items-center gap-1">
-          <MapPin
-            size={16}
-            strokeWidth={1.5}
-            absoluteStrokeWidth
-            className={themeClassNames.metaIcon}
-          />
-          <span className={cn('line-clamp-1 label-2 font-medium', themeClassNames.metaText)}>
+          <MapPin size={16} strokeWidth={1.5} absoluteStrokeWidth className={ui.metaIcon} />
+          <span className={cn('line-clamp-1 label-2 font-medium', ui.metaText)}>
             {place.addressDescriptor?.description || place.address || '위치 정보 없음'}
           </span>
         </div>
       </div>
 
-      <div className={cn('w-full rounded-lg px-3 py-2', themeClassNames.reviewBox)}>
-        <span className={cn('center line-clamp-2 label-2 font-medium', themeClassNames.reviewText)}>
+      <div className={cn('w-full rounded-lg px-3 py-2', ui.reviewBox)}>
+        <span className={cn('center line-clamp-2 label-2 font-medium', ui.reviewText)}>
           {place.topReview?.text || ''}
         </span>
       </div>
@@ -81,38 +76,36 @@ const RestaurantCardContent = ({
           images={place.photos}
           activeIndex={imageIndex || 0}
           onImageChange={handleImageChange}
-          containerClassName={themeClassNames.gallery}
-          imageClassName={themeClassNames.galleryImage}
+          containerClassName={ui.gallery}
+          imageClassName={ui.galleryImage}
           imagePriority={imagePriority}
         />
       )}
 
-      <div className={cn('flex items-center gap-4', themeClassNames.buttonContainer)}>
+      <div className={cn('flex items-center gap-4', ui.buttonContainer)}>
         <button
           type="button"
           className={cn(
             'h-12 items-center justify-center rounded-[0.625rem] px-5 label-1 font-semibold',
-            themeClassNames.addrButton
+            ui.addrButton
           )}
           onClick={() => {
             router.push(place.link);
           }}
         >
-          <span className={themeClassNames.addrText}>지도에서 보기</span>
+          <span className={ui.addrText}>지도에서 보기</span>
         </button>
         <button
           type="button"
           className={cn(
             'flex h-12 flex-1 shrink-0 items-center justify-center gap-3 rounded-[0.625rem] font-semibold',
-            themeClassNames.wishButton
+            ui.wishButton
           )}
           onClick={() => {
             // TODO: 구현 필요 - 장소 공유 기능
           }}
         >
-          <span className={cn('label-1 font-bold', themeClassNames.wishCount)}>
-            {place.likeCount}
-          </span>
+          <span className={cn('label-1 font-bold', ui.wishCount)}>{place.likeCount}</span>
           <span className="label-1 font-semibold text-white">가고 싶어요</span>
           <Heart size={24} strokeWidth={1.5} absoluteStrokeWidth className="text-white" />
         </button>
