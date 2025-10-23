@@ -106,7 +106,7 @@ const HomePage = () => {
       {isMenuOpen && (
         <div className="fixed right-5 bottom-30 z-99 flex flex-col items-end gap-4">
           <ActionButton
-            icon="/icons/peoples.svg"
+            icon="/icons/people.svg"
             label="모임 생성하기"
             onClick={handleCreateMeeting}
           />
