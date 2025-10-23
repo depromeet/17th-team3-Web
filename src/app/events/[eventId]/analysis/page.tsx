@@ -24,7 +24,10 @@ const AnalysisPage = async ({ params }: AnalysisPageProps) => {
 
   const { items: places } = placesResponse;
 
-  const { preferredCuisines } = analysisData;
+  const preferredCuisinesChartData = analysisData.preferredCuisines.map((cuisine) => ({
+    name: cuisine.name,
+    value: cuisine.value,
+  }));
 
   return (
     <div className="flex flex-1 flex-col">
@@ -45,7 +48,7 @@ const AnalysisPage = async ({ params }: AnalysisPageProps) => {
             <Image src="/images/avatar/orange.svg" alt="orange" width={24} height={24} />
             <span className="body-3 font-semibold text-neutral-400">선호하는 음식</span>
           </div>
-          <PieChart data={preferredCuisines} />
+          <PieChart data={preferredCuisinesChartData} />
         </div>
 
         <div className="flex flex-col gap-4">

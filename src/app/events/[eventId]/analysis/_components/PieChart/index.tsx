@@ -7,18 +7,18 @@ import { cn } from '@/app/_lib/cn';
 
 import { CHART_THEME, PIE_GRADIENTS } from './chart';
 
-type ChartData = {
+type ChartData = Record<string, unknown> & {
   name: string;
   value: number;
 };
 
 //-------------------------------- LegendItem 컴포넌트 --------------------------------
-type LegendItemProps = {
+interface LegendItemProps {
   chartData: ChartData;
   index: number;
   activeIndex: number | null;
   onClick: () => void;
-};
+}
 
 const LegendItem = ({ chartData, index, activeIndex, onClick }: LegendItemProps) => {
   const isFirst = index === 0;
