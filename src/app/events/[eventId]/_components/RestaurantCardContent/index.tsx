@@ -106,6 +106,9 @@ const RestaurantCardContent = ({
             'flex h-12 flex-1 shrink-0 items-center justify-center gap-3 rounded-[0.625rem] font-semibold',
             themeClassNames.wishButton
           )}
+          onClick={() => {
+            // TODO: 구현 필요 - 장소 공유 기능
+          }}
         >
           <span className={cn('label-1 font-bold', themeClassNames.wishCount)}>
             {place.likeCount}
