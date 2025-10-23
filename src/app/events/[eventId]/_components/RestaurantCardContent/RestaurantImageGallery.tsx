@@ -5,12 +5,12 @@ import { cn } from '@/app/_lib/cn';
 
 interface RestaurantImageGalleryProps {
   images: string[];
-  activeIndex: number;
+  activeIndex?: number;
   containerClassName?: string;
   imageClassName?: string;
   isScrollable?: boolean;
   imagePriority?: boolean;
-  onImageChange: (index: number) => void;
+  onImageChange?: (index: number) => void;
 }
 
 const RestaurantImageGallery = ({
@@ -29,7 +29,7 @@ const RestaurantImageGallery = ({
   });
 
   const onClickImage = (index: number) => {
-    onImageChange(index);
+    onImageChange?.(index);
     emblaApi?.scrollTo(index);
   };
 

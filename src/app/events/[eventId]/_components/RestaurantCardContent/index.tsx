@@ -25,25 +25,23 @@ const RestaurantCardContent = ({
 }: RestaurantCardContentProps) => {
   const router = useRouter();
 
-  const themeClass = CARD_UI[theme].root;
+  const themeClassNames = CARD_UI[theme]; //themeClassNames는 CARD_UI에 정의된 테마 클래스 이름들을 가져옴
 
   return (
-    <div className={cn('flex flex-col', themeClass, className)}>
+    <div className={cn('flex flex-col', themeClassNames.root, className)}>
       {theme === 'lightCompact' && (
         <RestaurantImageGallery
           images={place.photos}
-          activeIndex={imageIndex || 0}
-          onImageChange={handleImageChange || (() => {})}
-          containerClassName={CARD_UI[theme].gallery}
-          imageClassName={CARD_UI[theme].galleryImage}
+          containerClassName={themeClassNames.gallery}
+          imageClassName={themeClassNames.galleryImage}
           isScrollable={true}
           imagePriority={imagePriority}
         />
       )}
       <div className="mb-1 flex w-full items-center justify-between gap-4">
-        <span className={CARD_UI[theme].title}>{place.name}</span>
+        <span className={themeClassNames.title}>{place.name}</span>
         <button type="button" className="pl-2">
-          <Send className={CARD_UI[theme].sendIcon} />
+          <Send className={themeClassNames.sendIcon} />
         </button>
       </div>
 
@@ -54,9 +52,9 @@ const RestaurantCardContent = ({
             fill="currentColor"
             strokeWidth={1.5}
             absoluteStrokeWidth
-            className={CARD_UI[theme].metaIcon}
+            className={themeClassNames.metaIcon}
           />
-          <span className={cn('label-2 font-medium', CARD_UI[theme].metaText)}>
+          <span className={cn('label-2 font-medium', themeClassNames.metaText)}>
             {place.rating} ({place.userRatingsTotal})
           </span>
         </div>
@@ -65,16 +63,16 @@ const RestaurantCardContent = ({
             size={16}
             strokeWidth={1.5}
             absoluteStrokeWidth
-            className={CARD_UI[theme].metaIcon}
+            className={themeClassNames.metaIcon}
           />
-          <span className={cn('line-clamp-1 label-2 font-medium', CARD_UI[theme].metaText)}>
+          <span className={cn('line-clamp-1 label-2 font-medium', themeClassNames.metaText)}>
             {place.addressDescriptor?.description || place.address || '위치 정보 없음'}
           </span>
         </div>
       </div>
 
-      <div className={cn('w-full rounded-lg px-3 py-2', CARD_UI[theme].reviewBox)}>
-        <span className={cn('center line-clamp-2 label-2 font-medium', CARD_UI[theme].reviewText)}>
+      <div className={cn('w-full rounded-lg px-3 py-2', themeClassNames.reviewBox)}>
+        <span className={cn('center line-clamp-2 label-2 font-medium', themeClassNames.reviewText)}>
           {place.topReview?.text || ''}
         </span>
       </div>
@@ -82,34 +80,34 @@ const RestaurantCardContent = ({
         <RestaurantImageGallery
           images={place.photos}
           activeIndex={imageIndex || 0}
-          onImageChange={handleImageChange || (() => {})}
-          containerClassName={CARD_UI[theme].gallery}
-          imageClassName={CARD_UI[theme].galleryImage}
+          onImageChange={handleImageChange}
+          containerClassName={themeClassNames.gallery}
+          imageClassName={themeClassNames.galleryImage}
           imagePriority={imagePriority}
         />
       )}
 
-      <div className={cn('flex items-center gap-4', CARD_UI[theme].buttonContainer)}>
+      <div className={cn('flex items-center gap-4', themeClassNames.buttonContainer)}>
         <button
           type="button"
           className={cn(
             'h-12 items-center justify-center rounded-[0.625rem] px-5 label-1 font-semibold',
-            CARD_UI[theme].addrButton
+            themeClassNames.addrButton
           )}
           onClick={() => {
             router.push(place.link);
           }}
         >
-          <span className={CARD_UI[theme].addrText}>지도에서 보기</span>
+          <span className={themeClassNames.addrText}>지도에서 보기</span>
         </button>
         <button
           type="button"
           className={cn(
             'flex h-12 flex-1 shrink-0 items-center justify-center gap-3 rounded-[0.625rem] font-semibold',
-            CARD_UI[theme].wishButton
+            themeClassNames.wishButton
           )}
         >
-          <span className={cn('label-1 font-bold', CARD_UI[theme].wishCount)}>
+          <span className={cn('label-1 font-bold', themeClassNames.wishCount)}>
             {place.likeCount}
           </span>
           <span className="label-1 font-semibold text-white">가고 싶어요</span>
