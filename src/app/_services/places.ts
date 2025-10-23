@@ -1,5 +1,4 @@
 import { api } from '@/app/_lib/api';
-import { ApiSuccessResponse } from '@/app/_models/api';
 
 export interface RecommendedPlace {
   placeId: number; // 장소 ID
@@ -31,8 +30,8 @@ export const getPlaces = async (keyword: string) => {
   const params = {
     query: keyword,
   };
-  const response = await api.get<ApiSuccessResponse<RecommendedPlaceResponse>>('/places', {
+  const response = await api.get<RecommendedPlaceResponse>('/places', {
     params,
   });
-  return response.data;
+  return response;
 };
