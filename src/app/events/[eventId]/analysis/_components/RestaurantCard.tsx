@@ -55,7 +55,7 @@ const RestaurantCard = ({ place, index, isActive }: RestaurantCardProps) => {
           </motion.div>
         </AnimatePresence>
 
-        {index === 0 && <PickRankBadge className="absolute top-6 left-0 z-20" index={index} />}
+        {index === 0 && <PickRankBadge className="absolute top-6 left-0 z-20" rank={index + 1} />}
         <div
           className="z-20 mt-auto w-full px-4 pt-9 pb-5"
           style={{

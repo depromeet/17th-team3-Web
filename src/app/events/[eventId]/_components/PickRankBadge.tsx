@@ -1,11 +1,11 @@
 import { cn } from '@/app/_lib/cn';
 
 interface PickRankBadgeProps {
-  index: number;
+  rank: number;
   className?: string;
 }
 
-const PickRankBadge = ({ index, className }: PickRankBadgeProps) => {
+const PickRankBadge = ({ rank, className }: PickRankBadgeProps) => {
   return (
     <div
       className={cn(
@@ -14,7 +14,7 @@ const PickRankBadge = ({ index, className }: PickRankBadgeProps) => {
       )}
     >
       <span className="flex h-4 w-4 items-center justify-center rounded-sm bg-black-alpha-2 label-1 font-extrabold text-white">
-        {index + 1}
+        {rank}
       </span>
       <span className="label-1 font-semibold text-white">우리 모임 Pick!</span>
     </div>

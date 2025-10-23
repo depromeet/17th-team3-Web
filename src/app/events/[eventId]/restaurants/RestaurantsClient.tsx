@@ -44,17 +44,22 @@ const RestaurantsClient = ({ restaurants }: RestaurantsProps) => {
       <RestaurantsSwiper restaurants={top3Restaurants} />
 
       <div className="flex flex-col bg-white">
-        {otherRestaurants.map((restaurant, index) => (
-          <div
-            key={restaurant.placeId}
-            ref={(el) => {
-              cardRefs.current[index] = el;
-            }}
-            style={{ scrollMarginTop: NAVIGATION_HEIGHT }}
-          >
-            <RestaurantCard restaurant={restaurant} index={index} />
-          </div>
-        ))}
+        {otherRestaurants.map((restaurant, index) => {
+          const rank = index + TOP_RANK + 1; // 4부터 시작
+          const isTop4 = rank <= 4; // 4번째 이하인지 여부
+
+          return (
+            <div
+              key={restaurant.placeId}
+              ref={(el) => {
+                cardRefs.current[index] = el;
+              }}
+              style={{ scrollMarginTop: NAVIGATION_HEIGHT }}
+            >
+              <RestaurantCard restaurant={restaurant} rank={isTop4 ? rank : undefined} />
+            </div>
+          );
+        })}
 
         <MorePicksButton />
       </div>

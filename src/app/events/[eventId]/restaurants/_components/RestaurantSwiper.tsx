@@ -57,7 +57,7 @@ const RestaurantsSwiper = ({ restaurants }: RestaurantsSwiperProps) => {
                 )}
               />
               <div className="z-10 flex flex-col gap-3">
-                <PickRankBadge index={index} />
+                <PickRankBadge rank={index + 1} />
                 <RestaurantCardContent
                   place={restaurant}
                   theme="lightCompact"
