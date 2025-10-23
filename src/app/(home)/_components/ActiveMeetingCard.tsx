@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import { CalendarDays, Check, ChevronRight, Clock, MapPin } from 'lucide-react';
+import Image from 'next/image';
 
 import CountdownDisplay from '@/app/(home)/_components/CountdownDisplay';
 import { Meeting } from '@/app/(home)/_models/types';
@@ -58,9 +59,13 @@ const ActiveMeetingCard = ({ meeting, onClick }: ActiveMeetingCardProps) => {
       </div>
 
       <div className="mt-8 rounded-3xl bg-white px-4 py-3">
-        <div className="py-2">
-          <StepIndicator total={attendeeCount} value={3} />
+        <div className="flex items-center py-2">
+          <StepIndicator total={attendeeCount} value={6} />
+          <div className="-ml-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-orange-100">
+            <Image alt="과녁 아이콘" src="/icons/arrow.svg" width={16} height={16} />
+          </div>
         </div>
+
         <div className="flex justify-between">
           <div className="flex items-center gap-1">
             <Check size={12} strokeWidth={4} className="rounded-full text-orange-500" />
