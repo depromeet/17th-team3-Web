@@ -14,9 +14,7 @@ const MorePicksButton = () => {
 
   return (
     <div className={cn('sticky bottom-0 px-5 py-3', picks === 10 && 'hidden')}>
-      <Button theme="cta-gradient" onClick={handleClick}>
-        5개 더 추천받기
-      </Button>
+      <Button onClick={handleClick}>5개 더 추천받기</Button>
     </div>
   );
 };
