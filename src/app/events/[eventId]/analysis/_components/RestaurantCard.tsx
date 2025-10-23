@@ -45,7 +45,7 @@ const RestaurantCard = ({ place, index, isActive }: RestaurantCardProps) => {
             className="absolute inset-0"
           >
             <Image
-              src={image || place.photos[0]}
+              src={image || place.photos?.[0]} //하이라이트 처리를 위해 첫 번째 이미지를 사용
               alt={place.name}
               fill
               className="z-10 object-cover"
