@@ -10,7 +10,7 @@ import ChipGroupMultiSelect, {
 } from '@/app/survey/_components/ui/ChipGroupMultiSelect';
 import FoodConfirmModal from '@/app/survey/_components/ui/FoodConfirmModal';
 import StepFormLayout from '@/app/survey/_components/ui/StepFormLayout';
-import { MAX_SELECT_COUNT, ANY_ID } from '@/app/survey/_models/constants';
+import { ANY_ID } from '@/app/survey/_models/constants';
 import {
   CUISINE_DETAIL_MAP,
   CUISINE_CATEGORY_LABELS,
@@ -26,14 +26,6 @@ const ID_TO_FOOD_KEY: Record<string, keyof typeof FOOD_MAP> = {
   chinese: 'chinese',
   western: 'western',
   southeast: 'southeast',
-};
-
-const LABEL_TO_FOOD_KEY: Record<string, keyof typeof FOOD_MAP> = {
-  한식: 'korean',
-  중식: 'chinese',
-  양식: 'western',
-  일식: 'japanese',
-  '동남아 음식': 'southeast',
 };
 
 /** Option[] → ChipOption[] 변환 */
@@ -66,18 +58,6 @@ const SurveyCuisineStepV2 = ({ title, defaultSelectedIds = [], onNext, onCancel 
   const [selectedIds, setSelectedIds] = useState<string[]>(defaultSelectedIds);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // 모든 음식 옵션 (CUISINE_DETAIL_MAP 기반)
-  const allOptions = useMemo(() => {
-    const result: ChipOption[] = [];
-    Object.entries(CUISINE_DETAIL_MAP).forEach(([category, foods]) => {
-      const chips = toChipOptions(foods);
-      result.push(...chips);
-    });
-    // "다 괜찮아요" 추가 (배타 옵션)
-    result.unshift({ id: ANY_ID, label: '다 괜찮아요!', variant: 'any' });
-    return result;
-  }, []);
-
   const handleNext = () => {
     if (selectedIds.length === 0) return;
     setIsModalOpen(true);
@@ -89,9 +69,6 @@ const SurveyCuisineStepV2 = ({ title, defaultSelectedIds = [], onNext, onCancel 
   };
 
   const cancelModal = () => setIsModalOpen(false);
-
-  // 선택한 label 목록
-  const selectedLabels = allOptions.filter((o) => selectedIds.includes(o.id)).map((o) => o.label);
 
   return (
     <>
