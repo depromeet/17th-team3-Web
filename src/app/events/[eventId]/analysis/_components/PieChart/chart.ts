@@ -1,6 +1,6 @@
 export type AnalysisType = 'preferred' | 'disliked';
 
-type AnalysisTheme = {
+interface AnalysisTheme {
   background: string;
   label: string;
   labelColor: string;
@@ -11,7 +11,7 @@ type AnalysisTheme = {
     backgroundStyle: string;
     colorStyle: string;
   };
-};
+}
 
 export const CHART_THEME: AnalysisTheme = {
   background:
