@@ -1,6 +1,8 @@
 import { api } from '@/app/_lib/api';
 import { ApiSuccessResponse } from '@/app/_models/api';
 
+const ANALYSIS_CACHE_DURATION = 300; // 5분
+
 export interface CuisinePreference {
   name: string;
   value: number;
@@ -16,7 +18,7 @@ export interface AnalysisData {
 
 export const getAnalysis = async (eventId: string): Promise<AnalysisData> => {
   const response = await api.get<ApiSuccessResponse<AnalysisData>>(`/events/${eventId}/analysis`, {
-    next: { revalidate: 300 }, // 5분 캐시
+    next: { revalidate: ANALYSIS_CACHE_DURATION },
   });
   return response.data;
 };
