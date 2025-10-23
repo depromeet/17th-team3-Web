@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 import { parseAsInteger, useQueryState } from 'nuqs';
 
@@ -36,8 +36,8 @@ const RestaurantsClient = ({ restaurants }: RestaurantsProps) => {
     prevPicksRef.current = picks;
   }, [picks]);
 
-  const top3Restaurants = restaurants.slice(0, TOP_RANK);
-  const otherRestaurants = restaurants.slice(TOP_RANK, picks);
+  const top3Restaurants = useMemo(() => restaurants.slice(0, TOP_RANK), [restaurants]);
+  const otherRestaurants = useMemo(() => restaurants.slice(TOP_RANK, picks), [restaurants, picks]);
 
   return (
     <div className="flex flex-col">
