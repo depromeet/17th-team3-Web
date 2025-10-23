@@ -43,17 +43,21 @@ const RestaurantCardSwiper = ({ places }: RestaurantCardSwiperProps) => {
   }, [emblaApi]);
 
   useEffect(() => {
-    const prevPicks = prevPicksRef.current;
+    const prevPicks = prevPicksRef.current; //이동 할 카드 타겟 인덱스
+
     if (!emblaApi) return;
 
     if (picks > prevPicks) {
-      setTimeout(() => {
+      const timeout = setTimeout(() => {
         emblaApi.scrollTo(prevPicks);
-      }, 500);
-    }
+      }, 500); // 500ms 후에 스크롤 이동(딜레이를 주어 애니메이션 효과를 줌,딜레이를 주지 않으면 카드가 즉시 이동해버림)
+      prevPicksRef.current = picks;
 
-    prevPicksRef.current = picks;
-  }, [emblaApi, picks]);
+      return () => {
+        clearTimeout(timeout);
+      };
+    }
+  }, [emblaApi, picks]); // picks 변동이 발생할때, picks가 이전 보다 많아 질때 실행
 
   return (
     <div className="flex w-full flex-col gap-5 pt-4 pb-10">
