@@ -1,3 +1,4 @@
+'use client';
 import { Heart, MapPin, Send, Star } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
