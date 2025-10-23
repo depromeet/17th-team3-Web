@@ -1,4 +1,3 @@
-/** src/app/survey/_components/step/SurveyNameStep.tsx */
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -57,10 +56,7 @@ const SurveyNameStep = ({
       prevButtonText="이전"
       nextButtonText="다음 단계로"
     >
-      {/* 프로필 선택 영역 추가 */}
       <ProfileSelector value={profileKey} onChange={(selected) => setProfileKey(selected)} />
-
-      {/* 기존 Input */}
       <Input
         value={name}
         onChange={(e) => setName(e.target.value)}
