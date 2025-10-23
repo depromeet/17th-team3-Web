@@ -18,9 +18,10 @@ const RestaurantCardSwiper = ({ places }: RestaurantCardSwiperProps) => {
   const params = useParams();
   const { eventId } = params;
 
-  const [emblaRef, emblaApi] = useEmblaCarousel();
   const [picks] = useQueryState('picks', parseAsInteger.withDefault(5));
   const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const [emblaRef, emblaApi] = useEmblaCarousel();
 
   const prevPicksRef = useRef(picks);
 
@@ -77,14 +78,14 @@ const RestaurantCardSwiper = ({ places }: RestaurantCardSwiperProps) => {
         <div className="pan-y flex w-full">
           {places.slice(0, picks).map((place, index) => (
             <div
-              key={index}
+              key={place.placeId}
               className={cn(
                 'min ml-1.5 h-[131.7vw] max-h-[623px] flex-[0_0_85%] [transform:translate3d(0,0,0)] overflow-hidden rounded-2xl',
                 index === 0 && 'ml-5',
                 index === places.length - 1 && 'mr-5'
               )}
             >
-              <RestaurantCard place={place} index={index} activeIndex={selectedIndex} />
+              <RestaurantCard place={place} index={index} isActive={selectedIndex === index} />
             </div>
           ))}
         </div>

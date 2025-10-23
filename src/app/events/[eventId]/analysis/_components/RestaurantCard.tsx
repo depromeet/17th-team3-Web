@@ -13,10 +13,10 @@ const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1414235077428-338989a2e
 interface RestaurantCardProps {
   place: RecommendedPlace;
   index: number;
-  activeIndex: number;
+  isActive: boolean;
 }
 
-const RestaurantCard = ({ place, index, activeIndex }: RestaurantCardProps) => {
+const RestaurantCard = ({ place, index, isActive }: RestaurantCardProps) => {
   const [image, setImage] = useState(place.photos?.[0]);
   const [imageIndex, setImageIndex] = useState(0);
 
@@ -24,8 +24,6 @@ const RestaurantCard = ({ place, index, activeIndex }: RestaurantCardProps) => {
     setImage(place.photos?.[index] || DEFAULT_IMAGE);
     setImageIndex(index);
   };
-
-  const isActive = activeIndex === index;
 
   return (
     <div

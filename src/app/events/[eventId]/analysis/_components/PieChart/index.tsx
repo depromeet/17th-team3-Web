@@ -99,7 +99,7 @@ const PieChart = ({ data }: PieChartProps) => {
               const isActive = activeIndex === null || activeIndex === index;
               return (
                 <Cell
-                  key={`cell-${index}`}
+                  key={`cell-${data[index].name}`}
                   fill={`url(#color${index})`}
                   focusable={false}
                   style={{
@@ -125,7 +125,7 @@ const PieChart = ({ data }: PieChartProps) => {
           <div className="flex flex-col items-center gap-2">
             {data.map((chartData, index) => (
               <LegendItem
-                key={index}
+                key={chartData.name}
                 chartData={chartData}
                 index={index}
                 activeIndex={activeIndex}
