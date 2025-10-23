@@ -17,10 +17,10 @@ export interface AnalysisData {
 }
 
 export const getAnalysis = async (eventId: string): Promise<AnalysisData> => {
-  const response = await api.get<ApiSuccessResponse<AnalysisData>>(`/events/${eventId}/analysis`, {
+  const response = await api.get<AnalysisData>(`/events/${eventId}/analysis`, {
     next: { revalidate: ANALYSIS_CACHE_DURATION },
   });
-  return response.data;
+  return response;
 };
 
 // 임시 Mock 데이터 (백엔드 API 준비 전까지)
