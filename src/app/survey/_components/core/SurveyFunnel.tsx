@@ -86,11 +86,35 @@ const SurveyFunnel = ({ role, initial, onComplete }: SurveyFunnelProps) => {
   switch (step) {
     case 'Name':
       return (
-        <SurveyLayout stepValue={stepValue} totalSteps={SURVEY_TOTAL_STEPS} onBack={handleBack}>
+        <SurveyLayout
+          stepValue={stepValue}
+          totalSteps={SURVEY_TOTAL_STEPS}
+          // onBack은 이제 모달 오픈으로 변경됨
+          onBack={() => setIsSkipModalOpen(true)}
+        >
           <SurveyNameStep
             initialValue={context.name}
-            onCancel={handleBack}
-            onNext={(name) => history.push('PreferCuisine', (prev) => ({ ...prev, name }))}
+            onCancel={() => setIsSkipModalOpen(true)} // 이전 버튼 클릭 시 모달 오픈
+            onNext={({ name, profileKey }) =>
+              history.push('PreferCuisine', (prev) => ({
+                ...prev,
+                name,
+                profileKey,
+              }))
+            }
+          />
+
+          <ConfirmModal
+            open={isSkipModalOpen}
+            title="설문을 그만둘까요?"
+            description="지금 나가면 입력된 내용이 사라져요."
+            cancelText="계속하기"
+            confirmText="나가기"
+            onCancel={() => setIsSkipModalOpen(false)}
+            onConfirm={() => {
+              setIsSkipModalOpen(false);
+              router.push('/meetings/1');
+            }}
           />
         </SurveyLayout>
       );
