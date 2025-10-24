@@ -14,6 +14,7 @@ export interface ReviewOption extends Option {
 export interface SurveyReviewStepProps {
   roleLabel: string;
   name: string;
+  profileKey?: string;
   prefer: ReviewOption[];
   dislike: ReviewOption[];
   onCancel: () => void;

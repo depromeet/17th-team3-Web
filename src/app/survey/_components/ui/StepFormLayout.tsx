@@ -1,5 +1,6 @@
 import { TitleGroup } from '@/app/_components/typography';
 import Button from '@/app/_components/ui/Button';
+import CuisineNoticeFrame from '@/app/survey/_components/ui/CuisineNoticeFrame';
 
 interface StepFormLayoutProps {
   title: string;
@@ -10,6 +11,7 @@ interface StepFormLayoutProps {
   isNextDisabled?: boolean;
   prevButtonText?: string;
   nextButtonText?: string;
+  showNotice?: boolean;
 }
 
 const StepFormLayout = ({
@@ -21,22 +23,32 @@ const StepFormLayout = ({
   isNextDisabled,
   prevButtonText = '이전',
   nextButtonText = '다음 단계로',
+  showNotice = false,
 }: StepFormLayoutProps) => {
   return (
-    <main className="flex flex-1 flex-col">
+    <main className="relative flex h-[100dvh] flex-1 flex-col">
+      {/* 제목 */}
       <div className="pt-4 pb-8">
         <TitleGroup title={title} description={description} />
       </div>
 
+      {/* 스크롤 영역 */}
       <div className="min-h-0 flex-1 overflow-y-auto">{children}</div>
 
-      <div className="flex gap-3 pt-3 pb-6">
-        <Button theme="gray" onClick={onCancel} className="w-[114px]">
-          {prevButtonText}
-        </Button>
-        <Button status={isNextDisabled ? 'disabled' : 'normal'} onClick={onNext} className="flex-1">
-          {nextButtonText}
-        </Button>
+      <div className="sticky bottom-0 flex w-full flex-col bg-orange-50">
+        {showNotice && <CuisineNoticeFrame />}
+        <div className="flex gap-3 pt-3 pb-6">
+          <Button theme="gray" onClick={onCancel} className="w-[114px]">
+            {prevButtonText}
+          </Button>
+          <Button
+            status={isNextDisabled ? 'disabled' : 'normal'}
+            onClick={onNext}
+            className="flex-1"
+          >
+            {nextButtonText}
+          </Button>
+        </div>
       </div>
     </main>
   );

@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo } from 'react';
 
+import { useToast } from '@/app/_features/toast';
 import Chip from '@/app/survey/_components/ui/Chip';
 import { MAX_SELECT_COUNT } from '@/app/survey/_models/constants';
 
@@ -14,11 +15,8 @@ export interface ChipOption {
 
 export interface ChipGroupMultiSelectProps {
   options: ReadonlyArray<ChipOption>;
-  /** 부모가 관리하는 선택값 */
   selectedIds: string[];
-  /** 예: ['c:any'] */
   exclusiveIds?: readonly string[];
-  /** 토글 시 새로운 배열을 부모에 통지 */
   onChange?: (ids: string[]) => void;
   className?: string;
 }
@@ -30,6 +28,8 @@ const ChipGroupMultiSelect = ({
   onChange,
   className,
 }: ChipGroupMultiSelectProps) => {
+  const { toast: customToast } = useToast();
+
   const activeExclusive = useMemo(
     () => selectedIds.find((id) => exclusiveIds.includes(id)),
     [selectedIds, exclusiveIds]
@@ -52,12 +52,21 @@ const ChipGroupMultiSelect = ({
         return;
       }
 
-      // 3. 일반 옵션 선택 시, 최대 개수 초과 방지
+      // 3. 일반 옵션 선택 시
       const base = activeExclusive ? [] : selectedIds;
 
+      // 최대 선택 개수 초과 시 토스트
       if (base.length >= MAX_SELECT_COUNT) {
-        console.warn(`[ChipGroupMultiSelect] 최대 선택 개수(${MAX_SELECT_COUNT})를 초과했습니다.`);
-        return; // 선택 무시
+        customToast(
+          <div className="flex items-center gap-2">
+            <img src="/icons/exclamation.svg" alt="!" className="h-8 w-8" />
+            <span className="text-gray-1500 body-3 font-semibold">
+              최대 5개까지 선택 가능합니다
+            </span>
+          </div>,
+          { showIcon: false, duration: 3000 }
+        );
+        return;
       }
 
       onChange?.([...base, id]);
@@ -65,22 +74,19 @@ const ChipGroupMultiSelect = ({
     [selectedIds, exclusiveIds, activeExclusive, onChange]
   );
 
+  // ✅ disabled 로직 수정 — 더 이상 maxedOut으로 막지 않음
   const isDisabled = (id: string) => {
     const isExclusive = exclusiveIds.includes(id);
-    // 선택 제한 상태에서 아직 선택되지 않은 칩은 클릭 비활성화
-    const maxedOut = selectedIds.length >= MAX_SELECT_COUNT && !selectedIds.includes(id);
-    return Boolean((activeExclusive && !isExclusive) || (!isExclusive && maxedOut));
+    return Boolean(activeExclusive && !isExclusive);
   };
 
   const orderOf = (id: string) => {
     const option = options.find((o) => o.id === id);
-    // "다 괜찮아요" (variant === "any") → 항상 배지 없음
     if (option?.variant === 'any') return 0;
     const idx = selectedIds.indexOf(id);
     return idx >= 0 ? idx + 1 : 0;
   };
 
-  // ANY 칩만 상단에 단독 렌더링
   const anyChip = options.find((o) => o.variant === 'any');
   const restChips = options.filter((o) => o !== anyChip);
 
