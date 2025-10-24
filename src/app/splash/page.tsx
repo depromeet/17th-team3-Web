@@ -13,7 +13,7 @@ const SplashPage = () => {
       const expiryDate = new Date();
       expiryDate.setFullYear(expiryDate.getFullYear() + 1);
       document.cookie = `splash_seen=true; expires=${expiryDate.toUTCString()}; path=/`;
-      router.push('/');
+      router.push('/login');
     }, 2000);
 
     return () => clearTimeout(timer);
