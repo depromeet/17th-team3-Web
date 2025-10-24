@@ -11,6 +11,7 @@ interface SurveyNameStepProps {
   onNext: (payload: { name: string; profileKey: string }) => void;
   onCancel: () => void;
   initialValue?: string;
+  initialProfileKey?: string;
   title?: string;
   description?: string;
 }
@@ -19,11 +20,12 @@ const SurveyNameStep = ({
   onNext,
   onCancel,
   initialValue = '',
+  initialProfileKey = 'default',
   title = '사용하실 프로필과\n이름을 알려주세요',
   description = '',
 }: SurveyNameStepProps) => {
   const [name, setName] = useState(initialValue);
-  const [profileKey, setProfileKey] = useState('default'); // 프로필 상태 추가
+  const [profileKey, setProfileKey] = useState(initialProfileKey);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 
 import Image from 'next/image';
 
@@ -58,6 +58,11 @@ const SurveyCuisineStepV2 = ({ title, defaultSelectedIds = [], onNext, onCancel 
   const [selectedIds, setSelectedIds] = useState<string[]>(defaultSelectedIds);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // 알림 콜백
+  const handleMaxSelect = () => {
+    alert('최대 5개까지 선택이 가능합니다.');
+  };
+
   const handleNext = () => {
     if (selectedIds.length === 0) return;
     setIsModalOpen(true);
@@ -68,8 +73,6 @@ const SurveyCuisineStepV2 = ({ title, defaultSelectedIds = [], onNext, onCancel 
     onNext(selectedIds);
   };
 
-  const cancelModal = () => setIsModalOpen(false);
-
   return (
     <>
       <StepFormLayout
@@ -78,21 +81,42 @@ const SurveyCuisineStepV2 = ({ title, defaultSelectedIds = [], onNext, onCancel 
         onNext={handleNext}
         isNextDisabled={selectedIds.length === 0}
         nextButtonText="다음으로"
+        showNotice
       >
         {/* 카테고리별 그룹 */}
         <div className="flex flex-col gap-6">
           {Object.entries(CUISINE_DETAIL_MAP).map(([category, foods]) => {
             const options = toChipOptions(foods);
+            const foodMeta = FOOD_MAP[category as keyof typeof FOOD_MAP];
+
             return (
               <div key={category}>
-                <h3 className="mb-2 text-lg font-semibold">
-                  {CUISINE_CATEGORY_LABELS[category as keyof typeof CUISINE_CATEGORY_LABELS] ??
-                    category}
-                </h3>
+                {/* 카테고리 타이틀 + 아이콘 */}
+                <div className="mb-2 flex items-center gap-2">
+                  <Image
+                    src={foodMeta.imageSrc}
+                    alt={foodMeta.name}
+                    width={24}
+                    height={24}
+                    className="aspect-square"
+                  />
+                  <h3 className="text-lg font-semibold">
+                    {CUISINE_CATEGORY_LABELS[category as keyof typeof CUISINE_CATEGORY_LABELS] ??
+                      category}
+                  </h3>
+                </div>
+
+                {/* 칩 그룹 */}
                 <ChipGroupMultiSelect
                   options={options}
                   selectedIds={selectedIds}
-                  onChange={setSelectedIds}
+                  onChange={(ids) => {
+                    if (ids.length > 5) {
+                      handleMaxSelect();
+                      return;
+                    }
+                    setSelectedIds(ids);
+                  }}
                   exclusiveIds={[ANY_ID]}
                 />
               </div>
@@ -101,7 +125,6 @@ const SurveyCuisineStepV2 = ({ title, defaultSelectedIds = [], onNext, onCancel 
         </div>
       </StepFormLayout>
 
-      {/* 선택 확인 모달 */}
       {isModalOpen && (
         <FoodConfirmModal
           open={isModalOpen}
@@ -115,14 +138,9 @@ const SurveyCuisineStepV2 = ({ title, defaultSelectedIds = [], onNext, onCancel 
             const detailLabel = CUISINE_DETAIL_MAP[
               category as keyof typeof CUISINE_DETAIL_MAP
             ].find((d) => d.id === id)?.label;
-
-            return {
-              categoryLabel,
-              iconSrc,
-              detailLabel: detailLabel ?? '',
-            };
+            return { categoryLabel, iconSrc, detailLabel: detailLabel ?? '' };
           })}
-          onCancel={cancelModal}
+          onCancel={() => setIsModalOpen(false)}
           onConfirm={confirmNext}
         />
       )}
