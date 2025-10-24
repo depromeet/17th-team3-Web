@@ -1,7 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-
 import { CalendarDays, Check, ChevronRight, Clock, MapPin } from 'lucide-react';
 import Image from 'next/image';
 
@@ -62,7 +60,7 @@ const ActiveMeetingCard = ({ meeting, onClick }: ActiveMeetingCardProps) => {
         <div className="flex items-center py-2">
           <StepIndicator total={attendeeCount} value={6} />
           {/* TODO: 추가 디자인 필요 */}
-          <div
+          {/* <div
             className="absolute -top-3 -translate-x-1/2"
             style={{ left: `${(6 / attendeeCount) * 100}%` }}
           >
@@ -74,7 +72,7 @@ const ActiveMeetingCard = ({ meeting, onClick }: ActiveMeetingCardProps) => {
             <div className="absolute top-full left-1/2 -translate-x-1/2">
               <div className="h-0 w-0 border-t-8 border-r-8 border-l-8 border-t-orange-50 border-r-transparent border-l-transparent" />
             </div>
-          </div>
+          </div> */}
 
           <div className="-ml-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-orange-100">
             <Image alt="과녁 아이콘" src="/icons/arrow.svg" width={16} height={16} />
