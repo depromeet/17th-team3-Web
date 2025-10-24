@@ -9,10 +9,9 @@ export const meetingsApi = {
   createMeeting: () => {
     const mockForm = {
       name: '오늘 뭐먹을건데',
-      attendeeNickname: '나야 혁준',
       attendeeCount: 7,
       stationId: 1,
-      endAt: '2025-10-15T09:00:00',
+      endAt: '2025-11-05T09:00:00',
     };
     return api.post('/meetings', mockForm);
   },

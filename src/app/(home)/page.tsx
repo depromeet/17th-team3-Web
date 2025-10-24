@@ -12,15 +12,18 @@ import {
   EndedMeetingCard,
   SectionHeader,
 } from '@/app/(home)/_components';
+import { useMeetingsByStatus } from '@/app/(home)/_hooks/useMeetingsByStatus';
 import { Meeting } from '@/app/(home)/_models/types';
 import FloatingActionButton from '@/app/_components/ui/FloatingActionButton';
 import { useToast } from '@/app/_features/toast';
+import { cn } from '@/app/_lib/cn';
 import { meetingsApi } from '@/app/_services/meetings';
 
 const HomePage = () => {
   const [meetings, setMeetings] = useState<Meeting[]>([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const { activeMeetings, endedMeetings } = useMeetingsByStatus(meetings);
   const { success: toast } = useToast();
 
   const router = useRouter();
@@ -48,13 +51,6 @@ const HomePage = () => {
     setIsMenuOpen(false);
   };
 
-  const activeMeetings = meetings
-    .filter((meeting) => !meeting.isClosed)
-    .sort((a, b) => new Date(b.endAt).getTime() - new Date(a.endAt).getTime());
-  const endedMeetings = meetings
-    .filter((meeting) => meeting.isClosed)
-    .sort((a, b) => new Date(b.endAt).getTime() - new Date(a.endAt).getTime());
-
   return (
     <div className="no-scrollbar flex h-[100dvh] flex-col overflow-auto bg-neutral-100">
       <header className="flex items-center justify-between px-5 pt-9 pb-5 select-none">
@@ -68,11 +64,19 @@ const HomePage = () => {
         {/* 진행 중인 모임 */}
         <section className="py-2">
           <SectionHeader title="진행 중인 모임" icon="/images/avatar/orange.svg" />
-          <div className="no-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-5">
+          <div
+            className={cn(
+              'no-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-5',
+              activeMeetings.length === 1 && 'justify-center'
+            )}
+          >
             {activeMeetings.length > 0 ? (
               activeMeetings.map((meeting) => (
                 <div key={meeting.id} className="min-w-[320px] shrink-0 snap-center">
-                  <ActiveMeetingCard meeting={meeting} onClick={() => console.log('1111')} />
+                  <ActiveMeetingCard
+                    meeting={meeting}
+                    onClick={() => console.log('모임현황 페이지로 이동!')}
+                  />
                 </div>
               ))
             ) : (
@@ -90,7 +94,7 @@ const HomePage = () => {
                 <EndedMeetingCard
                   key={meeting.id}
                   meeting={meeting}
-                  onClick={() => console.log('2222')}
+                  onClick={() => console.log('모임결과 페이지로 이동')}
                 />
               ))
             ) : (
