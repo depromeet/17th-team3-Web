@@ -69,28 +69,19 @@ const ProfileSelectModal = ({
                   onClick={() => !isLocked && onSelect(a.key)}
                   disabled={isLocked}
                   className={cn(
-                    'relative flex items-center justify-center rounded-[36px] p-3 transition-all duration-150',
+                    'relative flex items-center justify-center rounded-full p-3 transition-all duration-150',
                     isLocked ? 'cursor-not-allowed opacity-40' : 'hover:opacity-90 active:scale-95'
                   )}
                   style={{
                     backgroundColor: a.bgColor,
                     width: 64,
                     height: 64,
-                    border: isSelected ? '2px solid #B82F00' : '2px solid transparent',
                   }}
                 >
                   <Image src={a.src} alt={a.key} width={40} height={40} />
 
-                  {/* 선택된 프로필 오버레이(check.svg) */}
                   {isSelected && (
-                    <div
-                      className="absolute flex h-14 w-14 items-center justify-center rounded-[36px] bg-black/60"
-                      style={{
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                      }}
-                    >
+                    <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/60">
                       <Image src="/icons/check.svg" alt="선택됨" width={24} height={24} />
                     </div>
                   )}
