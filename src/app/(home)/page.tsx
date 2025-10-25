@@ -12,10 +12,10 @@ import {
   EndedMeetingCard,
   SectionHeader,
 } from '@/app/(home)/_components';
-import { useMeetingsByStatus } from '@/app/(home)/_hooks/useMeetingsByStatus';
 import { Meeting } from '@/app/(home)/_models/types';
 import FloatingActionButton from '@/app/_components/ui/FloatingActionButton';
 import { useToast } from '@/app/_features/toast';
+import { useMeetingsByStatus } from '@/app/_hooks/meeting/useMeetingsByStatus';
 import { cn } from '@/app/_lib/cn';
 import { meetingsApi } from '@/app/_services/meetings';
 
