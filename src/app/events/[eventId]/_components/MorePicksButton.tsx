@@ -1,20 +1,16 @@
 'use client';
 
-import { useQueryState, parseAsInteger } from 'nuqs';
-
 import Button from '@/app/_components/ui/Button';
 import { cn } from '@/app/_lib/cn';
+import { ADDITIONAL_RESTAURANT_COUNT } from '@/app/events/[eventId]/_constants/restaurants';
+import { useRestaurantPickCount } from '@/app/events/[eventId]/_hooks/useRestaurantPickCount';
 
 const MorePicksButton = () => {
-  const [picks, setPicks] = useQueryState('picks', parseAsInteger.withDefault(5));
-
-  const handleClick = () => {
-    setPicks((v) => (v ?? 5) + 5, { history: 'replace' });
-  };
+  const { increasePickCount, canLoadMore } = useRestaurantPickCount();
 
   return (
-    <div className={cn('sticky bottom-0 px-5 py-3', picks === 10 && 'hidden')}>
-      <Button onClick={handleClick}>5개 더 추천받기</Button>
+    <div className={cn('sticky bottom-0 px-5 py-3', !canLoadMore && 'hidden')}>
+      <Button onClick={increasePickCount}>{ADDITIONAL_RESTAURANT_COUNT}개 더 추천받기</Button>
     </div>
   );
 };

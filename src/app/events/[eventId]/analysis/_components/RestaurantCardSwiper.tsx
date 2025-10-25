@@ -5,10 +5,10 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { ListIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { parseAsInteger, useQueryState } from 'nuqs';
 
 import { cn } from '@/app/_lib/cn';
 import { RecommendedPlace } from '@/app/_services/places';
+import { useRestaurantPickCount } from '@/app/events/[eventId]/_hooks/useRestaurantPickCount';
 import RestaurantCard from '@/app/events/[eventId]/analysis/_components/RestaurantCard';
 
 interface RestaurantCardSwiperProps {
@@ -18,14 +18,14 @@ const RestaurantCardSwiper = ({ places }: RestaurantCardSwiperProps) => {
   const params = useParams();
   const { eventId } = params;
 
-  const [picks] = useQueryState('picks', parseAsInteger.withDefault(5));
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const { pickCount, getUrlWithPicks } = useRestaurantPickCount();
 
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const [emblaRef, emblaApi] = useEmblaCarousel();
 
-  const prevPicksRef = useRef(picks);
+  const prevPicksRef = useRef(pickCount);
 
-  const totalPicks = Math.min(picks, places.length);
+  const totalPicks = Math.min(pickCount, places.length);
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -47,17 +47,17 @@ const RestaurantCardSwiper = ({ places }: RestaurantCardSwiperProps) => {
 
     if (!emblaApi) return;
 
-    if (picks > prevPicks) {
+    if (pickCount > prevPicks) {
       const timeout = setTimeout(() => {
         emblaApi.scrollTo(prevPicks);
       }, 500); // 500ms 후에 스크롤 이동(딜레이를 주어 애니메이션 효과를 줌,딜레이를 주지 않으면 카드가 즉시 이동해버림)
-      prevPicksRef.current = picks;
+      prevPicksRef.current = pickCount;
 
       return () => {
         clearTimeout(timeout);
       };
     }
-  }, [emblaApi, picks]); // picks 변동이 발생할때, picks가 이전 보다 많아 질때 실행
+  }, [emblaApi, pickCount]); // picks 변동이 발생할때, picks가 이전 보다 많아 질때 실행
 
   return (
     <div className="flex w-full flex-col gap-5 pt-4 pb-10">
@@ -68,7 +68,7 @@ const RestaurantCardSwiper = ({ places }: RestaurantCardSwiperProps) => {
           <span className="text-neutral-600">{totalPicks}</span>
         </div>
         <Link
-          href={`/events/${eventId}/restaurants?picks=${picks}`}
+          href={getUrlWithPicks(`/events/${eventId}/restaurants`)}
           replace={true}
           prefetch={true}
           className="flex h-8 items-center gap-1 rounded-full border border-white-alpha-3 bg-white-alpha-2 pr-3 pl-2"
@@ -80,7 +80,7 @@ const RestaurantCardSwiper = ({ places }: RestaurantCardSwiperProps) => {
 
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="pan-y flex w-full">
-          {places.slice(0, picks).map((place, index) => (
+          {places.slice(0, pickCount).map((place, index) => (
             <div
               key={place.placeId}
               className={cn(

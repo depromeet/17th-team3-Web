@@ -2,13 +2,12 @@
 
 import { useEffect, useMemo, useRef } from 'react';
 
-import { parseAsInteger, useQueryState } from 'nuqs';
-
 import { RecommendedPlace } from '@/app/_services/places';
 import MorePicksButton from '@/app/events/[eventId]/_components/MorePicksButton';
+import { TOP_RESTAURANT_COUNT } from '@/app/events/[eventId]/_constants/restaurants';
+import { useRestaurantPickCount } from '@/app/events/[eventId]/_hooks/useRestaurantPickCount';
 import RestaurantCard from '@/app/events/[eventId]/restaurants/_components/RestaurantCard';
 import RestaurantsSwiper from '@/app/events/[eventId]/restaurants/_components/RestaurantSwiper';
-import { TOP_RANK } from '@/app/events/[eventId]/restaurants/_constants';
 
 const NAVIGATION_HEIGHT = '3.5rem';
 
@@ -16,28 +15,31 @@ interface RestaurantsProps {
   restaurants: RecommendedPlace[];
 }
 const RestaurantsClient = ({ restaurants }: RestaurantsProps) => {
-  const [picks] = useQueryState('picks', parseAsInteger.withDefault(5));
+  const { pickCount } = useRestaurantPickCount();
 
-  const prevPicksRef = useRef(picks);
+  const prevPicksRef = useRef(pickCount);
   const cardRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
 
   useEffect(() => {
-    const prevPicks = prevPicksRef.current;
+    const prevPickCount = prevPicksRef.current;
 
-    if (picks > prevPicks) {
-      const newFirstIndex = prevPicks;
-      const targetCard = cardRefs.current[newFirstIndex - TOP_RANK];
+    if (pickCount > prevPickCount) {
+      const newFirstIndex = prevPickCount;
+      const targetCard = cardRefs.current[newFirstIndex - TOP_RESTAURANT_COUNT];
 
       if (targetCard) {
         targetCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }
 
-    prevPicksRef.current = picks;
-  }, [picks]);
+    prevPicksRef.current = pickCount;
+  }, [pickCount]);
 
-  const top3Restaurants = useMemo(() => restaurants.slice(0, TOP_RANK), [restaurants]);
-  const otherRestaurants = useMemo(() => restaurants.slice(TOP_RANK, picks), [restaurants, picks]);
+  const top3Restaurants = useMemo(() => restaurants.slice(0, TOP_RESTAURANT_COUNT), [restaurants]);
+  const otherRestaurants = useMemo(
+    () => restaurants.slice(TOP_RESTAURANT_COUNT, pickCount),
+    [restaurants, pickCount]
+  );
 
   return (
     <div className="flex flex-col">
@@ -45,7 +47,7 @@ const RestaurantsClient = ({ restaurants }: RestaurantsProps) => {
 
       <div className="flex flex-col bg-white">
         {otherRestaurants.map((restaurant, index) => {
-          const rank = index + TOP_RANK + 1; // 4부터 시작
+          const rank = index + TOP_RESTAURANT_COUNT + 1; // 4부터 시작
           const isTop4 = rank <= 4; // 4번째 이하인지 여부
 
           return (

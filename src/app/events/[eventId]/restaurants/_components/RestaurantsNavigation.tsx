@@ -3,29 +3,26 @@
 import { useEffect } from 'react';
 
 import { useRouter } from 'next/navigation';
-import { parseAsInteger, useQueryState } from 'nuqs';
 
 import TopNavigation from '@/app/_components/layout/TopNavigation';
+import { useRestaurantPickCount } from '@/app/events/[eventId]/_hooks/useRestaurantPickCount';
 
 const RestaurantsNavigation = ({ eventId }: { eventId: string }) => {
   const router = useRouter();
-  const [picks] = useQueryState('picks', parseAsInteger.withDefault(5));
 
-  const analysisUrl = `/events/${eventId}/analysis?picks=${picks}`;
+  const { isDefaultCount, getUrlWithPicks } = useRestaurantPickCount();
+
+  const analysisUrl = getUrlWithPicks(`/events/${eventId}/analysis`);
 
   const goToAnalysis = () => {
-    if (picks) {
-      router.replace(analysisUrl);
-    } else {
-      router.back();
-    }
+    router.replace(analysisUrl);
   };
 
   useEffect(() => {
-    if (picks) {
+    if (isDefaultCount) {
       router.prefetch(analysisUrl);
     }
-  }, [analysisUrl, picks, router]);
+  }, [analysisUrl, isDefaultCount, router]);
 
   return (
     <TopNavigation
