@@ -1,68 +1,86 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 
 import { DatePicker } from '@mantine/dates';
 import { CalendarDays, Clock } from 'lucide-react';
 
 import BottomSheet from '@/app/_components/ui/BottomSheet';
 import Button from '@/app/_components/ui/Button';
+import { useClickOutside } from '@/app/_hooks/useClickOutside';
 import { cn } from '@/app/_lib/cn';
 
 import 'dayjs/locale/ko';
 
+/**
+ * 날짜와 시간 선택 컴포넌트 (Controlled Component)
+ */
 interface DateTimePickerProps {
-  dateValue: string | null;
-  onDateClick: (date: string) => void;
-  onTimeClick: (hour: string) => void;
+  date: string | null;
+  time: string | null;
+  onDateChange: (date: string | null) => void;
+  onTimeChange: (time: string | null) => void;
   dateLabel?: string;
 }
 
 const DateTimePicker = ({
-  dateValue,
-  onDateClick,
-  onTimeClick,
+  date,
+  time,
+  onDateChange,
+  onTimeChange,
   dateLabel = '날짜 선택하기',
 }: DateTimePickerProps) => {
   const [showCalendar, setShowCalendar] = useState(false);
-  const [date, setDate] = useState<string | null>(null);
-  const [hour, setHour] = useState<string | null>(null);
+  const [tempDate, setTempDate] = useState<Date | null>(null);
 
-  const handleDateSelect = () => {
-    if (date) {
-      onDateClick(date);
-      setShowCalendar(false);
+  const handleOpenCalendar = useCallback(() => {
+    setShowCalendar(true);
+  }, []);
+
+  const handleCloseCalendar = useCallback(() => {
+    setShowCalendar(false);
+    setTempDate(null);
+  }, []);
+
+  const handleDateChange = useCallback((date: Date | null) => {
+    setTempDate(date);
+  }, []);
+
+  const handleConfirmDate = useCallback(() => {
+    if (tempDate) {
+      const dateString = tempDate.toISOString().split('T')[0];
+      onDateChange(dateString);
+      handleCloseCalendar();
     }
-  };
-
-  const handleTimeSelect = (hour: string) => {
-    setHour(hour);
-    onTimeClick(hour);
-  };
+  }, [tempDate, onDateChange, handleCloseCalendar]);
 
   return (
     <>
       <div className="flex items-center">
+        {/* 날짜 선택 버튼 */}
         <button
-          onClick={() => setShowCalendar(true)}
+          type="button"
+          onClick={handleOpenCalendar}
           className={cn(
             'flex flex-1 items-center gap-3 border-b-1 border-b-neutral-200 pt-3 pr-3 pb-2 pl-1 body-2 font-semibold text-neutral-400',
-            dateValue && 'text-gray-1500'
+            date && 'text-gray-1500'
           )}
         >
           <CalendarDays size={20} strokeWidth={2.5} className="text-neutral-400" />
-          {dateValue || dateLabel}
+          {date || dateLabel}
         </button>
 
-        <TimePicker selectedHour={hour} onTimeChange={handleTimeSelect} />
+        {/* 시간 선택 */}
+        <TimePicker selectedHour={time} onTimeChange={onTimeChange} />
       </div>
 
+      {/* 달력 모달 */}
       {showCalendar && (
-        <BottomSheet onClose={() => setShowCalendar(false)}>
+        <BottomSheet onClose={handleCloseCalendar}>
           <div className="flex flex-col items-center justify-center gap-6">
             <DatePicker
-              value={date}
-              onChange={setDate}
+              value={tempDate}
+              onChange={handleDateChange as any}
               minDate={new Date()}
               locale="ko"
               hideOutsideDates
@@ -88,7 +106,7 @@ const DateTimePicker = ({
                 },
               }}
             />
-            <Button onClick={handleDateSelect} status={!date ? 'disabled' : 'normal'}>
+            <Button onClick={handleConfirmDate} status={tempDate ? 'normal' : 'disabled'}>
               선택
             </Button>
           </div>
@@ -98,101 +116,72 @@ const DateTimePicker = ({
   );
 };
 
+/**
+ * 시간 선택 서브 컴포넌트
+ */
 interface TimePickerProps {
   selectedHour: string | null;
-  onTimeChange: (hour: string) => void;
+  onTimeChange: (hour: string | null) => void;
 }
 
-const TimePicker = ({ selectedHour = '00', onTimeChange }: TimePickerProps) => {
+const TimePicker = ({ selectedHour, onTimeChange }: TimePickerProps) => {
   const [showHourDropdown, setShowHourDropdown] = useState(false);
-
   const hourDropdownRef = useRef<HTMLDivElement>(null);
 
   const hours = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        hourDropdownRef.current &&
-        !hourDropdownRef.current.contains(event.target as HTMLDivElement)
-      ) {
-        setShowHourDropdown(false);
-      }
-    };
+  // 외부 클릭 감지
+  useClickOutside(hourDropdownRef, () => setShowHourDropdown(false));
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+  const handleSelectHour = useCallback(
+    (hour: string) => {
+      onTimeChange(hour);
+      setShowHourDropdown(false);
+    },
+    [onTimeChange]
+  );
+
+  const handleToggleDropdown = useCallback(() => {
+    setShowHourDropdown((prev) => !prev);
   }, []);
 
   return (
     <div className="flex items-center gap-2 border-b-1 border-neutral-200">
       <Clock size={20} strokeWidth={2.5} className="text-neutral-400" />
 
-      <TimeUnit
-        value={selectedHour}
-        unit="시"
-        options={hours}
-        isOpen={showHourDropdown}
-        onToggle={() => setShowHourDropdown(!showHourDropdown)}
-        onSelect={(hour) => {
-          onTimeChange(hour);
-          setShowHourDropdown(false);
-        }}
-        dropdownRef={hourDropdownRef}
-      />
+      <div
+        ref={hourDropdownRef}
+        role="presentation"
+        onClick={handleToggleDropdown}
+        className="relative flex items-center justify-center gap-2 pt-3 pr-3 pb-2 pl-1"
+      >
+        <div
+          className={cn(
+            'mr-4 flex items-center gap-2 body-2 font-semibold text-neutral-400',
+            selectedHour && 'text-neutral-1500'
+          )}
+        >
+          {selectedHour || '00'}
+        </div>
+        <span className="body-1 font-semibold text-neutral-1500">시</span>
+
+        {showHourDropdown && (
+          <div className="absolute top-13 right-0 z-10 max-h-60 w-35 overflow-hidden overflow-y-auto rounded-lg bg-white shadow-lg">
+            {hours.map((hour) => (
+              <button
+                key={hour}
+                type="button"
+                onClick={() => handleSelectHour(hour)}
+                className="w-full rounded-lg px-3 py-2 text-left body-3 font-semibold transition-all duration-150 select-none hover:bg-gray-50 active:scale-[0.98] active:bg-orange-500 active:text-neutral-100"
+              >
+                {hour}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
-
-interface TimeUnitProps {
-  value: string | null;
-  unit: string;
-  options: string[];
-  isOpen: boolean;
-  onToggle: () => void;
-  onSelect: (value: string) => void;
-  dropdownRef: React.RefObject<HTMLDivElement | null>;
-}
-
-const TimeUnit = ({
-  value,
-  unit,
-  options,
-  isOpen,
-  onToggle,
-  onSelect,
-  dropdownRef,
-}: TimeUnitProps) => (
-  <div
-    role="presentation"
-    ref={dropdownRef}
-    onClick={onToggle}
-    className="relative flex items-center justify-center gap-2 pt-3 pr-3 pb-2 pl-1"
-  >
-    <div
-      className={cn(
-        'mr-4 flex items-center gap-2 body-2 font-semibold text-neutral-400',
-        value !== null && 'text-neutral-1500'
-      )}
-    >
-      {value === null ? '00' : value}
-    </div>
-    <span className="body-1 font-semibold text-neutral-1500">{unit}</span>
-
-    {isOpen && (
-      <div className="absolute top-13 right-0 z-10 max-h-60 w-35 overflow-hidden overflow-y-auto rounded-lg bg-white shadow-lg">
-        {options.map((option) => (
-          <button
-            key={option}
-            onClick={() => onSelect(option)}
-            className="w-full rounded-lg px-3 py-2 text-left body-3 font-semibold transition-all duration-150 select-none hover:bg-gray-50 active:scale-[0.98] active:bg-orange-500 active:text-neutral-100"
-          >
-            {option}
-          </button>
-        ))}
-      </div>
-    )}
-  </div>
-);
 
 export default DateTimePicker;
