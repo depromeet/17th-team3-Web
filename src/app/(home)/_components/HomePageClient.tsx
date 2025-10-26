@@ -11,8 +11,8 @@ import {
   HomeMenu,
   SectionHeader,
 } from '@/app/(home)/_components';
+import { useMeetingsByStatus } from '@/app/(home)/_hooks/useMeetingsByStatus';
 import { Meeting } from '@/app/(home)/_models/types';
-import { useMeetingsByStatus } from '@/app/_hooks/meeting/useMeetingsByStatus';
 import { cn } from '@/app/_lib/cn';
 
 interface HomePageClientProps {

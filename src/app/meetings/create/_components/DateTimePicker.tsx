@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 
 import { DatePicker } from '@mantine/dates';
-import { CalendarDays, CalendarPlus2, ChevronDown, Clock } from 'lucide-react';
+import { CalendarDays, Clock } from 'lucide-react';
 
 import BottomSheet from '@/app/_components/ui/BottomSheet';
 import Button from '@/app/_components/ui/Button';
@@ -14,7 +14,7 @@ import 'dayjs/locale/ko';
 interface DateTimePickerProps {
   dateValue?: string;
   onDateClick: (date: string) => void;
-  onTimeClick: (hour: string | null) => void;
+  onTimeClick: (hour: string) => void;
   dateLabel?: string;
 }
 
@@ -35,7 +35,7 @@ const DateTimePicker = ({
     }
   };
 
-  const handleTimeSelect = (hour: string | null) => {
+  const handleTimeSelect = (hour: string) => {
     setHour(hour);
     onTimeClick(hour);
   };
@@ -100,7 +100,7 @@ const DateTimePicker = ({
 
 interface TimePickerProps {
   selectedHour: string | null;
-  onTimeChange: (hour: string | null) => void;
+  onTimeChange: (hour: string) => void;
 }
 
 const TimePicker = ({ selectedHour = '00', onTimeChange }: TimePickerProps) => {

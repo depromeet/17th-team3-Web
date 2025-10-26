@@ -43,20 +43,6 @@ const CreatePage = () => {
     setSearchValue('');
   }, []);
 
-  const handleSearchClear = useCallback(() => {
-    setSearchValue('');
-  }, []);
-
-  const handleDateClick = useCallback((date: string) => {
-    setSelectedDate(date);
-  }, []);
-
-  const handleTimeClick = useCallback((hour: string | null) => {
-    if (hour) {
-      setSelectedTime(hour);
-    }
-  }, []);
-
   const isFormValid =
     name.trim() && selectedStation && selectedDate && selectedTime && members >= MEMBERS_SIZE.MIN;
 
@@ -84,7 +70,8 @@ const CreatePage = () => {
       <div className="fixed w-full bg-white">
         <TopNavigation showBackButton onLeftClick={handleCancel} />
       </div>
-      <header className="mt-16 flex flex-col gap-3 px-5 pt-2 pb-8">
+
+      <header className="mt-16 flex flex-col gap-3 px-5 pt-2 pb-8 select-none">
         <Badge>모임 만들기</Badge>
         <Heading as="h1">{`모임 이름과 내용을\n작성해 주세요`}</Heading>
       </header>
@@ -120,14 +107,16 @@ const CreatePage = () => {
         </FormSection>
 
         <FormSection label="식당 추천 시간">
-          <DateTimePicker
-            dateValue={selectedDate}
-            onDateClick={handleDateClick}
-            onTimeClick={handleTimeClick}
-          />
+          <div className="flex flex-col gap-4 pb-8">
+            <DateTimePicker
+              dateValue={selectedDate}
+              onDateClick={(date) => setSelectedDate(date)}
+              onTimeClick={(hour) => setSelectedTime(hour)}
+            />
 
-          <div className="flex items-center justify-center rounded-sm bg-orange-500/[0.08] p-3 label-2 text-xs font-medium text-neutral-700">
-            식당 추천 시간까지 모임원의 식사 취향 설문이 가능합니다.
+            <span className="flex items-center justify-center rounded-sm bg-orange-500/[0.08] p-3 label-2 text-xs font-medium text-neutral-700 select-none">
+              식당 추천 시간까지 모임원의 식사 취향 설문이 가능합니다.
+            </span>
           </div>
         </FormSection>
       </main>
@@ -149,7 +138,7 @@ const CreatePage = () => {
         isOpen={showLocationSheet}
         searchValue={searchValue}
         onSearchChange={setSearchValue}
-        onSearchClear={handleSearchClear}
+        onSearchClear={() => setSearchValue('')}
         onStationSelect={handleStationSelect}
         onClose={toggleLocationSheet}
       />
