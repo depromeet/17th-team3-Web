@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import BottomSheet from '@/app/_components/ui/BottomSheet';
 import Input from '@/app/_components/ui/Input';
+import { useInputState } from '@/app/_hooks/useInputState';
 import { meetingsApi } from '@/app/_services/meetings';
 import { Station } from '@/app/meetings/create/_models/types';
 
@@ -9,22 +10,13 @@ import LocationItem from './LocationItem';
 
 interface LocationBottomSheetProps {
   isOpen: boolean;
-  searchValue: string;
-  onSearchChange: (value: string) => void;
-  onSearchClear: () => void;
   onStationSelect: (station: Station) => void;
   onClose: () => void;
 }
 
-const LocationBottomSheet = ({
-  isOpen,
-  searchValue,
-  onSearchChange,
-  onSearchClear,
-  onStationSelect,
-  onClose,
-}: LocationBottomSheetProps) => {
+const LocationBottomSheet = ({ isOpen, onStationSelect, onClose }: LocationBottomSheetProps) => {
   const [stations, setStations] = useState<Station[]>([]);
+  const { value, handleChange, handleClear } = useInputState('');
 
   useEffect(() => {
     const getStations = async () => {
@@ -36,10 +28,10 @@ const LocationBottomSheet = ({
   }, []);
 
   const filteredStations = useMemo(() => {
-    const query = searchValue.trim();
+    const query = value.trim();
     if (!query) return [];
     return stations.filter((station: Station) => station.name.startsWith(query)).slice(0, 10);
-  }, [searchValue, stations]);
+  }, [value, stations]);
 
   if (!isOpen) return null;
 
@@ -48,9 +40,9 @@ const LocationBottomSheet = ({
       <div className="flex h-150 flex-col gap-2">
         <Input
           type="search"
-          value={searchValue}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSearchChange(e.target.value)}
-          onClear={onSearchClear}
+          value={value}
+          onChange={handleChange}
+          onClear={handleClear}
           showClearButton
           placeholder="지하철역으로 검색"
         />
@@ -61,14 +53,14 @@ const LocationBottomSheet = ({
               <LocationItem
                 key={station.id}
                 station={station}
-                searchQuery={searchValue.trim()}
+                searchQuery={value.trim()}
                 onClick={() => onStationSelect(station)}
               />
             ))}
           </div>
         )}
 
-        {searchValue && filteredStations.length === 0 && (
+        {value && filteredStations.length === 0 && (
           <div className="mt-12 text-center text-neutral-500">검색 결과가 없습니다</div>
         )}
       </div>

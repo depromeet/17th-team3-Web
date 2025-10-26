@@ -12,14 +12,14 @@ import { cn } from '@/app/_lib/cn';
 import 'dayjs/locale/ko';
 
 interface DateTimePickerProps {
-  dateValue?: string;
+  dateValue: string | null;
   onDateClick: (date: string) => void;
   onTimeClick: (hour: string) => void;
   dateLabel?: string;
 }
 
 const DateTimePicker = ({
-  dateValue = '',
+  dateValue,
   onDateClick,
   onTimeClick,
   dateLabel = '날짜 선택하기',

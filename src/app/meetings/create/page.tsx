@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 
 import { MapPin } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -12,7 +12,7 @@ import Button from '@/app/_components/ui/Button';
 import Input from '@/app/_components/ui/Input';
 import ConfirmModal from '@/app/_components/ui/Modal/ConfirmModal';
 import StepperInput from '@/app/_components/ui/StepperInput';
-import { useBottomSheet } from '@/app/_hooks/useBottomSheet';
+import { useDisclosure } from '@/app/_hooks/useDisclosure';
 import { useInputState } from '@/app/_hooks/useInputState';
 import { cn } from '@/app/_lib/cn';
 import { Station } from '@/app/meetings/create/_models/types';
@@ -25,49 +25,20 @@ import { MEMBERS_SIZE } from './_models/constants';
 const CreatePage = () => {
   const router = useRouter();
 
-  // 폼 상태
   const nameInput = useInputState('');
   const [members, setMembers] = useState(MEMBERS_SIZE.MIN);
   const [selectedStation, setSelectedStation] = useState<Station | null>(null);
-  const [selectedDate, setSelectedDate] = useState('');
-  const [selectedTime, setSelectedTime] = useState('');
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
-  // UI 상태
+  const { isOpen: isLocationSheetOpen, handler: locationSheet } = useDisclosure();
   const [showConfirm, setShowConfirm] = useState(false);
-  const locationSheet = useBottomSheet();
-  const searchInput = useInputState('');
-
-  // 유효성 검사
-  const isFormValid =
-    nameInput.value.trim() &&
-    selectedStation &&
-    selectedDate &&
-    selectedTime &&
-    members >= MEMBERS_SIZE.MIN;
-
-  // 핸들러 함수들
-  const handleLocationSheetToggle = useCallback(() => {
-    locationSheet.toggle();
-  }, [locationSheet]);
-
-  const handleStationSelect = useCallback(
-    (station: Station) => {
-      setSelectedStation(station);
-      locationSheet.close();
-      searchInput.handleClear();
-    },
-    [locationSheet, searchInput]
-  );
-
-  const handleLocationSheetClose = useCallback(() => {
-    locationSheet.close();
-  }, [locationSheet]);
 
   const handleSubmit = () => {
     if (!isFormValid) return;
 
     // TODO: API 호출로 대체 예정
-    console.error({
+    console.log({
       name: nameInput.value.trim(),
       attendeeCount: members,
       stationId: selectedStation?.id,
@@ -76,6 +47,20 @@ const CreatePage = () => {
 
     // router.push('/meetings/create/success/');
   };
+
+  console.log({
+    name: nameInput.value.trim(),
+    attendeeCount: members,
+    stationId: selectedStation?.id,
+    endAt: `${selectedDate}T${selectedTime}:00:00`,
+  });
+
+  const isFormValid =
+    nameInput.value.trim() &&
+    selectedStation &&
+    selectedDate &&
+    selectedTime &&
+    members >= MEMBERS_SIZE.MIN;
 
   return (
     <div className="relative flex h-[100dvh] flex-col overflow-y-auto background-1">
@@ -107,7 +92,7 @@ const CreatePage = () => {
         <FormSection label="모임 장소">
           <button
             type="button"
-            onClick={handleLocationSheetToggle}
+            onClick={() => locationSheet.toggle()}
             className={cn(
               'flex items-center gap-2 border-b-1 border-b-neutral-300 pt-3 pb-2 body-2 font-semibold',
               selectedStation ? 'text-gray-1600' : 'text-neutral-400'
@@ -151,12 +136,9 @@ const CreatePage = () => {
       />
 
       <LocationBottomSheet
-        isOpen={locationSheet.isOpen}
-        searchValue={searchInput.value}
-        onSearchChange={(value) => searchInput.setValue(value)}
-        onSearchClear={searchInput.handleClear}
-        onStationSelect={handleStationSelect}
-        onClose={handleLocationSheetClose}
+        isOpen={isLocationSheetOpen}
+        onStationSelect={setSelectedStation}
+        onClose={() => console.log('수정필요')}
       />
     </div>
   );
