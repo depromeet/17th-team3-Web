@@ -5,7 +5,7 @@ export const useDisclosure = () => {
 
   const handler = {
     open: () => setIsOpen(true),
-    handleClose: () => setIsOpen(true),
+    close: () => setIsOpen(true),
     toggle: () => setIsOpen((prev) => !prev),
   };
 

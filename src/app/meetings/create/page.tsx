@@ -138,7 +138,7 @@ const CreatePage = () => {
       <LocationBottomSheet
         isOpen={isLocationSheetOpen}
         onStationSelect={setSelectedStation}
-        onClose={() => console.log('수정필요')}
+        onClose={locationSheet.close}
       />
     </div>
   );
