@@ -12,75 +12,46 @@ import { cn } from '@/app/_lib/cn';
 
 import 'dayjs/locale/ko';
 
-/**
- * 날짜와 시간 선택 컴포넌트 (Controlled Component)
- */
 interface DateTimePickerProps {
   date: string | null;
   time: string | null;
   onDateChange: (date: string | null) => void;
   onTimeChange: (time: string | null) => void;
-  dateLabel?: string;
 }
 
-const DateTimePicker = ({
-  date,
-  time,
-  onDateChange,
-  onTimeChange,
-  dateLabel = '날짜 선택하기',
-}: DateTimePickerProps) => {
+const DateTimePicker = ({ date, time, onDateChange, onTimeChange }: DateTimePickerProps) => {
   const [showCalendar, setShowCalendar] = useState(false);
-  const [tempDate, setTempDate] = useState<Date | null>(null);
-
-  const handleOpenCalendar = useCallback(() => {
-    setShowCalendar(true);
-  }, []);
-
-  const handleCloseCalendar = useCallback(() => {
-    setShowCalendar(false);
-    setTempDate(null);
-  }, []);
-
-  const handleDateChange = useCallback((date: Date | null) => {
-    setTempDate(date);
-  }, []);
+  const [tempDate, setTempDate] = useState<string | null>(null);
 
   const handleConfirmDate = useCallback(() => {
-    if (tempDate) {
-      const dateString = tempDate.toISOString().split('T')[0];
-      onDateChange(dateString);
-      handleCloseCalendar();
-    }
-  }, [tempDate, onDateChange, handleCloseCalendar]);
+    onDateChange(tempDate);
+    setShowCalendar(false);
+  }, [tempDate, onDateChange]);
 
   return (
     <>
       <div className="flex items-center">
-        {/* 날짜 선택 버튼 */}
         <button
           type="button"
-          onClick={handleOpenCalendar}
+          onClick={() => setShowCalendar(true)}
           className={cn(
             'flex flex-1 items-center gap-3 border-b-1 border-b-neutral-200 pt-3 pr-3 pb-2 pl-1 body-2 font-semibold text-neutral-400',
             date && 'text-gray-1500'
           )}
         >
           <CalendarDays size={20} strokeWidth={2.5} className="text-neutral-400" />
-          {date || dateLabel}
+          {date || '날짜 선택하기'}
         </button>
 
-        {/* 시간 선택 */}
         <TimePicker selectedHour={time} onTimeChange={onTimeChange} />
       </div>
 
-      {/* 달력 모달 */}
       {showCalendar && (
-        <BottomSheet onClose={handleCloseCalendar}>
+        <BottomSheet title="모임 날짜/시간" onClose={() => setShowCalendar(false)}>
           <div className="flex flex-col items-center justify-center gap-6">
             <DatePicker
               value={tempDate}
-              onChange={handleDateChange as any}
+              onChange={(date) => setTempDate(date)}
               minDate={new Date()}
               locale="ko"
               hideOutsideDates
@@ -116,9 +87,6 @@ const DateTimePicker = ({
   );
 };
 
-/**
- * 시간 선택 서브 컴포넌트
- */
 interface TimePickerProps {
   selectedHour: string | null;
   onTimeChange: (hour: string | null) => void;
@@ -130,7 +98,6 @@ const TimePicker = ({ selectedHour, onTimeChange }: TimePickerProps) => {
 
   const hours = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
 
-  // 외부 클릭 감지
   useClickOutside(hourDropdownRef, () => setShowHourDropdown(false));
 
   const handleSelectHour = useCallback(

@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useMemo, useState } from 'react';
 
 import BottomSheet from '@/app/_components/ui/BottomSheet';
@@ -33,6 +35,11 @@ const LocationBottomSheet = ({ isOpen, onStationSelect, onClose }: LocationBotto
     return stations.filter((station: Station) => station.name.startsWith(query)).slice(0, 10);
   }, [value, stations]);
 
+  const handleClickStation = (station: Station) => {
+    onStationSelect(station);
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -54,7 +61,7 @@ const LocationBottomSheet = ({ isOpen, onStationSelect, onClose }: LocationBotto
                 key={station.id}
                 station={station}
                 searchQuery={value.trim()}
-                onClick={() => onStationSelect(station)}
+                onClick={() => handleClickStation(station)}
               />
             ))}
           </div>
