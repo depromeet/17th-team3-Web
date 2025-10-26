@@ -9,6 +9,7 @@ import BottomSheet from '@/app/_components/ui/BottomSheet';
 import Button from '@/app/_components/ui/Button';
 import { useClickOutside } from '@/app/_hooks/useClickOutside';
 import { cn } from '@/app/_lib/cn';
+import TimePickerScroll from '@/app/meetings/create/_components/TimePickerScroll';
 
 import 'dayjs/locale/ko';
 
@@ -35,48 +36,70 @@ const DateTimePicker = ({ date, time, onDateChange, onTimeChange }: DateTimePick
           type="button"
           onClick={() => setShowCalendar(true)}
           className={cn(
-            'flex flex-1 items-center gap-3 border-b-1 border-b-neutral-200 pt-3 pr-3 pb-2 pl-1 body-2 font-semibold text-neutral-400',
+            'flex flex-1 items-center gap-8 border-b-1 border-b-neutral-200 pt-3 pr-3 pb-2 pl-1 body-2 font-semibold text-neutral-400',
             date && 'text-gray-1500'
           )}
         >
-          <CalendarDays size={20} strokeWidth={2.5} className="text-neutral-400" />
-          {date || '날짜 선택하기'}
+          <div className="flex items-center gap-3">
+            <CalendarDays size={20} strokeWidth={2.5} className="text-neutral-400" />
+            {date || '날짜 선택하기'}
+          </div>
+          <div className="flex items-center gap-3">
+            <Clock size={20} strokeWidth={2.5} className="text-neutral-400" />
+            {date || '시간 선택하기'}
+          </div>
         </button>
-
-        <TimePicker selectedHour={time} onTimeChange={onTimeChange} />
       </div>
 
       {showCalendar && (
         <BottomSheet title="모임 날짜/시간" onClose={() => setShowCalendar(false)}>
           <div className="flex flex-col items-center justify-center gap-6">
-            <DatePicker
-              value={tempDate}
-              onChange={(date) => setTempDate(date)}
-              minDate={new Date()}
-              locale="ko"
-              hideOutsideDates
-              size="md"
-              decadeLabelFormat="YYYY년"
-              yearLabelFormat="YYYY년"
-              monthLabelFormat="YYYY MM월"
-              styles={{
-                calendarHeaderLevel: {
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                  marginBottom: '12px',
-                },
-                day: {
-                  fontSize: '20px',
-                  fontWeight: '400',
-                  letterSpacing: '-0.45px',
-                },
-                weekday: {
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  color: '#3c3c3c',
-                },
-              }}
-            />
+            <div className="flex w-full flex-col items-center justify-center gap-1">
+              <p className="self-start py-1 label-1 text-sm font-semibold text-neutral-800">
+                날짜 선택
+              </p>
+              <DatePicker
+                value={tempDate}
+                onChange={(date) => setTempDate(date)}
+                minDate={new Date()}
+                locale="ko"
+                hideOutsideDates
+                size="md"
+                decadeLabelFormat="YYYY년"
+                yearLabelFormat="YYYY년"
+                monthLabelFormat="YYYY MM월"
+                styles={{
+                  calendarHeaderLevel: {
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    color: '#131416',
+                    lineHeight: '1.5rem',
+                    letterSpacing: ' -0.01%',
+                  },
+                  day: {
+                    fontSize: '0.875rem',
+                    color: '#131416',
+                    lineHeight: '1.375rem',
+                    letterSpacing: ' -0.01%',
+                    fontWeight: '500',
+                  },
+                  weekday: {
+                    fontSize: '0.875rem',
+                    fontWeight: '500',
+                    color: '#9ba3b0',
+                    lineHeight: '1.375rem',
+                    letterSpacing: ' -0.01%',
+                  },
+                }}
+              />
+            </div>
+
+            <div className="flex w-full flex-col items-center justify-center gap-1">
+              <p className="self-start py-1 label-1 text-sm font-semibold text-neutral-800">
+                시간 선택
+              </p>
+            </div>
+            <TimePickerScroll onTimeChange={onTimeChange} />
             <Button onClick={handleConfirmDate} status={tempDate ? 'normal' : 'disabled'}>
               선택
             </Button>

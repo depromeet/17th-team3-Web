@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 
 import { CreateMeetingFormData, INITIAL_FORM_DATA, validateForm } from '../_models/formState';
 import { Station } from '../_models/types';
@@ -28,9 +28,9 @@ export const useMeetingForm = () => {
     updateFormData({ date });
   };
 
-  const setTime = (time: string | null) => {
+  const setTime = useCallback((time: string | null) => {
     updateFormData({ time });
-  };
+  }, []);
 
   const updateFormData = (updates: Partial<CreateMeetingFormData>) => {
     setFormData((prev) => ({ ...prev, ...updates }));
