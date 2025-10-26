@@ -12,6 +12,8 @@ import Button from '@/app/_components/ui/Button';
 import Input from '@/app/_components/ui/Input';
 import ConfirmModal from '@/app/_components/ui/Modal/ConfirmModal';
 import StepperInput from '@/app/_components/ui/StepperInput';
+import { useBottomSheet } from '@/app/_hooks/useBottomSheet';
+import { useInputState } from '@/app/_hooks/useInputState';
 import { cn } from '@/app/_lib/cn';
 import { Station } from '@/app/meetings/create/_models/types';
 
@@ -23,52 +25,62 @@ import { MEMBERS_SIZE } from './_models/constants';
 const CreatePage = () => {
   const router = useRouter();
 
-  const [name, setName] = useState('');
+  // 폼 상태
+  const nameInput = useInputState('');
   const [members, setMembers] = useState(MEMBERS_SIZE.MIN);
   const [selectedStation, setSelectedStation] = useState<Station | null>(null);
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
 
+  // UI 상태
   const [showConfirm, setShowConfirm] = useState(false);
-  const [showLocationSheet, setShowLocationSheet] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
+  const locationSheet = useBottomSheet();
+  const searchInput = useInputState('');
 
-  const toggleLocationSheet = useCallback(() => {
-    setShowLocationSheet((prev) => !prev);
-  }, []);
-
-  const handleStationSelect = useCallback((station: Station) => {
-    setSelectedStation(station);
-    setShowLocationSheet(false);
-    setSearchValue('');
-  }, []);
-
+  // 유효성 검사
   const isFormValid =
-    name.trim() && selectedStation && selectedDate && selectedTime && members >= MEMBERS_SIZE.MIN;
+    nameInput.value.trim() &&
+    selectedStation &&
+    selectedDate &&
+    selectedTime &&
+    members >= MEMBERS_SIZE.MIN;
+
+  // 핸들러 함수들
+  const handleLocationSheetToggle = useCallback(() => {
+    locationSheet.toggle();
+  }, [locationSheet]);
+
+  const handleStationSelect = useCallback(
+    (station: Station) => {
+      setSelectedStation(station);
+      locationSheet.close();
+      searchInput.handleClear();
+    },
+    [locationSheet, searchInput]
+  );
+
+  const handleLocationSheetClose = useCallback(() => {
+    locationSheet.close();
+  }, [locationSheet]);
 
   const handleSubmit = () => {
     if (!isFormValid) return;
 
     // TODO: API 호출로 대체 예정
-    console.log({
-      name: name.trim(),
-      members,
-      location: selectedStation?.name,
-      date: selectedDate,
-      time: selectedTime,
+    console.error({
+      name: nameInput.value.trim(),
+      attendeeCount: members,
+      stationId: selectedStation?.id,
+      endAt: `${selectedDate}T${selectedTime}:00:00`,
     });
 
-    router.push('/meetings/create/success/');
-  };
-
-  const handleCancel = () => {
-    setShowConfirm(true);
+    // router.push('/meetings/create/success/');
   };
 
   return (
     <div className="relative flex h-[100dvh] flex-col overflow-y-auto background-1">
       <div className="fixed w-full bg-white">
-        <TopNavigation showBackButton onLeftClick={handleCancel} />
+        <TopNavigation showBackButton onLeftClick={() => setShowConfirm(true)} />
       </div>
 
       <header className="mt-16 flex flex-col gap-3 px-5 pt-2 pb-8 select-none">
@@ -79,9 +91,9 @@ const CreatePage = () => {
       <main className="no-scrollbar flex flex-1 flex-col gap-8 px-5 pb-6">
         <FormSection label="모임 이름">
           <Input
-            value={name}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => setName(event.target.value)}
-            onClear={() => setName('')}
+            value={nameInput.value}
+            onChange={nameInput.handleChange}
+            onClear={nameInput.handleClear}
             showClearButton
             maxLength={20}
             placeholder="모임명 입력"
@@ -95,7 +107,7 @@ const CreatePage = () => {
         <FormSection label="모임 장소">
           <button
             type="button"
-            onClick={toggleLocationSheet}
+            onClick={handleLocationSheetToggle}
             className={cn(
               'flex items-center gap-2 border-b-1 border-b-neutral-300 pt-3 pb-2 body-2 font-semibold',
               selectedStation ? 'text-gray-1600' : 'text-neutral-400'
@@ -111,7 +123,11 @@ const CreatePage = () => {
             <DateTimePicker
               dateValue={selectedDate}
               onDateClick={(date) => setSelectedDate(date)}
-              onTimeClick={(hour) => setSelectedTime(hour)}
+              onTimeClick={(hour) => {
+                if (hour) {
+                  setSelectedTime(hour);
+                }
+              }}
             />
 
             <span className="flex items-center justify-center rounded-sm bg-orange-500/[0.08] p-3 label-2 text-xs font-medium text-neutral-700 select-none">
@@ -135,12 +151,12 @@ const CreatePage = () => {
       />
 
       <LocationBottomSheet
-        isOpen={showLocationSheet}
-        searchValue={searchValue}
-        onSearchChange={setSearchValue}
-        onSearchClear={() => setSearchValue('')}
+        isOpen={locationSheet.isOpen}
+        searchValue={searchInput.value}
+        onSearchChange={(value) => searchInput.setValue(value)}
+        onSearchClear={searchInput.handleClear}
         onStationSelect={handleStationSelect}
-        onClose={toggleLocationSheet}
+        onClose={handleLocationSheetClose}
       />
     </div>
   );
