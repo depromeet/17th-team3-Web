@@ -1,5 +1,3 @@
-'use client';
-
 import { CalendarDays, Check, ChevronRight, Clock, MapPin } from 'lucide-react';
 import Image from 'next/image';
 
