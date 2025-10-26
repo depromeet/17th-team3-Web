@@ -101,12 +101,6 @@ const eslintConfig = [
       // 함수/식별자 네이밍
       camelcase: ['error', { properties: 'never' }],
 
-      // 이벤트 핸들러 네이밍
-      'react/jsx-handler-names': [
-        'error',
-        { eventHandlerPrefix: 'handle', eventHandlerPropPrefix: 'on' },
-      ],
-
       // props 구조분해
       'react/destructuring-assignment': ['error', 'always'],
 
