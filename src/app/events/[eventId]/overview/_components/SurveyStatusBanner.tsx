@@ -1,5 +1,3 @@
-'use client';
-
 import { cn } from '@/app/_lib/cn';
 
 type SurveyStatusVariant = 'progress' | 'closed' | 'completed';
