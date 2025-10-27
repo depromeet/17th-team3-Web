@@ -6,7 +6,7 @@ import { EffectCoverflow } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import { cn } from '@/app/_lib/cn';
-import { RecommendedPlace } from '@/app/_services/places';
+import { RecommendedPlace } from '@/app/_services/place';
 import PickRankBadge from '@/app/events/[eventId]/_components/PickRankBadge';
 import RestaurantCardContent from '@/app/events/[eventId]/_components/RestaurantCardContent';
 
