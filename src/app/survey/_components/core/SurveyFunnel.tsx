@@ -93,6 +93,7 @@ const SurveyFunnel = ({ role, initial, onComplete }: SurveyFunnelProps) => {
         >
           <SurveyNameStep
             initialValue={context.name}
+            initialProfileKey={context.profileKey}
             onCancel={() => setIsSkipModalOpen(true)}
             onNext={({ name, profileKey }) =>
               history.push('PreferCuisine', (prev) => ({
