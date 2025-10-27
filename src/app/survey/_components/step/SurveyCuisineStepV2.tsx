@@ -9,6 +9,7 @@ import ChipGroupMultiSelect, {
   type ChipOption,
 } from '@/app/survey/_components/ui/ChipGroupMultiSelect';
 import FoodConfirmModal from '@/app/survey/_components/ui/FoodConfirmModal';
+import LoadingOverlay from '@/app/survey/_components/ui/LoadingOverlay';
 import StepFormLayout from '@/app/survey/_components/ui/StepFormLayout';
 import { ANY_ID } from '@/app/survey/_models/constants';
 import {
@@ -57,6 +58,7 @@ interface Props {
 const SurveyCuisineStepV2 = ({ title, defaultSelectedIds = [], onNext, onCancel }: Props) => {
   const [selectedIds, setSelectedIds] = useState<string[]>(defaultSelectedIds);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // 알림 콜백
   const handleMaxSelect = () => {
@@ -68,9 +70,15 @@ const SurveyCuisineStepV2 = ({ title, defaultSelectedIds = [], onNext, onCancel 
     setIsModalOpen(true);
   };
 
-  const confirmNext = () => {
+  const confirmNext = async () => {
     setIsModalOpen(false);
+    setIsLoading(true);
+
+    // 저장 API 호출 & 지연 시뮬레이션
+    await new Promise((res) => setTimeout(res, 5000));
+
     onNext(selectedIds);
+    setIsLoading(false);
   };
 
   return (
@@ -144,6 +152,8 @@ const SurveyCuisineStepV2 = ({ title, defaultSelectedIds = [], onNext, onCancel 
           onConfirm={confirmNext}
         />
       )}
+
+      {isLoading && <LoadingOverlay />}
     </>
   );
 };
