@@ -100,7 +100,7 @@ const SurveyCuisineStepV2 = ({ title, defaultSelectedIds = [], onNext, onCancel 
                     height={24}
                     className="aspect-square"
                   />
-                  <h3 className="text-lg font-semibold">
+                  <h3 className="type-gradient text-lg font-semibold">
                     {CUISINE_CATEGORY_LABELS[category as keyof typeof CUISINE_CATEGORY_LABELS] ??
                       category}
                   </h3>
