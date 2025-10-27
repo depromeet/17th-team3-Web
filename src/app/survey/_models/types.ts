@@ -27,6 +27,7 @@ export type StepKey = (typeof STEP_KEYS)[number];
 export interface CommonCtx {
   role: RoleLabel;
   name: string;
+  profileKey: string;
 
   /** 선택은 id 배열로 관리 */
   preferCuisineIds: string[];

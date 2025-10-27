@@ -16,6 +16,7 @@ export const useSurveyFunnel = (initial?: Partial<CommonCtx>) => {
       context: {
         role: initial?.role ?? '참여자',
         name: initial?.name ?? '',
+        profileKey: initial?.profileKey ?? 'default',
         preferCuisineIds: initial?.preferCuisineIds ?? [],
         dislikeCuisineIds: initial?.dislikeCuisineIds ?? [],
         others: initial?.others ?? {},
