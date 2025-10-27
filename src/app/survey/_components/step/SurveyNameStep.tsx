@@ -48,6 +48,10 @@ const SurveyNameStep = ({
     setErrorMessage(result.error);
   }, [name]);
 
+  useEffect(() => {
+    setProfileKey(initialProfileKey);
+  }, [initialProfileKey]);
+
   return (
     <StepFormLayout
       title={title}
