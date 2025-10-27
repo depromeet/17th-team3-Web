@@ -1,8 +1,9 @@
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 
 import { Heading } from '@/app/_components/typography';
+import { getPlacesQueryOptions } from '@/app/_queries/placeQueries';
 import { getMockAnalysis } from '@/app/_services/analysis';
-import { getPlaces } from '@/app/_services/places';
 import MorePicksButton from '@/app/events/[eventId]/_components/MorePicksButton';
 import PieChart from '@/app/events/[eventId]/analysis/_components/PieChart';
 import RestaurantCardSwiper from '@/app/events/[eventId]/analysis/_components/RestaurantCardSwiper';
@@ -16,13 +17,16 @@ interface AnalysisPageProps {
 const AnalysisPage = async ({ params }: AnalysisPageProps) => {
   const { eventId } = await params;
 
-  // 병렬로 데이터 가져오기
-  const [analysisData, placesResponse] = await Promise.all([
+  const queryClient = new QueryClient();
+
+  const [analysisData] = await Promise.all([
     getMockAnalysis(eventId), // 나중에 getAnalysis(eventId)로 변경
-    getPlaces('강남역 한식 맛집'),
+    queryClient.prefetchQuery({
+      ...getPlacesQueryOptions('강남역 한식 맛집'),
+    }),
   ]);
 
-  const { items: places } = placesResponse;
+  const dehydratedState = dehydrate(queryClient);
 
   const preferredCuisinesChartData = analysisData.preferredCuisines.map((cuisine) => ({
     name: cuisine.name,
@@ -34,7 +38,9 @@ const AnalysisPage = async ({ params }: AnalysisPageProps) => {
       <Heading level="h2" as="h1" className="px-5 py-2 whitespace-pre-line text-white">
         {analysisData.summary}
       </Heading>
-      <RestaurantCardSwiper places={places} />
+      <HydrationBoundary state={dehydratedState}>
+        <RestaurantCardSwiper />
+      </HydrationBoundary>
 
       <div className="h-2 w-full bg-neutral-1500" />
 

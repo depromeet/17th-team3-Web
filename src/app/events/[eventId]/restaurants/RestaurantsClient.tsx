@@ -2,7 +2,11 @@
 
 import { useEffect, useMemo, useRef } from 'react';
 
-import { RecommendedPlace } from '@/app/_services/places';
+import { useQuery } from '@tanstack/react-query';
+
+import { ApiError } from '@/app/_models/api';
+import { getPlacesQueryOptions } from '@/app/_queries/placeQueries';
+import { RecommendedPlaceResponse } from '@/app/_services/place';
 import MorePicksButton from '@/app/events/[eventId]/_components/MorePicksButton';
 import { TOP_RESTAURANT_COUNT } from '@/app/events/[eventId]/_constants/restaurants';
 import { useRestaurantPickCount } from '@/app/events/[eventId]/_hooks/useRestaurantPickCount';
@@ -11,14 +15,15 @@ import RestaurantsSwiper from '@/app/events/[eventId]/restaurants/_components/Re
 
 const NAVIGATION_HEIGHT = '3.5rem';
 
-interface RestaurantsProps {
-  restaurants: RecommendedPlace[];
-}
-const RestaurantsClient = ({ restaurants }: RestaurantsProps) => {
+const RestaurantsClient = () => {
   const { pickCount } = useRestaurantPickCount();
 
   const prevPicksRef = useRef(pickCount);
   const cardRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
+
+  const { data: restaurants } = useQuery<RecommendedPlaceResponse, ApiError>({
+    ...getPlacesQueryOptions('강남역 한식 맛집'),
+  });
 
   useEffect(() => {
     const prevPickCount = prevPicksRef.current;
@@ -35,18 +40,21 @@ const RestaurantsClient = ({ restaurants }: RestaurantsProps) => {
     prevPicksRef.current = pickCount;
   }, [pickCount]);
 
-  const top3Restaurants = useMemo(() => restaurants.slice(0, TOP_RESTAURANT_COUNT), [restaurants]);
+  const top3Restaurants = useMemo(
+    () => restaurants?.items.slice(0, TOP_RESTAURANT_COUNT),
+    [restaurants]
+  );
   const otherRestaurants = useMemo(
-    () => restaurants.slice(TOP_RESTAURANT_COUNT, pickCount),
+    () => restaurants?.items.slice(TOP_RESTAURANT_COUNT, pickCount),
     [restaurants, pickCount]
   );
 
   return (
     <div className="flex flex-col">
-      <RestaurantsSwiper restaurants={top3Restaurants} />
+      <RestaurantsSwiper restaurants={top3Restaurants || []} />
 
       <div className="flex flex-col bg-white">
-        {otherRestaurants.map((restaurant, index) => {
+        {otherRestaurants?.map((restaurant, index) => {
           const rank = index + TOP_RESTAURANT_COUNT + 1; // 4부터 시작
           const isTop4 = rank <= 4; // 4번째 이하인지 여부
 
