@@ -43,7 +43,10 @@ const SurveyLayout = ({
   rightLabel,
 }: SurveyLayoutProps) => {
   return (
-    <div className={cn('relative flex min-h-dvh flex-col background-1', className)}>
+    <div
+      id="survey-layout-root"
+      className={cn('relative flex min-h-dvh flex-col background-1', className)}
+    >
       <TopNavigation
         title={title}
         showBackButton

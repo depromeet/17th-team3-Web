@@ -89,12 +89,11 @@ const SurveyFunnel = ({ role, initial, onComplete }: SurveyFunnelProps) => {
         <SurveyLayout
           stepValue={stepValue}
           totalSteps={SURVEY_TOTAL_STEPS}
-          // onBack은 이제 모달 오픈으로 변경됨
           onBack={() => setIsSkipModalOpen(true)}
         >
           <SurveyNameStep
             initialValue={context.name}
-            onCancel={() => setIsSkipModalOpen(true)} // 이전 버튼 클릭 시 모달 오픈
+            onCancel={() => setIsSkipModalOpen(true)}
             onNext={({ name, profileKey }) =>
               history.push('PreferCuisine', (prev) => ({
                 ...prev,
