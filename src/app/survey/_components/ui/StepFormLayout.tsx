@@ -35,9 +35,9 @@ const StepFormLayout = ({
       {/* 스크롤 영역 */}
       <div className="min-h-0 flex-1 overflow-y-auto">{children}</div>
 
-      <div className="sticky bottom-0 flex w-full flex-col bg-orange-50">
+      <div className="sticky bottom-0 flex w-full flex-col">
         {showNotice && <CuisineNoticeFrame />}
-        <div className="flex gap-3 pt-3 pb-6">
+        <div className="flex gap-3 bg-orange-50 pt-3 pb-6">
           <Button theme="gray" onClick={onCancel} className="w-[114px]">
             {prevButtonText}
           </Button>
