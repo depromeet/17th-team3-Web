@@ -1,22 +1,28 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 
+import { useQuery } from '@tanstack/react-query';
 import useEmblaCarousel from 'embla-carousel-react';
 import { ListIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
 import { cn } from '@/app/_lib/cn';
-import { RecommendedPlace } from '@/app/_services/places';
+import { ApiError } from '@/app/_models/api';
+import { getPlacesQueryOptions } from '@/app/_queries/placeQueries';
+import { RecommendedPlaceResponse } from '@/app/_services/place';
 import { useRestaurantPickCount } from '@/app/events/[eventId]/_hooks/useRestaurantPickCount';
 import RestaurantCard from '@/app/events/[eventId]/analysis/_components/RestaurantCard';
 
-interface RestaurantCardSwiperProps {
-  places: RecommendedPlace[];
-}
-const RestaurantCardSwiper = ({ places }: RestaurantCardSwiperProps) => {
+const RestaurantCardSwiper = () => {
   const params = useParams();
   const { eventId } = params;
+
+  const { data: placesData } = useQuery<RecommendedPlaceResponse, ApiError>({
+    ...getPlacesQueryOptions('강남역 한식 맛집'),
+  });
+
+  const places = placesData?.items || [];
 
   const { pickCount, getUrlWithPicks } = useRestaurantPickCount();
 

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 
-import { RecommendedPlace } from '@/app/_services/places';
+import { RecommendedPlace } from '@/app/_services/place';
 import PickRankBadge from '@/app/events/[eventId]/_components/PickRankBadge';
 import RestaurantCardContent from '@/app/events/[eventId]/_components/RestaurantCardContent';
 

@@ -3,7 +3,7 @@ import { Heart, MapPin, Send, Star } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import { cn } from '@/app/_lib/cn';
-import { RecommendedPlace } from '@/app/_services/places';
+import { RecommendedPlace } from '@/app/_services/place';
 import { CARD_UI } from '@/app/events/[eventId]/_components/RestaurantCardContent/restaurantCardThemes';
 import RestaurantImageGallery from '@/app/events/[eventId]/_components/RestaurantCardContent/RestaurantImageGallery';
 

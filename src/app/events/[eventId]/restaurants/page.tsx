@@ -1,5 +1,7 @@
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
+
 import { Heading } from '@/app/_components/typography';
-import { getPlaces } from '@/app/_services/places';
+import { getPlacesQueryOptions } from '@/app/_queries/placeQueries';
 import RestaurantsClient from '@/app/events/[eventId]/restaurants/RestaurantsClient';
 
 interface RestaurantsPageProps {
@@ -7,18 +9,22 @@ interface RestaurantsPageProps {
 }
 
 const RestaurantsPage = async ({ params }: RestaurantsPageProps) => {
-  const { eventId } = await params;
+  const { eventId: _eventId } = await params;
 
-  const places = await getPlaces('강남역 한식 맛집');
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    ...getPlacesQueryOptions('강남역 한식 맛집'),
+  });
 
-  const restaurants = places.items;
-
+  const dehydratedState = dehydrate(queryClient);
   return (
     <div className="flex flex-1 flex-col">
       <Heading level="h3" as="h1" className="px-5 py-2 text-white">
         우리 모임이 Pick한 식당
       </Heading>
-      <RestaurantsClient restaurants={restaurants} />
+      <HydrationBoundary state={dehydratedState}>
+        <RestaurantsClient />
+      </HydrationBoundary>
     </div>
   );
 };
