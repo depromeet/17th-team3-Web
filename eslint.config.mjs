@@ -48,8 +48,9 @@ const eslintConfig = [
       parser: tsParser,
       parserOptions: {
         // tsconfig를 인식하도록 (v9+ 권장)
-        project: true,
-        tsconfigRootDir: __dirname,
+        // 모노레포 환경에 맞게 조정
+        project: ['tsconfig.json', 'apps/*/tsconfig.json'],
+        tsconfigRootDir: __dirname, 
         ecmaFeatures: { jsx: true },
       },
     },
@@ -63,6 +64,9 @@ const eslintConfig = [
       filenames,
     },
     settings: {
+      next: {
+        rootDir: ['apps/web/'],
+      },
       react: {
         version: 'detect',
       },
@@ -80,11 +84,11 @@ const eslintConfig = [
       /**
        * @description
        * Flat Config(ESLint 9 이상) 환경에서 eslint-plugin-filenames 의 match-regex 룰 지원 하지 않음
-       *
+       * 
        * 버전을 낮춘다면,
        * 기존 룰 (filenames/match-regex) 그대로 사용 가능
        * 최신 ESLint 기능 및 성능, 버그 픽스 미적용
-       *
+       * 
        * 버전 유지 + 룰 제거/변경
        * 최신 ESLint, Next.js 최신 기능 유지
        * 파일명 체크 룰을 포기하거나 직접 구현 필요
@@ -186,7 +190,7 @@ const eslintConfig = [
 
   // Next 라우팅/세그먼트 파일은 파일명 규칙 예외
   {
-    files: ['src/app/**', 'src/pages/**', 'src/app/api/**'],
+    files: ['apps/web/src/app/**', 'apps/web/src/pages/**', 'apps/web/src/app/api/**'],
     rules: {
       'filenames/match-regex': 'off',
     },
