@@ -12,8 +12,8 @@ export const useMeetingForm = () => {
     updateFormData({ name });
   };
 
-  const setMembers = (members: number) => {
-    updateFormData({ members });
+  const setMembers = (attendeeCount: number) => {
+    updateFormData({ attendeeCount });
   };
 
   const setStation = (station: Station | null) => {

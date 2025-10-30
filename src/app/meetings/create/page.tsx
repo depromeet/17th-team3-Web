@@ -45,7 +45,7 @@ const CreatePage = () => {
     // TODO: API 호출로 대체 예정
     console.log({
       name: form.formData.name.trim(),
-      attendeeCount: form.formData.members,
+      attendeeCount: form.formData.attendeeCount,
       stationId: form.formData.station?.id,
       endAt: `${form.formData.date}T${form.formData.time}:00:00`,
     });
@@ -75,7 +75,7 @@ const CreatePage = () => {
         </FormSection>
 
         <FormSection label="모임 인원">
-          <StepperInput value={form.formData.members} onChange={form.setMembers} />
+          <StepperInput value={form.formData.attendeeCount} onChange={form.setMembers} />
         </FormSection>
 
         <FormSection label="모임 장소">

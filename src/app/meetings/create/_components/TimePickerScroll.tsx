@@ -6,15 +6,19 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 
 import { cn } from '@/app/_lib/cn';
 
+import { convertTo12HourFormat } from '../_lib/timeUtils';
+
 interface TimePickerScrollProps {
   onTimeChange: (time: string | null) => void;
+  defaultTime?: string | null;
 }
 
 type Period = '오전' | '오후';
 
-const TimePickerScroll = ({ onTimeChange }: TimePickerScrollProps) => {
-  const [hour, setHour] = useState(1);
-  const [period, setPeriod] = useState<Period>('오전');
+const TimePickerScroll = ({ onTimeChange, defaultTime }: TimePickerScrollProps) => {
+  const initialState = convertTo12HourFormat(defaultTime) as { hour: number; period: Period };
+  const [hour, setHour] = useState(initialState.hour);
+  const [period, setPeriod] = useState<Period>(initialState.period);
 
   const periods: Period[] = ['오전', '오후'];
   const hours = Array.from({ length: 12 }, (_, index) => index + 1);
@@ -23,14 +27,16 @@ const TimePickerScroll = ({ onTimeChange }: TimePickerScrollProps) => {
   const hourIndex = hours.indexOf(hour);
 
   // 높이 계산 (가운데 위치 계산용)
-  const itemHeight = 36; // 각 아이템의 높이 (body-1 + py-2)
+  const itemHeight = 46; // 각 아이템의 높이 (body-1 + p-2)
+  const gap = 8; // gap-2 = 8px
+  const totalItemHeight = itemHeight + gap; // 아이템 + 간격
   const paddingHeight = 48; // 위쪽 패딩 (h-12)
   const containerHeight = 140; // h-35 = 140px
   const centerOffset = containerHeight / 2 - itemHeight / 2;
 
-  // 스크롤 위치 계산 (transform 오프셋으로 사용)
-  const periodOffset = -(periodIndex * itemHeight + paddingHeight - centerOffset + 15);
-  const hourOffset = -(hourIndex * itemHeight + paddingHeight - centerOffset + 15);
+  // 스크롤 위치 계산 (선택된 아이템이 가운데에 오도록)
+  const periodOffset = -(periodIndex * totalItemHeight + paddingHeight - centerOffset + 13);
+  const hourOffset = -(hourIndex * totalItemHeight + paddingHeight - centerOffset + 13);
 
   // 시간이나 오전/오후가 변경될 때 콜백 호출
   useEffect(() => {
@@ -41,6 +47,7 @@ const TimePickerScroll = ({ onTimeChange }: TimePickerScrollProps) => {
       fullHour = hour === 12 ? 12 : hour + 12;
     }
     const timeString = fullHour.toString().padStart(2, '0');
+    // 선택한 시간을 그대로 저장
     onTimeChange(timeString);
   }, [hour, period, onTimeChange]);
 
@@ -94,17 +101,15 @@ const TimePickerScroll = ({ onTimeChange }: TimePickerScrollProps) => {
             >
               <div className="h-12" />
               {periods.map((period_) => (
-                <button
+                <div
                   key={period_}
-                  type="button"
-                  onClick={() => setPeriod(period_)}
                   className={cn(
-                    'text-center body-1 transition-colors duration-200',
+                    'p-2 text-center body-1 transition-colors duration-200',
                     period_ === period ? 'text-neutral-1600' : 'text-neutral-400'
                   )}
                 >
                   {period_}
-                </button>
+                </div>
               ))}
               <div className="h-12" />
             </div>
@@ -147,17 +152,15 @@ const TimePickerScroll = ({ onTimeChange }: TimePickerScrollProps) => {
             >
               <div className="h-12" />
               {hours.map((hour_) => (
-                <button
+                <div
                   key={hour_}
-                  type="button"
-                  onClick={() => setHour(hour_)}
                   className={cn(
-                    'text-center body-1 transition-colors duration-200',
+                    'p-2 text-center body-1 transition-colors duration-200',
                     hour_ === hour ? 'text-neutral-1600' : 'text-neutral-400'
                   )}
                 >
                   {hour_.toString()}시
-                </button>
+                </div>
               ))}
               <div className="h-12" />
             </div>
