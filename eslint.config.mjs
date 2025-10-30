@@ -71,6 +71,9 @@ const eslintConfig = [
         version: 'detect',
       },
       'import/resolver': {
+        typescript: {
+          project: ['tsconfig.json', 'apps/*/tsconfig.json'],
+        },
         node: {
           extensions: ['.js', '.jsx', '.ts', '.tsx'],
           paths: ['src', '.'],
