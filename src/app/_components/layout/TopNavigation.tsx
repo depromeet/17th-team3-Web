@@ -89,7 +89,6 @@ const TopNavigation = ({
               absoluteStrokeWidth
               className="text-orange-800"
             />
-            <ChevronLeft size={24} strokeWidth={2} absoluteStrokeWidth />
           </button>
         )}
       </div>
