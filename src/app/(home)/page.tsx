@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 
-import { HomePageClient } from '@/app/(home)/_components';
-import Loading from '@/app/_components/ui/Loading';
+import { HomePageLayout, HomePageClient, Skeleton } from '@/app/(home)/_components';
 import { meetingsApi } from '@/app/_services/meetings';
 
 const HomePageContent = async () => {
@@ -11,9 +10,18 @@ const HomePageContent = async () => {
 
 const HomePage = () => {
   return (
-    <Suspense fallback={<Loading />}>
-      <HomePageContent />
-    </Suspense>
+    <HomePageLayout>
+      <Suspense
+        fallback={
+          <>
+            <Skeleton />
+            <Skeleton />
+          </>
+        }
+      >
+        <HomePageContent />
+      </Suspense>
+    </HomePageLayout>
   );
 };
 
