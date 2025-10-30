@@ -72,40 +72,36 @@ const TopNavigation = ({
         className
       )}
     >
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center">
+      <div className="flex h-6 w-6 shrink-0 items-center justify-center">
         {showBackButton && (
           <button
             type="button"
             onClick={handleLeftClick}
             aria-label={leftAriaLabel}
-            className="flex cursor-pointer items-center justify-center bg-transparent text-current"
+            className={cn(
+              'flex cursor-pointer items-center justify-center bg-transparent text-orange-800',
+              className
+            )}
           >
-            <ChevronLeft
-              size={32}
-              strokeWidth={2}
-              absoluteStrokeWidth
-              className="text-orange-800"
-            />
+            <ChevronLeft size={24} strokeWidth={2} absoluteStrokeWidth />
           </button>
         )}
       </div>
 
-      <span className="body-3 font-semibold text-orange-800">{title}</span>
+      <span className={cn('body-3 font-semibold text-orange-800', className)}>{title}</span>
 
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center">
+      <div className="flex h-6 w-6 shrink-0 items-center justify-center">
         {showNextButton && (
           <button
             type="button"
             onClick={handleRightClick}
             aria-label={rightAriaLabel}
-            className="flex cursor-pointer items-center justify-center bg-transparent text-current"
+            className={cn(
+              'flex cursor-pointer items-center justify-center bg-transparent text-orange-800',
+              className
+            )}
           >
-            <ChevronRight
-              size={32}
-              strokeWidth={2}
-              absoluteStrokeWidth
-              className="text-orange-800"
-            />
+            <ChevronRight size={24} strokeWidth={2} absoluteStrokeWidth />
           </button>
         )}
       </div>
