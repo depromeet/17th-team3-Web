@@ -1,64 +1,71 @@
-import { parseEnv } from 'util';
-
 import { Suspense } from 'react';
 
 import { HomePageLayout, HomePageClient, Skeleton } from '@/app/(home)/_components';
-import { meetingsApi } from '@/app/_services/meetings';
+// import { meetingsApi } from '@/app/_services/meetings';
 
 const HomePageContent = async () => {
-  // const meetings = await meetingsApi.getMeetings();
   const meetings = [
     {
       id: 1,
-      title: 'asdfsadf',
-      hostUserId: 3,
-      totalParticipantCnt: 4,
-      isClosed: false,
-      stationName: 'string',
-      endAt: '2025-12-10T00:00:00',
-      createdAt: '2025-12-10T00:00:00',
-      updatedAt: '2025-12-10T00:00:00',
+      title: '강남역 저녁 약속',
+      stationName: '강남',
+      totalParticipantCnt: 5,
+      endAt: '2025-11-02T00:00:00',
       participantList: [
-        {
-          userId: 4,
-          attendeeNickname: 'cvcvcvc',
-          color: 'fffffffffff',
-        },
+        { userId: 1, attendeeNickname: '사용자1', color: 'orange' },
+        { userId: 2, attendeeNickname: '사용자2', color: 'orange' },
       ],
+      hostUserId: 1,
+      isClosed: false,
+      createdAt: '2025-10-02T00:00:00',
+      updatedAt: '2025-10-02T00:00:00',
+    },
+    {
+      id: 3,
+      title: '강남역 저녁 약속',
+      stationName: '강남',
+      totalParticipantCnt: 10,
+      endAt: '2025-11-02T00:00:00',
+      participantList: [
+        { userId: 1, attendeeNickname: '사용자1', color: 'orange' },
+        { userId: 2, attendeeNickname: '사용자2', color: 'orange' },
+      ],
+      hostUserId: 1,
+      isClosed: false,
+      createdAt: '2025-10-02T00:00:00',
+      updatedAt: '2025-10-02T00:00:00',
     },
     {
       id: 2,
-      title: 'asdfsadf',
-      hostUserId: 3,
-      totalParticipantCnt: 14,
-      isClosed: true,
-      stationName: 'string',
-      endAt: '2025-10-10T00:00:00',
-      createdAt: '2025-10-10T00:00:00',
-      updatedAt: '2025-12-10T00:00:00',
+      title: '강남역 저녁 약속22',
+      stationName: '강남',
+      totalParticipantCnt: 8,
+      endAt: '2025-10-30T00:00:00',
       participantList: [
-        {
-          userId: 4,
-          attendeeNickname: 'cvcvcvc',
-          color: 'fffffffffff',
-        },
+        { userId: 1, attendeeNickname: '사용자1', color: 'orange' },
+        { userId: 2, attendeeNickname: '사용자2', color: 'orange' },
       ],
+      hostUserId: 1,
+      isClosed: true,
+      createdAt: '2025-10-02T00:00:00',
+      updatedAt: '2025-10-02T00:00:00',
     },
   ];
+  // const meetings = meetingsApi.getMeetings();
   return <HomePageClient meetings={meetings} />;
 };
+
+const HomeSkeleton = () => (
+  <>
+    <Skeleton />
+    <Skeleton />
+  </>
+);
 
 const HomePage = () => {
   return (
     <HomePageLayout>
-      <Suspense
-        fallback={
-          <>
-            <Skeleton />
-            <Skeleton />
-          </>
-        }
-      >
+      <Suspense fallback={<HomeSkeleton />}>
         <HomePageContent />
       </Suspense>
     </HomePageLayout>
@@ -66,25 +73,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
-export interface MeetingInfo {
-  id: number;
-  title: string;
-  hostUserId: number;
-  totalParticipantCnt: number;
-  isClosed: boolean;
-  stationName: string;
-  endAt: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface Participant {
-  userId: number;
-  attendeeNickname: string;
-  color: string; // TODO: 아이콘 Union 타입으로 변경 필요
-}
-
-export interface Meeting extends MeetingInfo {
-  participantList: Participant[];
-}

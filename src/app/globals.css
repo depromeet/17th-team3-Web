@@ -409,6 +409,10 @@
   animation-delay: 0s;
 }
 
+@utility skeleton-gradient {
+  background: linear-gradient(224.49deg, #f1f2f4 3.05%, #f9fafb 96.12%);
+}
+
 @keyframes result-text-flow {
   0% {
     background-position: 100% 50%;
@@ -487,7 +491,4 @@
   );
 }
 
-@utility bg-skeleton-gradient {
-  background: linear-gradient(224.49deg, #f1f2f4 3.05%, #f9fafb 96.12%);
-}
 /* 그 외 전역 리셋/유틸은 기존 그대로 두면 됩니다 */

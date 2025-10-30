@@ -24,10 +24,11 @@ const MeetingParticipantProgress = ({
               className="absolute -top-10 -translate-x-1/2 transition-all"
               style={{ left: `${progressPercent}%` }}
             >
-              <div className="flex h-7 w-18 items-center gap-1 rounded-full bg-orange-100 px-2 py-0.5">
+              <div className="flex h-7 w-18 justify-center gap-1 rounded-full bg-orange-100 px-2 py-0.5">
                 <Image alt="그룹 아이콘" src="/icons/people-fill.svg" width={16} height={16} />
                 <span className="font-bold text-orange-600">{surveyCompletedParticipants}</span>
-                <span className="text-gray-400">/ {totalParticipants}</span>
+                <span className="text-gray-400">/</span>
+                <span className="text-gray-400">{totalParticipants}</span>
               </div>
 
               <div className="absolute top-full left-1/2 -translate-x-1/2">
