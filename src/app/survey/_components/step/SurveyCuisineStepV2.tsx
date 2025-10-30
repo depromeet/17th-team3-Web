@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import { FOOD_MAP } from '@/app/_constants/menu';
 import ChipGroupMultiSelect, {
@@ -45,40 +46,34 @@ const toChipOptions = (opts: ReadonlyArray<Option>): ChipOption[] =>
 interface Props {
   title: string;
   defaultSelectedIds?: string[];
-  onNext: (ids: string[]) => void;
   onCancel: () => void;
 }
 
-/**
- * SurveyCuisineStepV2
- * - ChipGroupMultiSelect 기반 버전
- * - 칩 배지/우선순위/예외옵션 포함
- * - 선택 후 모달로 한 번 더 확인
- */
-const SurveyCuisineStepV2 = ({ title, defaultSelectedIds = [], onNext, onCancel }: Props) => {
+const SurveyCuisineStepV2 = ({ title, defaultSelectedIds = [], onCancel }: Props) => {
+  const router = useRouter();
   const [selectedIds, setSelectedIds] = useState<string[]>(defaultSelectedIds);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // 알림 콜백
-  const handleMaxSelect = () => {
-    alert('최대 5개까지 선택이 가능합니다.');
-  };
-
+  const handleMaxSelect = () => alert('최대 5개까지 선택이 가능합니다.');
   const handleNext = () => {
     if (selectedIds.length === 0) return;
     setIsModalOpen(true);
   };
 
+  // 저장하기 버튼 로직
   const confirmNext = async () => {
     setIsModalOpen(false);
     setIsLoading(true);
 
-    // 저장 API 호출 & 지연 시뮬레이션
-    await new Promise((res) => setTimeout(res, 5000));
+    // 저장 API 시뮬레이션
+    await new Promise((res) => setTimeout(res, 2000));
 
-    onNext(selectedIds);
-    setIsLoading(false);
+    // 선택된 음식 이름들을 전달용 문자열로 변환
+    const selectedLabels = selectedIds.join(',');
+
+    // overview로 이동
+    router.push(`/events/123/overview?selected=${encodeURIComponent(selectedLabels)}`);
   };
 
   return (
