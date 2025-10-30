@@ -57,12 +57,10 @@ const FoodConfirmModal = ({
 
         {/* Title */}
         <div className="flex w-full flex-col items-start gap-1 px-4">
-          <h2 className="bg-gradient-to-r from-[#5C1700] via-[#8F2400] to-[#8F2400] bg-clip-text text-[24px] leading-[36px] font-bold tracking-tight text-transparent">
+          <h2 className="bg-gradient-to-r from-orange-900 via-orange-800 to-orange-800 bg-clip-text heading-3 font-bold tracking-tight text-transparent">
             {title}
           </h2>
-          {subtitle && (
-            <p className="pt-1 text-[16px] leading-[24px] font-medium text-[#6D7581]">{subtitle}</p>
-          )}
+          {subtitle && <p className="pt-1 subheading-3 font-medium text-neutral-800">{subtitle}</p>}
         </div>
 
         {/* 음식 리스트 Frame */}
@@ -80,15 +78,13 @@ const FoodConfirmModal = ({
                     height={20}
                     className="aspect-square"
                   />
-                  <span className="title-gradient pl-2 text-[14px] leading-[22px] font-semibold">
-                    {categoryLabel}
-                  </span>
+                  <span className="title-gradient pl-2 label-1 font-semibold">{categoryLabel}</span>
                 </div>
 
                 {/* 첫 번째 칩 */}
                 {foods[0] && (
                   <div className="rounded-full bg-black/5 px-3 py-1">
-                    <span className="text-[14px] leading-[22px] font-semibold text-[#3A3D42]">
+                    <span className="label-1 font-semibold text-neutral-1400">
                       {foods[0].detailLabel}
                     </span>
                   </div>
@@ -99,7 +95,7 @@ const FoodConfirmModal = ({
               {foods.slice(1).map((food, idx) => (
                 <div key={`${categoryLabel}-${idx}`} className="flex w-full justify-end">
                   <div className="rounded-full bg-black/5 px-3 py-1">
-                    <span className="text-[14px] leading-[22px] font-semibold text-[#3A3D42]">
+                    <span className="label-1 font-semibold text-neutral-1400">
                       {food.detailLabel}
                     </span>
                   </div>
@@ -123,7 +119,7 @@ const FoodConfirmModal = ({
             onClick={onConfirm}
             className={cn(
               'flex h-[62px] flex-1 items-center justify-center rounded-[14px] text-[16px] font-semibold text-white',
-              'bg-gradient-to-r from-[#FF7E52] via-[#FF4F14] to-[#FF7E52]'
+              'bg-gradient-to-r from-orange-400 via-orange-500 to-orange-400'
             )}
           >
             저장하기
