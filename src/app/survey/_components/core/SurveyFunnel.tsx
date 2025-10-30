@@ -11,6 +11,7 @@ import SurveyCuisineStepV2 from '@/app/survey/_components/step/SurveyCuisineStep
 import SurveyNameStep from '@/app/survey/_components/step/SurveyNameStep';
 import SurveyReviewStep from '@/app/survey/_components/step/SurveyReviewStep';
 import ConfirmModal from '@/app/survey/_components/ui/ConfirmModal';
+import LoadingOverlay from '@/app/survey/_components/ui/LoadingOverlay';
 import { useSurveyFunnel } from '@/app/survey/_hooks/useSurveyFunnel';
 import {
   MAX_SELECT_COUNT,
@@ -21,7 +22,6 @@ import {
 } from '@/app/survey/_models/constants';
 import { CUISINE_OPTIONS, CUISINE_DETAIL_MAP, type Option } from '@/app/survey/_models/option';
 import { type RoleLabel, type SurveyResult } from '@/app/survey/_models/types';
-
 /* -------------------------------------------
  * 유틸리티
  * ----------------------------------------- */
@@ -66,6 +66,7 @@ const SurveyFunnel = ({ role, initial, onComplete }: SurveyFunnelProps) => {
   const { step, context, history } = useSurveyFunnel({ ...initial, role });
   const stepValue = stepKeyToIndex(step); // 1-based step index
   const router = useRouter(); // 라우터 훅 사용
+  const [isLoading, setIsLoading] = useState(false);
 
   const [isSkipModalOpen, setIsSkipModalOpen] = useState(false);
 
@@ -132,10 +133,10 @@ const SurveyFunnel = ({ role, initial, onComplete }: SurveyFunnelProps) => {
           <SurveyCuisineStepV2
             title={`좋아하는 음식을\n최대 5개까지 선택해주세요`}
             defaultSelectedIds={context.preferCuisineIds}
-            onNext={(ids) => {
-              const nextIds = ids.includes(ANY_ID) ? [ANY_ID] : ids.slice(0, MAX_SELECT_COUNT);
-              history.push('Review', (prev) => ({ ...prev, preferCuisineIds: nextIds }));
-            }}
+            // onNext={(ids) => {
+            //   const nextIds = ids.includes(ANY_ID) ? [ANY_ID] : ids.slice(0, MAX_SELECT_COUNT);
+            //   history.push('Review', (prev) => ({ ...prev, preferCuisineIds: nextIds }));
+            // }}
             onCancel={handleBack}
           />
 
@@ -143,15 +144,21 @@ const SurveyFunnel = ({ role, initial, onComplete }: SurveyFunnelProps) => {
           <ConfirmModal
             open={isSkipModalOpen}
             title="설문을 건너뛸까요?"
-            // description="건너뛰면 선호 음식이 저장되지 않습니다."
             cancelText="취소"
             confirmText="건너뛰기"
             onCancel={() => setIsSkipModalOpen(false)}
-            onConfirm={() => {
+            onConfirm={async () => {
               setIsSkipModalOpen(false);
-              history.push('Review', (prev) => ({ ...prev, preferCuisineIds: [] }));
+              setIsLoading(true);
+
+              // 약간의 로딩 시간 후 이동
+              await new Promise((r) => setTimeout(r, 1500));
+
+              // ✅ ‘다 괜찮아요’로 overview 이동
+              router.push(`/events/123/overview?selected=${encodeURIComponent('다 괜찮아요')}`);
             }}
           />
+          {isLoading && <LoadingOverlay />}
         </SurveyLayout>
       );
 
