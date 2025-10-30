@@ -53,7 +53,7 @@ const ActiveMeetingCard = ({ meeting, onClick }: ActiveMeetingCardProps) => {
         </div>
       </div>
 
-      <div className="mt-8 rounded-3xl bg-white px-4 py-3 pt-11">
+      <div className="mt-8 rounded-3xl bg-white px-4 py-3 pt-12">
         <MeetingParticipantProgress
           surveyCompletedParticipants={2} // TODO: API 구현 후, 설문 참여 인원으로 변경 필요
           totalParticipants={totalParticipantCnt}

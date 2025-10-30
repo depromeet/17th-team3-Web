@@ -21,7 +21,7 @@ const MeetingParticipantProgress = ({
         <div className="flex-1">
           <div className="relative">
             <div
-              className="absolute -top-10 -translate-x-1/2 transition-all"
+              className="absolute -top-11 -translate-x-1/2 transition-all"
               style={{ left: `${progressPercent}%` }}
             >
               <div className="flex h-7 w-18 justify-center gap-1 rounded-full bg-orange-100 px-2 py-0.5">
