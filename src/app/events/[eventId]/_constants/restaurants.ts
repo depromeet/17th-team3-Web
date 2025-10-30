@@ -1,0 +1,4 @@
+export const INITIAL_RESTAURANT_COUNT = 5;
+export const ADDITIONAL_RESTAURANT_COUNT = 5;
+export const TOP_RESTAURANT_COUNT = 3;
+export const MAX_RESTAURANT_COUNT = 10;

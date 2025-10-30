@@ -187,6 +187,20 @@
   --color-blue-800: #17308c;
   --color-blue-900: #091953;
   --color-blue-1000: #040b25;
+
+  /* === Neutral / White === */
+  --color-black-alpha-1: #00000014; /* 8% */
+  --color-black-alpha-2: #0000003d; /* 24% */
+  --color-black-alpha-3: #00000066; /* 40% */
+  --color-black-alpha-4: #0000008f; /* 56% */
+  --color-black-alpha-5: #000000b8; /* 72% */
+
+  --color-white-alpha-1: #ffffff14; /* 8% */
+  --color-white-alpha-2: #ffffff3d; /* 24% */
+  --color-white-alpha-3: #ffffff66; /* 40% */
+  --color-white-alpha-4: #ffffff8f; /* 56% */
+  --color-white-alpha-5: #ffffffb8; /* 72% */
+  --color-white-alpha-6: #ffffffe0; /* 88% */
 }
 
 @layer utilities {
@@ -379,6 +393,7 @@
     )
   );
   background-clip: text;
+  color: transparent;
 }
 @utility type-gradient {
   background: var(
