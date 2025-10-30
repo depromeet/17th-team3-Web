@@ -18,7 +18,7 @@ const MOCK_AVATARS = [
 ];
 
 const EndedMeetingCard = ({ meeting, onClick }: EndedMeetingCardProps) => {
-  const { name, stationName, attendeeCount, endAt } = meeting;
+  const { title, stationName, totalParticipantCnt, endAt } = meeting;
 
   return (
     <div
@@ -30,7 +30,7 @@ const EndedMeetingCard = ({ meeting, onClick }: EndedMeetingCardProps) => {
     >
       <div className="flex flex-col gap-1">
         <div className="flex justify-between">
-          <h3 className="subheading-2 font-bold">{name}</h3>
+          <h3 className="subheading-2 font-bold">{title}</h3>
           <ChevronRight size={24} className="text-neutral-800" />
         </div>
 
@@ -41,7 +41,7 @@ const EndedMeetingCard = ({ meeting, onClick }: EndedMeetingCardProps) => {
         </div>
       </div>
 
-      <AvatarList avatars={MOCK_AVATARS} additionalCount={attendeeCount} />
+      <AvatarList avatars={MOCK_AVATARS} additionalCount={totalParticipantCnt} />
     </div>
   );
 };

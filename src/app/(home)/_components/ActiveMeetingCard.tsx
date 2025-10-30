@@ -12,7 +12,7 @@ interface ActiveMeetingCardProps {
 }
 
 const ActiveMeetingCard = ({ meeting, onClick }: ActiveMeetingCardProps) => {
-  const { name, stationName, attendeeCount, endAt } = meeting;
+  const { title, stationName, totalParticipantCnt, endAt } = meeting;
 
   return (
     <div
@@ -32,7 +32,7 @@ const ActiveMeetingCard = ({ meeting, onClick }: ActiveMeetingCardProps) => {
             <ChevronRight size={24} className="text-orange-500" />
           </div>
 
-          <h3 className="heading-4 text-xl leading-8 font-bold text-orange-1000">{name}</h3>
+          <h3 className="heading-4 text-xl leading-8 font-bold text-orange-1000">{title}</h3>
         </div>
 
         <div className="flex flex-col gap-1">
@@ -56,7 +56,7 @@ const ActiveMeetingCard = ({ meeting, onClick }: ActiveMeetingCardProps) => {
 
       <div className="mt-8 rounded-3xl bg-white px-4 py-3">
         <div className="flex items-center py-2">
-          <StepIndicator total={attendeeCount} value={6} />
+          <StepIndicator total={totalParticipantCnt} value={6} />
           {/* TODO: 추가 디자인 필요 */}
           {/* <div
             className="absolute -top-3 -translate-x-1/2"

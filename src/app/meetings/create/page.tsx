@@ -14,6 +14,7 @@ import ConfirmModal from '@/app/_components/ui/Modal/ConfirmModal';
 import StepperInput from '@/app/_components/ui/StepperInput';
 import { useDisclosure } from '@/app/_hooks/useDisclosure';
 import { cn } from '@/app/_lib/cn';
+// import { meetingsApi } from '@/app/_services/meetings';
 
 import DateTimePicker from './_components/DateTimePicker';
 import FormSection from './_components/FormSection';
@@ -28,8 +29,18 @@ const CreatePage = () => {
 
   const router = useRouter();
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!form.isFormValid) return;
+
+    // const formatedForm = {
+    //   name: form.formData.name.trim(),
+    //   attendeeCount: form.formData.members,
+    //   stationId: form.formData.station?.id,
+    //   endAt: `${form.formData.date}T${form.formData.time}:00:00`,
+    // };
+
+    // const data = await meetingsApi.createMeeting(formatedForm);
+    // console.log(data.validateTokenUrl);
 
     // TODO: API 호출로 대체 예정
     console.log({
