@@ -14,13 +14,6 @@ interface HomePageClientProps {
   meetings: Meeting[];
 }
 
-/**
- * 홈 페이지의 클라이언트 컴포넌트
- * 진행 중인 모임과 나의 모임 정보를 렌더링합니다.
- * useMeetingsByStatus 훅을 사용하여 5분마다 자동 업데이트됩니다.
- *
- * @param meetings - API에서 받은 모임 데이터 배열
- */
 const HomePageClient = ({ meetings }: HomePageClientProps) => {
   const { activeMeetings, endedMeetings } = useMeetingsByStatus(meetings);
 
