@@ -25,7 +25,12 @@ const EndedMeetingCard = ({ meeting, onClick }: EndedMeetingCardProps) => {
       role="button"
       tabIndex={0}
       onClick={onClick}
-      onKeyDown={onClick}
+      onKeyDown={(event: React.KeyboardEvent<HTMLDivElement>) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          onClick?.();
+        }
+      }}
       className="flex cursor-pointer flex-col gap-3 rounded-2xl bg-gray-100 p-4 select-none"
     >
       <div className="flex flex-col gap-1">

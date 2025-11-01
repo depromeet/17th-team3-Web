@@ -13,7 +13,12 @@ const ActionButton = ({ icon, label, onClick }: ActionButtonProps) => {
       <button
         type="button"
         onClick={onClick}
-        onKeyDown={onClick}
+        onKeyDown={(event: React.KeyboardEvent<HTMLButtonElement>) => {
+          if (event.key === 'Enter') {
+            event.preventDefault();
+            onClick();
+          }
+        }}
         className="flex h-15 w-15 cursor-pointer items-center justify-center rounded-full bg-white"
         aria-label={label}
       >
