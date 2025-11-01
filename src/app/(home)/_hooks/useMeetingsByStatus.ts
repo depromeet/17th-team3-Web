@@ -25,7 +25,7 @@ interface MeetingsByStatusResult {
 }
 
 export const useMeetingsByStatus = (meetings: Meeting[]): MeetingsByStatusResult => {
-  const [, forceUpdate] = useReducer((x) => x + 1, 0);
+  const [tick, forceUpdate] = useReducer((x) => x + 1, 0);
 
   useEffect(() => {
     const interval = setInterval(forceUpdate, AUTO_UPDATE_INTERVAL_MS);
@@ -51,7 +51,7 @@ export const useMeetingsByStatus = (meetings: Meeting[]): MeetingsByStatusResult
       activeMeetings: active,
       endedMeetings: ended,
     };
-  }, [meetings]);
+  }, [meetings, tick]);
 
   return result;
 };
