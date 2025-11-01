@@ -1,13 +1,13 @@
 /**
  * ISO 날짜 문자열을 한국 형식으로 변환
- * @param dateString - ISO 8601 형식 (예: "2025-10-20T12:02:00")
- * @returns 포맷된 날짜 (예: "2025.10.20(월) 오후 12:02")
+ * @param dateString - ISO 8601 형식 ("2025-10-20T12:02:00")
+ * @returns 포맷된 날짜 ("2025.10.20(월) 오후 12:02")
  */
 export const formatDateTime = (dateString: string): string => {
   const date = new Date(dateString);
 
   if (isNaN(date.getTime())) {
-    console.error('Invalid date:', dateString);
+    console.error('잘못된 날짜 형식:', dateString);
     return dateString;
   }
 
