@@ -2,11 +2,11 @@
 
 import { useCountdownDisplay } from '@/app/_hooks/useCountdownDisplay';
 
-interface CountdownDisplay {
+interface CountdownDisplayProps {
   endAt: string;
 }
 
-const CountdownDisplay = ({ endAt }: CountdownDisplay) => {
+const CountdownDisplay = ({ endAt }: CountdownDisplayProps) => {
   const displayText = useCountdownDisplay(new Date(endAt));
 
   return <span className="label-1 font-medium text-orange-600">{displayText}</span>;

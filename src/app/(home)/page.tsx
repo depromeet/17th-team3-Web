@@ -50,6 +50,21 @@ const HomePageContent = async () => {
       createdAt: '2025-10-02T00:00:00',
       updatedAt: '2025-10-02T00:00:00',
     },
+    {
+      id: 4,
+      title: '강남역 저녁 약속22',
+      stationName: '강남',
+      totalParticipantCnt: 8,
+      endAt: '2025-10-20T00:00:00',
+      participantList: [
+        { userId: 1, attendeeNickname: '사용자1', color: 'orange' },
+        { userId: 2, attendeeNickname: '사용자2', color: 'orange' },
+      ],
+      hostUserId: 1,
+      isClosed: true,
+      createdAt: '2025-10-02T00:00:00',
+      updatedAt: '2025-10-02T00:00:00',
+    },
   ];
   // const meetings = await meetingsApi.getMeetings();
   return <HomePageClient meetings={meetings} />;

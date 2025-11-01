@@ -5,7 +5,7 @@ import { Meeting } from '@/app/(home)/_models/types';
 const CLOSED_MEETING_ACTIVE_DISPLAY_MS = 6 * 60 * 60 * 1000; // 종료된 모임이 "진행 중"으로 표시되는 시간 (6시간)
 const AUTO_UPDATE_INTERVAL_MS = 5 * 60 * 1000; // 자동 업데이트 간격(5분)
 
-const sortByEndDateAsc = (a: Meeting, b: Meeting): number =>
+const sortByEndDateDesc = (a: Meeting, b: Meeting): number =>
   new Date(b.endAt).getTime() - new Date(a.endAt).getTime();
 
 const isStillActive = (meeting: Meeting): boolean => {
@@ -44,8 +44,8 @@ export const useMeetingsByStatus = (meetings: Meeting[]): MeetingsByStatusResult
       }
     });
 
-    active.sort(sortByEndDateAsc);
-    ended.sort(sortByEndDateAsc);
+    active.sort(sortByEndDateDesc);
+    ended.sort(sortByEndDateDesc);
 
     return {
       activeMeetings: active,
