@@ -11,7 +11,7 @@ import Button from '@/app/_components/ui/Button';
 import { useToast } from '@/app/_features/toast';
 import { exhaustiveCheck } from '@/app/_utils/typeGuards';
 import { SHARE_OPTIONS } from '@/app/meetings/create/_models/constants';
-import { ShareType } from '@/app/meetings/create/_models/types';
+// import { ShareType } from '@/app/meetings/create/_models/types';
 import ResultCard from '@/app/survey/_components/ResultCard';
 
 // URL에서 모임 URL 갖고 오기
@@ -42,31 +42,31 @@ const CreateSuccessPage = () => {
     setShowBottomSheet((prev) => !prev);
   };
 
-  const handleShareButtonClick = (shareType: ShareType) => {
-    switch (shareType) {
-      case 'url':
-        copyUrlToClipboard();
-        break;
-      case 'kakao':
-        successToast('카카오톡 공유 준비중!', {
-          preventDuplicate: true,
-          position: 'top',
-        });
-        // todo: 카카오톡 공유
-        // shareToKakaoTalk()
-        break;
-      case 'sms':
-        successToast('SMS 공유 준비중!', {
-          preventDuplicate: true,
-          position: 'top',
-        });
-        // todo: SMS 방법 무엇일까? 템플릿 클립보드 복사일까?
-        // shareViaSms()
-        break;
-      default:
-        exhaustiveCheck(shareType);
-    }
-  };
+  // const handleShareButtonClick = (shareType: ShareType) => {
+  //   switch (shareType) {
+  //     case 'url':
+  //       copyUrlToClipboard();
+  //       break;
+  //     case 'kakao':
+  //       successToast('카카오톡 공유 준비중!', {
+  //         preventDuplicate: true,
+  //         position: 'top',
+  //       });
+  //       // todo: 카카오톡 공유
+  //       // shareToKakaoTalk()
+  //       break;
+  //     case 'sms':
+  //       successToast('SMS 공유 준비중!', {
+  //         preventDuplicate: true,
+  //         position: 'top',
+  //       });
+  //       // todo: SMS 방법 무엇일까? 템플릿 클립보드 복사일까?
+  //       // shareViaSms()
+  //       break;
+  //     default:
+  //       exhaustiveCheck(shareType);
+  //   }
+  // };
 
   return (
     <div className="relative flex h-[100dvh] flex-col p-4">
@@ -110,7 +110,7 @@ const CreateSuccessPage = () => {
               <button
                 type="button"
                 key={option.id}
-                onClick={() => handleShareButtonClick(option.id)}
+                onClick={() => {}}
                 className="flex flex-col items-center justify-center gap-3"
               >
                 <div className="overflow-hidden rounded-full">

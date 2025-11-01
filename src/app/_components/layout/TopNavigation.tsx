@@ -68,7 +68,7 @@ const TopNavigation = ({
   return (
     <div
       className={cn(
-        'sticky top-0 z-10 flex w-full shrink-0 items-center justify-between bg-inherit p-4',
+        'sticky top-0 z-10 flex w-full shrink-0 items-center justify-between bg-inherit p-4 pb-3',
         className
       )}
     >
@@ -83,7 +83,12 @@ const TopNavigation = ({
               className
             )}
           >
-            <ChevronLeft size={24} strokeWidth={2} absoluteStrokeWidth />
+            <ChevronLeft
+              size={24}
+              strokeWidth={2}
+              absoluteStrokeWidth
+              className="text-orange-800"
+            />
           </button>
         )}
       </div>

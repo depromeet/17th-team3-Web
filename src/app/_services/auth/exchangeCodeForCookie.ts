@@ -3,10 +3,14 @@
  * @param code - 카카오로부터 받은 인가 코드(code)
  */
 export const exchangeCodeForCookie = async (code: string) => {
-  const response = await fetch(`/api/auth/kakao/callback?code=${code}`, {
-    method: 'GET',
-    credentials: 'include',
-  });
+  const redirectUrl = window.location.origin;
+  const response = await fetch(
+    `/api/auth/kakao/callback?code=${code}&redirect_uri=${redirectUrl}/auth/callback`,
+    {
+      method: 'GET',
+      credentials: 'include',
+    }
+  );
 
   if (!response.ok) {
     const errorText = await response.text();

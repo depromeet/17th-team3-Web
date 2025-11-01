@@ -4,6 +4,7 @@ import { Suspense, useEffect } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import Loading from '@/app/_components/ui/Loading';
 import { exchangeCodeForCookie } from '@/app/_services/auth';
 import { useAuthParams } from '@/app/auth/_hooks/useAuthParams';
 
@@ -38,12 +39,12 @@ const CallbackContent = () => {
     processAuth();
   }, [code, error, router]);
 
-  return <div className="mx-auto flex items-center justify-center">로그인 처리중...</div>;
+  return <Loading />;
 };
 
 const CallbackPage = () => {
   return (
-    <Suspense>
+    <Suspense fallback={<Loading />}>
       <CallbackContent />
     </Suspense>
   );

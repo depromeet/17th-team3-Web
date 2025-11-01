@@ -1,234 +1,119 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useCallback } from 'react';
 
 import { DatePicker } from '@mantine/dates';
-import { CalendarPlus2, ChevronDown, Clock } from 'lucide-react';
+import { CalendarDays, Clock } from 'lucide-react';
 
 import BottomSheet from '@/app/_components/ui/BottomSheet';
 import Button from '@/app/_components/ui/Button';
 import { cn } from '@/app/_lib/cn';
+import TimePickerScroll from '@/app/meetings/create/_components/TimePickerScroll';
+import { formatTimeDisplay } from '@/app/meetings/create/_utils/timeFormat';
 
 import 'dayjs/locale/ko';
 
 interface DateTimePickerProps {
-  dateValue?: string;
-  onDateClick: (date: string) => void;
-  onTimeClick: (hour: string | null, minute: string | null) => void;
-  dateLabel?: string;
+  date: string | null;
+  time: string | null;
+  onDateChange: (date: string | null) => void;
+  onTimeChange: (time: string | null) => void;
 }
 
-const DateTimePicker = ({
-  dateValue = '',
-  onDateClick,
-  onTimeClick,
-  dateLabel = '날짜 선택하기',
-}: DateTimePickerProps) => {
+const DateTimePicker = ({ date, time, onDateChange, onTimeChange }: DateTimePickerProps) => {
   const [showCalendar, setShowCalendar] = useState(false);
-  const [date, setDate] = useState<string | null>(null);
-  const [hour, setHour] = useState<string | null>(null);
-  const [minute, setMinute] = useState<string | null>(null);
+  const [tempDate, setTempDate] = useState<string | null>(date);
 
-  const handleDateSelect = () => {
-    if (date) {
-      onDateClick(date);
-      setShowCalendar(false);
-    }
-  };
+  const handleOpenCalendar = useCallback(() => {
+    setTempDate(date);
+    setShowCalendar(true);
+  }, [date]);
 
-  const handleTimeSelect = (hour: string | null, minute: string | null) => {
-    setHour(hour);
-    setMinute(minute);
-    onTimeClick(hour, minute);
-  };
+  const handleConfirmDate = useCallback(() => {
+    onDateChange(tempDate);
+    setShowCalendar(false);
+  }, [tempDate, onDateChange]);
 
   return (
-    <div>
-      <div className="flex flex-col gap-4">
+    <>
+      <div className="flex items-center">
         <button
-          onClick={() => setShowCalendar(true)}
+          type="button"
+          onClick={handleOpenCalendar}
           className={cn(
-            'flex w-full items-center gap-3 border-b-1 border-b-neutral-300 px-3 py-3 body-1 font-semibold text-neutral-500',
-            dateValue && 'text-gray-1600'
+            'flex flex-1 items-center gap-8 border-b-1 border-b-neutral-200 pt-3 pr-3 pb-2 pl-1 body-2 font-semibold text-neutral-400',
+            date && 'text-gray-1500'
           )}
         >
-          <CalendarPlus2 size={24} strokeWidth={2.5} className="text-neutral-500" />
-          {dateValue || dateLabel}
+          <div className="flex items-center gap-4">
+            <CalendarDays size={20} strokeWidth={2.5} className="text-neutral-400" />
+            {date || '날짜 선택하기'}
+          </div>
+          <div className="flex items-center gap-4">
+            <Clock size={20} strokeWidth={2.5} className="text-neutral-400" />
+            {formatTimeDisplay(time)}
+          </div>
         </button>
-
-        <TimePicker selectedHour={hour} selectedMinute={minute} onTimeChange={handleTimeSelect} />
       </div>
 
       {showCalendar && (
-        <BottomSheet onClose={() => setShowCalendar(false)}>
+        <BottomSheet title="모임 날짜/시간" onClose={() => setShowCalendar(false)} showCloseButton>
           <div className="flex flex-col items-center justify-center gap-6">
-            <DatePicker
-              value={date}
-              onChange={setDate}
-              minDate={new Date()}
-              locale="ko"
-              hideOutsideDates
-              size="md"
-              decadeLabelFormat="YYYY년"
-              yearLabelFormat="YYYY년"
-              monthLabelFormat="YYYY MM월"
-              styles={{
-                calendarHeaderLevel: {
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                  marginBottom: '12px',
-                },
-                day: {
-                  fontSize: '20px',
-                  fontWeight: '400',
-                  letterSpacing: '-0.45px',
-                },
-                weekday: {
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  color: '#3c3c3c',
-                },
-              }}
-            />
-            <Button onClick={handleDateSelect} status={!date ? 'disabled' : 'normal'}>
+            <div className="flex w-full flex-col items-center justify-center gap-1">
+              <p className="self-start py-1 label-1 text-sm font-semibold text-neutral-800">
+                날짜 선택
+              </p>
+              <DatePicker
+                value={tempDate}
+                onChange={(date) => setTempDate(date)}
+                minDate={new Date()}
+                defaultDate={date || new Date()}
+                locale="ko"
+                hideOutsideDates
+                size="md"
+                decadeLabelFormat="YYYY년"
+                yearLabelFormat="YYYY년"
+                monthLabelFormat="YYYY MM월"
+                styles={{
+                  calendarHeaderLevel: {
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    color: '#131416',
+                    lineHeight: '1.5rem',
+                    letterSpacing: ' -0.01%',
+                  },
+                  day: {
+                    fontSize: '0.875rem',
+                    color: '#131416',
+                    lineHeight: '1.375rem',
+                    letterSpacing: ' -0.01%',
+                    fontWeight: '500',
+                  },
+                  weekday: {
+                    fontSize: '0.875rem',
+                    fontWeight: '500',
+                    color: '#9ba3b0',
+                    lineHeight: '1.375rem',
+                    letterSpacing: ' -0.01%',
+                  },
+                }}
+              />
+            </div>
+
+            <div className="flex w-full flex-col items-center justify-center gap-1">
+              <p className="self-start py-1 label-1 text-sm font-semibold text-neutral-800">
+                시간 선택
+              </p>
+            </div>
+            <TimePickerScroll onTimeChange={onTimeChange} defaultTime={time} />
+            <Button onClick={handleConfirmDate} status={tempDate ? 'normal' : 'disabled'}>
               선택
             </Button>
           </div>
         </BottomSheet>
       )}
-    </div>
+    </>
   );
 };
-
-interface TimePickerProps {
-  selectedHour: string | null;
-  selectedMinute: string | null;
-  onTimeChange: (hour: string | null, minute: string | null) => void;
-}
-
-const TimePicker = ({
-  selectedHour = '00',
-  selectedMinute = '00',
-  onTimeChange,
-}: TimePickerProps) => {
-  const [showHourDropdown, setShowHourDropdown] = useState(false);
-  const [showMinuteDropdown, setShowMinuteDropdown] = useState(false);
-
-  const hourDropdownRef = useRef<HTMLDivElement>(null);
-  const minuteDropdownRef = useRef<HTMLDivElement>(null);
-
-  const hours = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
-  const minutes = ['00', '10', '20', '30', '40', '50'];
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        hourDropdownRef.current &&
-        !hourDropdownRef.current.contains(event.target as HTMLDivElement)
-      ) {
-        setShowHourDropdown(false);
-      }
-      if (
-        minuteDropdownRef.current &&
-        !minuteDropdownRef.current.contains(event.target as HTMLDivElement)
-      ) {
-        setShowMinuteDropdown(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-  return (
-    <div className="flex w-full items-center gap-2 p-3">
-      <Clock size={24} strokeWidth={2.5} className="text-neutral-500" />
-
-      <TimeUnit
-        value={selectedHour}
-        unit="시"
-        options={hours}
-        isOpen={showHourDropdown}
-        onToggle={() => setShowHourDropdown(!showHourDropdown)}
-        onSelect={(hour) => {
-          onTimeChange(hour, selectedMinute);
-          setShowHourDropdown(false);
-        }}
-        dropdownRef={hourDropdownRef}
-      />
-
-      <div className="mx-2 text-neutral-1500">:</div>
-
-      <TimeUnit
-        value={selectedMinute}
-        unit="분"
-        options={minutes}
-        isOpen={showMinuteDropdown}
-        onToggle={() => setShowMinuteDropdown(!showMinuteDropdown)}
-        onSelect={(minute) => {
-          onTimeChange(selectedHour, minute);
-          setShowMinuteDropdown(false);
-        }}
-        dropdownRef={minuteDropdownRef}
-      />
-    </div>
-  );
-};
-
-interface TimeUnitProps {
-  value: string | null;
-  unit: string;
-  options: string[];
-  isOpen: boolean;
-  onToggle: () => void;
-  onSelect: (value: string) => void;
-  dropdownRef: React.RefObject<HTMLDivElement | null>;
-}
-
-const TimeUnit = ({
-  value,
-  unit,
-  options,
-  isOpen,
-  onToggle,
-  onSelect,
-  dropdownRef,
-}: TimeUnitProps) => (
-  <div
-    role="presentation"
-    ref={dropdownRef}
-    onClick={onToggle}
-    className="relative flex items-center justify-center gap-2 border-b-1 border-neutral-300 py-2 pr-1 pl-5"
-  >
-    <div
-      className={cn(
-        'mr-4 flex items-center gap-2 body-1 font-semibold text-neutral-500',
-        value !== null && 'text-neutral-1600'
-      )}
-    >
-      {value === null ? '00' : value}
-    </div>
-    <span className="body-1 font-semibold text-neutral-1500">{unit}</span>
-    <ChevronDown
-      size={20}
-      strokeWidth={2.5}
-      className="cursor-pointer text-neutral-1500 transition-transform duration-150 active:scale-95"
-      // onClick={onToggle}
-    />
-
-    {isOpen && (
-      <div className="absolute top-13 right-0 z-10 max-h-60 w-35 overflow-hidden overflow-y-auto rounded-lg bg-white shadow-lg">
-        {options.map((option) => (
-          <button
-            key={option}
-            onClick={() => onSelect(option)}
-            className="w-full rounded-lg px-3 py-2 text-left body-3 font-semibold transition-all duration-150 select-none hover:bg-gray-50 active:scale-[0.98] active:bg-orange-500 active:text-neutral-100"
-          >
-            {option}
-          </button>
-        ))}
-      </div>
-    )}
-  </div>
-);
 
 export default DateTimePicker;

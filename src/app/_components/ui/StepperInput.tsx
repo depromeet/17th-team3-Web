@@ -42,14 +42,14 @@ const StepperInput = ({
         onClick={handleDecrement}
         disabled={!canDecrement}
         className={cn(
-          'absolute top-4 left-3 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-md transition-colors',
+          'absolute top-4 left-3 z-10 flex h-5 w-5 cursor-pointer items-center justify-center rounded-sm transition-colors',
           canDecrement
-            ? 'bg-orange-100 text-orange-500'
-            : 'cursor-not-allowed bg-neutral-400 text-neutral-600'
+            ? 'bg-neutral-300 text-neutral-1200'
+            : 'cursor-not-allowed bg-neutral-200 text-neutral-400'
         )}
         aria-label="감소"
       >
-        <Minus size={20} strokeWidth={2} />
+        <Minus size={16} strokeWidth={2.5} />
       </button>
 
       <Input
@@ -60,7 +60,10 @@ const StepperInput = ({
         min={min}
         max={max}
         showClearButton={false}
-        className={cn('p-3 text-center focus:border-b-1 focus:border-b-neutral-300', className)}
+        className={cn(
+          'p-3 pb-2 text-center text-xl focus:border-b-1 focus:border-b-neutral-300',
+          className
+        )}
         {...props}
       />
 
@@ -69,14 +72,14 @@ const StepperInput = ({
         onClick={handleIncrement}
         disabled={!canIncrement}
         className={cn(
-          'absolute top-4 right-3 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-md transition-colors',
+          'absolute top-4 right-3 z-10 flex h-5 w-5 cursor-pointer items-center justify-center rounded-sm transition-colors',
           canIncrement
-            ? 'bg-orange-100 text-orange-500'
-            : 'cursor-not-allowed bg-neutral-400 text-neutral-600'
+            ? 'bg-neutral-300 text-neutral-1200'
+            : 'cursor-not-allowed bg-neutral-200 text-neutral-400'
         )}
         aria-label="증가"
       >
-        <Plus size={20} strokeWidth={2} />
+        <Plus size={16} strokeWidth={2.5} />
       </button>
     </div>
   );
