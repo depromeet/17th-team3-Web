@@ -5,13 +5,13 @@ import Image from 'next/image';
 
 import AvatarIcon from '@/app/_components/ui/AvatarIcon';
 import { getCuisineImageSrc } from '@/app/_constants/cuisine';
-import { Cuisine, Survey } from '@/app/_services/overview';
+import { CuisineCategory, MeetingParticipant } from '@/app/_services/overview';
 
-interface PersonaCardProps {
-  survey: Survey;
+interface CuisinePreferenceRowProps {
+  cuisine: CuisineCategory;
 }
 
-const CuisinePreferenceRow = ({ cuisine }: { cuisine: Cuisine }) => {
+const CuisinePreferenceRow = ({ cuisine }: CuisinePreferenceRowProps) => {
   return (
     <div className="flex flex-row items-start justify-between gap-2">
       <div className="mt-0.5 flex shrink-0 items-center gap-2">
@@ -25,7 +25,7 @@ const CuisinePreferenceRow = ({ cuisine }: { cuisine: Cuisine }) => {
         <span className="type-gradient label-1 font-semibold">{cuisine.name}</span>
       </div>
       <div className="flex max-w-[70%] flex-wrap justify-end gap-1">
-        {cuisine.menuList.map((menu) => (
+        {cuisine.leafCategoryList.map((menu) => (
           <div
             key={menu.id}
             className="flex items-center rounded-[2.5rem] bg-neutral-1400/[0.06] px-3 py-1"
@@ -39,20 +39,24 @@ const CuisinePreferenceRow = ({ cuisine }: { cuisine: Cuisine }) => {
 };
 
 // -------------------------------------------- PersonaCard --------------------------------------------
-const PersonaCard = ({ survey }: PersonaCardProps) => {
+
+interface PersonaCardProps {
+  participant: MeetingParticipant;
+}
+const PersonaCard = ({ participant }: PersonaCardProps) => {
   return (
     <div
-      data-id={survey.participantId}
+      data-id={participant.userId}
       className="flex w-full flex-col gap-6 rounded-[1.25rem] bg-white p-5"
     >
       <div className="flex items-center gap-3">
-        <AvatarIcon variant={survey.avatarColor} className="shrink-0" />
+        <AvatarIcon variant={participant.profileColor} className="shrink-0" />
         <span className="line-clamp-1 subheading-1 font-bold text-neutral-1600">
-          {survey.nickname}
+          {participant.nickname}
         </span>
       </div>
       <div className="flex flex-col gap-3 overflow-y-auto">
-        {survey.selectedCategoryList.map((cuisine) => (
+        {participant.selectedCategories.map((cuisine) => (
           <CuisinePreferenceRow key={cuisine.id} cuisine={cuisine} />
         ))}
       </div>

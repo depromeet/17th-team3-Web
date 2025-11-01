@@ -1,8 +1,12 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import { useParams, useRouter } from 'next/navigation';
 
 import Button from '@/app/_components/ui/Button';
+import { ApiError } from '@/app/_models/api';
+import { getOverviewQueryOptions } from '@/app/_queries/overviewQueries';
+import { MeetingOverview } from '@/app/_services/overview';
 
 type SurveyActionVariant = 'join' | 'closing-soon' | 'show-result';
 
@@ -18,6 +22,12 @@ const BUTTON_LABEL_MAP: Record<SurveyActionVariant, string> = {
 
 const SurveyActionButton = ({ variant }: SurveyActionButtonProps) => {
   const router = useRouter();
+  const params = useParams();
+  const { eventId } = params;
+
+  const { data: overview, isPending } = useQuery<MeetingOverview, ApiError>({
+    ...getOverviewQueryOptions(Number(eventId)),
+  });
 
   const handleClick = () => {
     if (variant === 'join') {
