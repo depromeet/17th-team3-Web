@@ -29,16 +29,18 @@ const HomePageClient = ({ meetings }: HomePageClientProps) => {
           )}
         >
           {activeMeetings.length > 0 ? (
-            activeMeetings.map((meeting) => (
-              <div key={meeting.id} className="min-w-[320px] shrink-0 snap-center">
-                <ActiveMeetingCard
-                  meeting={meeting}
-                  onClick={() => {
-                    // TODO: 모임현황 페이지로 이동
-                  }}
-                />
-              </div>
-            ))
+            activeMeetings.map((meeting) => {
+              return (
+                <div key={meeting.id} className="min-w-[320px] shrink-0 snap-center">
+                  <ActiveMeetingCard
+                    meeting={meeting}
+                    onClick={() => {
+                      // TODO: 모임현황 페이지로 이동
+                    }}
+                  />
+                </div>
+              );
+            })
           ) : (
             <EmptyActiveMeetingCard />
           )}

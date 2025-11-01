@@ -20,7 +20,7 @@ const ConfirmModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-10 flex items-center justify-center">
+    <div className="absolute inset-0 z-10 flex items-center justify-center">
       <div role="presentation" className="absolute inset-0 bg-black/60" onClick={onCancel} />
 
       <div className="relative flex w-full max-w-[85%] flex-col gap-6 rounded-2xl bg-white p-4 pt-6">
