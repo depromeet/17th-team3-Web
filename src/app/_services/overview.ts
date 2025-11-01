@@ -1,31 +1,39 @@
 import { CuisineId } from '@/app/_constants/cuisine';
-import overviewMockData from '@/app/_mocks/overview';
+import { api } from '@/app/_lib/api';
 import { AvatarVariantKey } from '@/app/_models/avator';
 
-export interface Menu {
+export interface MenuItem {
   id: number;
   name: string;
 }
-export interface Cuisine {
+export interface CuisineCategory {
   id: CuisineId;
   name: string;
-  menuList: Menu[];
+  leafCategoryList: MenuItem[];
 }
 
-export interface Survey {
-  participantId: number;
+export interface MeetingParticipant {
+  userId: number;
   nickname: string;
-  avatarColor: AvatarVariantKey;
-  selectedCategoryList: Cuisine[];
+  profileColor: AvatarVariantKey;
+  selectedCategories: CuisineCategory[];
 }
-export interface Overview {
-  surveys: Survey[];
-  totalAttendees: number;
-  notYetParticipationAttendees: number;
-  isMyParticipation: boolean;
+
+export interface MeetingInfo {
+  id: number;
+  title: string;
+  hostUserId: number;
+  totalParticipantCnt: number;
+  isClosed: boolean;
+  stationName: string;
   endAt: string;
 }
+export interface MeetingOverview {
+  currentUserId: number;
+  meetingInfo: MeetingInfo;
+  participantList: MeetingParticipant[];
+}
 
-export const getMockOverview = async (_eventId: string): Promise<Overview> => {
-  return overviewMockData;
+export const getOverview = async (meetingId: number): Promise<MeetingOverview> => {
+  return api.get<MeetingOverview>(`/meetings/${meetingId}`);
 };
