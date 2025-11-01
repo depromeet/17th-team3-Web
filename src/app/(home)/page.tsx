@@ -51,7 +51,7 @@ const HomePageContent = async () => {
       updatedAt: '2025-10-02T00:00:00',
     },
   ];
-  // const meetings = meetingsApi.getMeetings();
+  // const meetings = await meetingsApi.getMeetings();
   return <HomePageClient meetings={meetings} />;
 };
 

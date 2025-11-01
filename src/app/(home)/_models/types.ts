@@ -1,16 +1,6 @@
 // TODO: API 응답 타입과 도메인 타입 분리 필요
 
-export interface MeetingInfo {
-  id: number;
-  title: string;
-  hostUserId: number;
-  totalParticipantCnt: number;
-  isClosed: boolean;
-  stationName: string;
-  endAt: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { MeetingInfo } from '@/app/_models/meeting';
 
 export interface Participant {
   userId: number;

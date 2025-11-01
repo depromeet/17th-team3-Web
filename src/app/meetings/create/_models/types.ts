@@ -1,16 +1,24 @@
-import { SHARE_OPTIONS } from '@/app/meetings/create/_models/constants';
-
-export type ShareType = (typeof SHARE_OPTIONS)[number]['id'];
-
-export interface CreateMeetingForm {
+export interface CreateMeetingFormData {
   name: string;
-  members: number;
-  location: string;
-  date: string;
-  time: string;
+  attendeeCount: number;
+  station: Station | null;
+  date: string | null;
+  time: string | null;
 }
 
 export interface Station {
   id: number;
   name: string;
+}
+
+export interface CreateMeetingRequest {
+  name: string;
+  attendeeCount: number;
+  stationId: number;
+  endAt: string;
+}
+
+export interface CreateMeetingResponse {
+  id: number;
+  validateTokenUrl: string;
 }

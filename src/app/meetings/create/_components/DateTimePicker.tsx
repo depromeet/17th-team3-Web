@@ -9,7 +9,7 @@ import BottomSheet from '@/app/_components/ui/BottomSheet';
 import Button from '@/app/_components/ui/Button';
 import { cn } from '@/app/_lib/cn';
 import TimePickerScroll from '@/app/meetings/create/_components/TimePickerScroll';
-import { formatTimeDisplay } from '@/app/meetings/create/_lib/timeUtils';
+import { formatTimeDisplay } from '@/app/meetings/create/_utils/timeFormat';
 
 import 'dayjs/locale/ko';
 
@@ -57,7 +57,7 @@ const DateTimePicker = ({ date, time, onDateChange, onTimeChange }: DateTimePick
       </div>
 
       {showCalendar && (
-        <BottomSheet title="모임 날짜/시간" onClose={() => setShowCalendar(false)}>
+        <BottomSheet title="모임 날짜/시간" onClose={() => setShowCalendar(false)} showCloseButton>
           <div className="flex flex-col items-center justify-center gap-6">
             <div className="flex w-full flex-col items-center justify-center gap-1">
               <p className="self-start py-1 label-1 text-sm font-semibold text-neutral-800">

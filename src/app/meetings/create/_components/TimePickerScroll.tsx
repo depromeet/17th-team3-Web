@@ -6,7 +6,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 
 import { cn } from '@/app/_lib/cn';
 
-import { convertTo12HourFormat } from '../_lib/timeUtils';
+import { convertTo12HourFormat } from '../_utils/timeFormat';
 
 interface TimePickerScrollProps {
   onTimeChange: (time: string | null) => void;
@@ -26,50 +26,22 @@ const TimePickerScroll = ({ onTimeChange, defaultTime }: TimePickerScrollProps) 
   const periodIndex = periods.indexOf(period);
   const hourIndex = hours.indexOf(hour);
 
-  // 높이 계산 (가운데 위치 계산용)
-  const itemHeight = 46; // 각 아이템의 높이 (body-1 + p-2)
-  const gap = 8; // gap-2 = 8px
-  const totalItemHeight = itemHeight + gap; // 아이템 + 간격
-  const paddingHeight = 48; // 위쪽 패딩 (h-12)
-  const containerHeight = 140; // h-35 = 140px
+  // 시간 아이템 높이 계산
+  const itemHeight = 46; // 각 아이템의 높이
+  const totalItemHeight = 46 + 8; // 아이템 + 간격
+  const paddingHeight = 48; // 위쪽 패딩
+  const containerHeight = 140; // 컨테이너 높이
   const centerOffset = containerHeight / 2 - itemHeight / 2;
 
   // 스크롤 위치 계산 (선택된 아이템이 가운데에 오도록)
   const periodOffset = -(periodIndex * totalItemHeight + paddingHeight - centerOffset + 13);
   const hourOffset = -(hourIndex * totalItemHeight + paddingHeight - centerOffset + 13);
 
-  // 시간이나 오전/오후가 변경될 때 콜백 호출
   useEffect(() => {
-    let fullHour: number;
-    if (period === '오전') {
-      fullHour = hour === 12 ? 0 : hour;
-    } else {
-      fullHour = hour === 12 ? 12 : hour + 12;
-    }
-    const timeString = fullHour.toString().padStart(2, '0');
-    // 선택한 시간을 그대로 저장
+    const fullHour = period === '오전' ? (hour === 12 ? 0 : hour) : hour === 12 ? 12 : hour + 12;
+    const timeString = String(fullHour).padStart(2, '0');
     onTimeChange(timeString);
   }, [hour, period, onTimeChange]);
-
-  const handlePeriodUp = () => {
-    if (period !== '오전') {
-      setPeriod('오전');
-    }
-  };
-
-  const handlePeriodDown = () => {
-    if (period !== '오후') {
-      setPeriod('오후');
-    }
-  };
-
-  const handleHourUp = () => {
-    setHour((prev) => prev - 1);
-  };
-
-  const handleHourDown = () => {
-    setHour((prev) => prev + 1);
-  };
 
   const isPeriodUpDisabled = period === '오전';
   const isPeriodDownDisabled = period === '오후';
@@ -82,7 +54,7 @@ const TimePickerScroll = ({ onTimeChange, defaultTime }: TimePickerScrollProps) 
         <div className="flex w-full flex-col items-center gap-3">
           <button
             type="button"
-            onClick={handlePeriodUp}
+            onClick={() => setPeriod('오전')}
             disabled={isPeriodUpDisabled}
             className={'flex items-center justify-center rounded transition-colors'}
             aria-label="이전"
@@ -117,7 +89,7 @@ const TimePickerScroll = ({ onTimeChange, defaultTime }: TimePickerScrollProps) 
 
           <button
             type="button"
-            onClick={handlePeriodDown}
+            onClick={() => setPeriod('오후')}
             disabled={isPeriodDownDisabled}
             className={'flex items-center justify-center rounded transition-colors'}
             aria-label="다음"
@@ -133,7 +105,7 @@ const TimePickerScroll = ({ onTimeChange, defaultTime }: TimePickerScrollProps) 
         <div className="flex w-full flex-col items-center gap-3">
           <button
             type="button"
-            onClick={handleHourUp}
+            onClick={() => setHour((prev) => prev - 1)}
             disabled={isHourUpDisabled}
             className={cn('flex items-center justify-center rounded transition-colors')}
             aria-label="이전"
@@ -168,7 +140,7 @@ const TimePickerScroll = ({ onTimeChange, defaultTime }: TimePickerScrollProps) 
 
           <button
             type="button"
-            onClick={handleHourDown}
+            onClick={() => setHour((prev) => prev + 1)}
             disabled={isHourDownDisabled}
             className={cn('flex h-8 w-8 items-center justify-center rounded transition-colors')}
             aria-label="다음"
