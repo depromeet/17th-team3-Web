@@ -49,7 +49,7 @@ const FoodConfirmModal = ({
               type="button"
               onClick={onCancel}
               aria-label="닫기"
-              className="flex h-6 w-6 items-center justify-center text-neutral-1600 hover:opacity-70"
+              className="flex h-6 w-6 cursor-pointer items-center justify-center text-neutral-1600 hover:opacity-70"
             >
               <X size={24} strokeWidth={2} />
             </button>
@@ -111,7 +111,7 @@ const FoodConfirmModal = ({
           <button
             type="button"
             onClick={onCancel}
-            className="flex h-[62px] w-[114px] items-center justify-center rounded-[14px] bg-neutral-300 text-[16px] font-semibold text-neutral-1400"
+            className="flex h-[62px] w-[114px] cursor-pointer items-center justify-center rounded-[14px] bg-neutral-300 text-[16px] font-semibold text-neutral-1400"
           >
             취소
           </button>
@@ -119,7 +119,7 @@ const FoodConfirmModal = ({
             type="button"
             onClick={onConfirm}
             className={cn(
-              'flex h-[62px] flex-1 items-center justify-center rounded-[14px] text-[16px] font-semibold text-white',
+              'flex h-[62px] flex-1 cursor-pointer items-center justify-center rounded-[14px] text-[16px] font-semibold text-white',
               'bg-gradient-to-r from-orange-400 via-orange-500 to-orange-400'
             )}
           >
