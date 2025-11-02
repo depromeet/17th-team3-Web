@@ -5,17 +5,19 @@ import {
   Station,
 } from '@/app/meetings/create/_models/types';
 
-import { formatMeetingResponse } from './format';
+import { formatCreateMeetingResponse, formatMeetingResponse } from './format';
 
 import type { MeetingResponse } from '@/app/(home)/_models/types';
 
 export const meetingsApi = {
   getMeetings: async () => {
-    const responses = await api.get<MeetingResponse[]>('/meetings');
-    return responses.map(formatMeetingResponse);
+    const response = await api.get<MeetingResponse[]>('/meetings');
+    return response.map(formatMeetingResponse);
   },
-  createMeeting: (form: CreateMeetingRequest) =>
-    api.post<CreateMeetingResponse, CreateMeetingRequest>('/meetings', form),
+  createMeeting: async (form: CreateMeetingRequest) => {
+    const response = await api.post<CreateMeetingResponse, CreateMeetingRequest>('/meetings', form);
+    return formatCreateMeetingResponse(response);
+  },
   getMeetingToken: (meetingId: number) => api.post(`/meetings/${meetingId}/invite-token`, {}),
   getStations: (query?: string) =>
     api.get<Station[]>('/stations', {
