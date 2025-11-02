@@ -1,3 +1,4 @@
+/** src/app/survey/_components/ui/FoodConfirmModal.tsx */
 'use client';
 
 import { X } from 'lucide-react';
@@ -39,8 +40,8 @@ const FoodConfirmModal = ({
   const groupedEntries = Object.entries(grouped);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 pt-[24vh] sm:pt-[180px]">
-      <div className="relative flex w-[89%] max-w-[335px] flex-col items-center rounded-2xl bg-white shadow-lg">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+      <div className="relative flex max-h-[90vh] w-[89%] max-w-[335px] flex-col items-center overflow-auto rounded-2xl bg-white shadow-lg">
         {/* X 버튼 영역 */}
         <div className="w-full px-4 pt-4 pb-3">
           <div className="flex w-full justify-end">

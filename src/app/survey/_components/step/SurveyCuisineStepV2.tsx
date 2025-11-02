@@ -1,3 +1,4 @@
+/** src/app/survey/_componrnts/step/SurveyCuisineStepV2.tsx  */
 'use client';
 
 import React, { useState } from 'react';

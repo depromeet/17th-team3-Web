@@ -22,6 +22,7 @@ import {
 } from '@/app/survey/_models/constants';
 import { CUISINE_OPTIONS, CUISINE_DETAIL_MAP, type Option } from '@/app/survey/_models/option';
 import { type RoleLabel, type SurveyResult } from '@/app/survey/_models/types';
+
 /* -------------------------------------------
  * 유틸리티
  * ----------------------------------------- */
@@ -144,6 +145,7 @@ const SurveyFunnel = ({ role, initial, onComplete }: SurveyFunnelProps) => {
           <ConfirmModal
             open={isSkipModalOpen}
             title="설문을 건너뛸까요?"
+            // description="건너뛰면 선호 음식이 저장되지 않습니다."
             cancelText="취소"
             confirmText="건너뛰기"
             onCancel={() => setIsSkipModalOpen(false)}
@@ -154,8 +156,10 @@ const SurveyFunnel = ({ role, initial, onComplete }: SurveyFunnelProps) => {
               // 약간의 로딩 시간 후 이동
               await new Promise((r) => setTimeout(r, 1500));
 
-              // ✅ ‘다 괜찮아요’로 overview 이동
+              // ‘다 괜찮아요’로 overview 이동
               router.push(`/events/123/overview?selected=${encodeURIComponent('다 괜찮아요')}`);
+
+              setIsLoading(false);
             }}
           />
           {isLoading && <LoadingOverlay />}
