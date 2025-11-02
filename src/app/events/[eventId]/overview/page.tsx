@@ -1,4 +1,9 @@
+import { redirect } from 'next/navigation';
+
+import { ApiError } from '@/app/_models/api';
+import { meetingsApi } from '@/app/_services/meetings';
 import { getMockOverview } from '@/app/_services/overview';
+import { isAlreadyJoined, isAccessDenied } from '@/app/_utils/errorGuards';
 import PersonaCardSwiper from '@/app/events/[eventId]/overview/_components/persona/PersonaCardSwiper';
 import SurveyActionButton from '@/app/events/[eventId]/overview/_components/SurveyActionButton';
 import SurveyStatusBanner from '@/app/events/[eventId]/overview/_components/SurveyStatusBanner';
@@ -10,14 +15,37 @@ interface OverviewPageProps {
   searchParams: Promise<{ token?: string }>;
 }
 
+/**
+ * 토큰이 있는 경우 검증 및 모임 참여 처리
+ * @param token - 초대 토큰
+ * @throws 진입 불가능한 에러인 경우 리다이렉트
+ */
+const handleTokenValidationAndJoin = async (token: string): Promise<void> => {
+  try {
+    await meetingsApi.validateToken(token);
+    await meetingsApi.joinMeeting(token);
+  } catch (error) {
+    const apiError = error as ApiError;
+
+    if (isAlreadyJoined(apiError)) {
+      console.log('isAlreadyJoined!!!!!!!!!!!!!!!!!!');
+      return;
+    }
+    if (isAccessDenied(apiError)) {
+      console.log('isAccessDenied!!!!!!!!!!!!!!!!!!');
+      redirect('/');
+    }
+
+    redirect('/');
+  }
+};
+
 const OverviewPage = async ({ params, searchParams }: OverviewPageProps) => {
   const { eventId } = await params;
   const { token } = await searchParams;
 
-  console.log(eventId, token);
-  // TODO: token이 있으면 토큰 검증 API 호출
   if (token) {
-    // 토큰 검증 로직은 여기에 추가될 예정
+    await handleTokenValidationAndJoin(token);
   }
 
   const overviewData = await getMockOverview(eventId);

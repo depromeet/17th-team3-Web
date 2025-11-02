@@ -1,0 +1,11 @@
+export const ERROR_CODES = {
+  // 모임 관련 에러
+  MEETING_NOT_FOUND: 'C4043',
+  MEETING_ENDED: 'C4097',
+  MEETING_ALREADY_JOINED: 'C4098',
+  MEETING_FULL: 'C4099',
+
+  // 토큰 관련 에러
+  TOKEN_INVALID_FORMAT: 'T002',
+  TOKEN_INVALID_MEETING_ID: 'T003',
+} as const;
