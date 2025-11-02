@@ -6,5 +6,6 @@ export const useAuthParams = () => {
   return {
     code: searchParams.get('code'),
     error: searchParams.get('error'),
+    state: searchParams.get('state'),
   };
 };

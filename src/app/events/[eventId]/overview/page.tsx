@@ -46,6 +46,7 @@ const OverviewPage = async ({ params, searchParams }: OverviewPageProps) => {
     await handleTokenValidationAndJoin(eventId, token);
   }
 
+  // TODO: 모임 설문 데이터 요청 시, 백엔드에서 사용자가 진입 권한이 있는지 검증 로직 필요 (토큰 없이 진입 시)
   const overviewData = await getMockOverview(eventId);
 
   return (

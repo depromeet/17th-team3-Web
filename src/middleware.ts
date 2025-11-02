@@ -40,14 +40,20 @@ const middleware = async (req: NextRequest) => {
         return response;
       }
 
-      const response = NextResponse.redirect(new URL('/login', req.url));
+      const redirectTo = `${pathname}${req.nextUrl.search}`;
+      const loginUrl = new URL('/login', req.url);
+      loginUrl.searchParams.set('redirectTo', redirectTo);
+      const response = NextResponse.redirect(loginUrl);
       response.cookies.delete('accessToken');
       response.cookies.delete('refreshToken');
       return response;
     }
 
     if (!accessToken) {
-      return NextResponse.redirect(new URL('/login', req.url));
+      const redirectTo = `${pathname}${req.nextUrl.search}`;
+      const loginUrl = new URL('/login', req.url);
+      loginUrl.searchParams.set('redirectTo', redirectTo);
+      return NextResponse.redirect(loginUrl);
     }
   }
 
