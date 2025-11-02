@@ -20,7 +20,7 @@ interface OverviewPageProps {
  * @param token - 초대 토큰
  * @throws 진입 불가능한 에러인 경우 리다이렉트
  */
-const handleTokenValidationAndJoin = async (token: string): Promise<void> => {
+const handleTokenValidationAndJoin = async (eventId: string, token: string): Promise<void> => {
   try {
     await meetingsApi.validateToken(token);
     await meetingsApi.joinMeeting(token);
@@ -28,11 +28,9 @@ const handleTokenValidationAndJoin = async (token: string): Promise<void> => {
     const apiError = error as ApiError;
 
     if (isAlreadyJoined(apiError)) {
-      console.log('isAlreadyJoined!!!!!!!!!!!!!!!!!!');
       return;
     }
     if (isAccessDenied(apiError)) {
-      console.log('isAccessDenied!!!!!!!!!!!!!!!!!!');
       redirect('/');
     }
 
@@ -45,7 +43,7 @@ const OverviewPage = async ({ params, searchParams }: OverviewPageProps) => {
   const { token } = await searchParams;
 
   if (token) {
-    await handleTokenValidationAndJoin(token);
+    await handleTokenValidationAndJoin(eventId, token);
   }
 
   const overviewData = await getMockOverview(eventId);

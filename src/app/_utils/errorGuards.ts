@@ -1,4 +1,4 @@
-import { ERROR_CODES } from '@/app/_constants/error-codes';
+import { ERROR_CODES } from '@/app/_constants/errorCodes';
 import { ApiError } from '@/app/_models/api';
 
 /**
