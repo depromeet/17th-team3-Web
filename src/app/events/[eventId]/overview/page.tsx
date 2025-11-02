@@ -7,10 +7,18 @@ import SurveyStatusBanner from '@/app/events/[eventId]/overview/_components/Surv
 
 interface OverviewPageProps {
   params: Promise<{ eventId: string }>;
+  searchParams: Promise<{ token?: string }>;
 }
 
-const OverviewPage = async ({ params }: OverviewPageProps) => {
+const OverviewPage = async ({ params, searchParams }: OverviewPageProps) => {
   const { eventId } = await params;
+  const { token } = await searchParams;
+
+  console.log(eventId, token);
+  // TODO: token이 있으면 토큰 검증 API 호출
+  if (token) {
+    // 토큰 검증 로직은 여기에 추가될 예정
+  }
 
   const overviewData = await getMockOverview(eventId);
 
