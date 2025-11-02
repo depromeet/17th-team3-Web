@@ -3,6 +3,8 @@
  * - 분기 스텝(예: KoreanFollowUp)도 여기서 선언만 해두고 필요 시 활성화
  */
 
+import { number } from 'framer-motion';
+
 export type RoleLabel = '참여자' | '주최자';
 
 export const STEP_KEYS = [
@@ -48,3 +50,14 @@ export interface CommonCtx {
 export type FunnelCtxMap = Record<StepKey, CommonCtx>;
 
 export type SurveyResult = CommonCtx;
+
+export interface FoodCategory {
+  level: 'BRANCH' | 'LEAF'; // 분기(하위 존재) or 리프(말단)
+  name: string; // 음식 이름
+  sortOrder: number; // 정렬 순서
+  children: FoodCategory[]; // 하위 항목 (재귀 구조)
+}
+
+export interface FoodCategoryResponse {
+  data: FoodCategory[];
+}

@@ -1,7 +1,6 @@
-/** src/app/survey/_componrnts/step/SurveyCuisineStepV2.tsx  */
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -20,62 +19,57 @@ import {
   type Option,
 } from '@/app/survey/_models/option';
 
-/* -------------------------------------------
- * 음식 → 아이콘 매핑
- * ----------------------------------------- */
-const ID_TO_FOOD_KEY: Record<string, keyof typeof FOOD_MAP> = {
-  korean: 'korean',
-  japanese: 'japanese',
-  chinese: 'chinese',
-  western: 'western',
-  southeast: 'southeast',
-};
-
-/** Option[] → ChipOption[] 변환 */
-const toChipOptions = (opts: ReadonlyArray<Option>): ChipOption[] =>
-  opts.map((o) => {
-    const key = o.id.split(':')[1] as keyof typeof ID_TO_FOOD_KEY;
-    const src = FOOD_MAP[ID_TO_FOOD_KEY[key]]?.imageSrc;
-    return {
-      id: o.id,
-      label: o.label,
-      variant: 'cuisine',
-      startIcon: src ? <Image src={src} alt={o.label} width={20} height={20} /> : null,
-    };
-  });
-
-interface Props {
+/**
+ * SurveyCuisineStepV2
+ * - 사용자가 선호하는 음식을 최대 5개까지 선택하는 단계
+ * - 선택 후 FoodConfirmModal로 확인 후 저장
+ * - 저장 완료 시 overview 페이지로 이동
+ */
+const SurveyCuisineStepV2 = ({
+  title,
+  defaultSelectedIds = [],
+  onCancel,
+}: {
   title: string;
   defaultSelectedIds?: string[];
   onCancel: () => void;
-}
-
-const SurveyCuisineStepV2 = ({ title, defaultSelectedIds = [], onCancel }: Props) => {
+}) => {
   const router = useRouter();
   const [selectedIds, setSelectedIds] = useState<string[]>(defaultSelectedIds);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  /** 최대 선택 수 초과 방지 */
   const handleMaxSelect = () => alert('최대 5개까지 선택이 가능합니다.');
+
+  /** 다음 단계 (모달 오픈) */
   const handleNext = () => {
     if (selectedIds.length === 0) return;
     setIsModalOpen(true);
   };
 
-  // 저장하기 버튼 로직
+  /** 저장 및 이동 */
   const confirmNext = async () => {
     setIsModalOpen(false);
     setIsLoading(true);
-
-    // 저장 API 시뮬레이션
     await new Promise((res) => setTimeout(res, 2000));
 
-    // 선택된 음식 이름들을 전달용 문자열로 변환
     const selectedLabels = selectedIds.join(',');
-
-    // overview로 이동
     router.push(`/events/123/overview?selected=${encodeURIComponent(selectedLabels)}`);
   };
+
+  /** Option[] → ChipOption[] 변환 */
+  const toChipOptions = (opts: ReadonlyArray<Option>): ChipOption[] =>
+    opts.map((o) => {
+      const categoryKey = o.id.split(':')[1] as keyof typeof FOOD_MAP;
+      const src = FOOD_MAP[categoryKey]?.imageSrc;
+      return {
+        id: o.id,
+        label: o.label,
+        variant: 'cuisine',
+        startIcon: src ? <Image src={src} alt={o.label} width={20} height={20} /> : null,
+      };
+    });
 
   return (
     <>
@@ -87,7 +81,7 @@ const SurveyCuisineStepV2 = ({ title, defaultSelectedIds = [], onCancel }: Props
         nextButtonText="다음으로"
         showNotice
       >
-        {/* 카테고리별 그룹 */}
+        {/* 카테고리별 음식 목록 그룹 */}
         <div className="flex flex-col gap-6">
           {Object.entries(CUISINE_DETAIL_MAP).map(([category, foods]) => {
             const options = toChipOptions(foods);
@@ -95,7 +89,6 @@ const SurveyCuisineStepV2 = ({ title, defaultSelectedIds = [], onCancel }: Props
 
             return (
               <div key={category}>
-                {/* 카테고리 타이틀 + 아이콘 */}
                 <div className="mb-2 flex items-center gap-2">
                   <Image
                     src={foodMeta.imageSrc}
@@ -105,20 +98,15 @@ const SurveyCuisineStepV2 = ({ title, defaultSelectedIds = [], onCancel }: Props
                     className="aspect-square"
                   />
                   <h3 className="type-gradient text-lg font-semibold">
-                    {CUISINE_CATEGORY_LABELS[category as keyof typeof CUISINE_CATEGORY_LABELS] ??
-                      category}
+                    {CUISINE_CATEGORY_LABELS[category as keyof typeof CUISINE_CATEGORY_LABELS]}
                   </h3>
                 </div>
 
-                {/* 칩 그룹 */}
                 <ChipGroupMultiSelect
                   options={options}
                   selectedIds={selectedIds}
                   onChange={(ids) => {
-                    if (ids.length > 5) {
-                      handleMaxSelect();
-                      return;
-                    }
+                    if (ids.length > 5) return handleMaxSelect();
                     setSelectedIds(ids);
                   }}
                   exclusiveIds={[ANY_ID]}
