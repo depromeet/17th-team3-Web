@@ -2,7 +2,6 @@
 
 import { Text } from '@/app/_components/typography';
 import { cn } from '@/app/_lib/cn';
-import { COLORS } from '@/app/survey/_styles/tokens';
 
 type ChipVariant = 'any' | 'cuisine';
 
@@ -23,7 +22,7 @@ const Chip = ({
   orderBadge,
   onClick,
   variant = 'cuisine',
-  startIcon,
+  startIcon: _startIcon,
 }: ChipProps) => {
   // 고정 width 제거 → 내용에 따라 자동 너비
   // any/cuisine 의 패딩만 다르게
@@ -48,7 +47,8 @@ const Chip = ({
 
   const selectedStyle: React.CSSProperties = selected
     ? {
-        background: `radial-gradient(120% 120% at 50% 50%, ${COLORS.orange500} 0%, ${COLORS.orange400} 100%)`,
+        background:
+          'radial-gradient(120% 120% at 50% 50%, var(--color-orange-500) 0%, var(--color-orange-400) 100%)',
       }
     : {};
 
@@ -64,9 +64,8 @@ const Chip = ({
       {selected && typeof orderBadge === 'number' && orderBadge > 0 && (
         <span
           className={cn(
-            'absolute -top-1 left-1 flex h-5 w-5 items-center justify-center rounded-full border bg-white'
+            'absolute -top-1 left-1 flex h-5 w-5 items-center justify-center rounded-full border border-orange-500 bg-white text-orange-500'
           )}
-          style={{ borderColor: COLORS.orange500, color: COLORS.orange500 }}
         >
           <span className="text-[11px] leading-none">{orderBadge}</span>
         </span>
