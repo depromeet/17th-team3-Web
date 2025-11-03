@@ -15,7 +15,7 @@ const MeetingParticipantProgress = ({
 }: MeetingParticipantProgressProps) => {
   const progressPercent = getProgressPercent(surveyCompletedParticipants, totalParticipants);
   const clampedPercent = Math.max(14, Math.min(86, progressPercent));
-  const trianglePercent = progressPercent < 14 ? 30 : progressPercent > 86 ? 70 : progressPercent;
+  const trianglePercent = progressPercent < 14 ? 30 : progressPercent > 86 ? 70 : 50;
 
   return (
     <div className="flex flex-col gap-3">
