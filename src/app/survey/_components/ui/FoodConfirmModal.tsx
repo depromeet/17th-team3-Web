@@ -1,5 +1,6 @@
-/** src/app/survey/_components/ui/FoodConfirmModal.tsx */
 'use client';
+
+import { useMemo } from 'react';
 
 import { X } from 'lucide-react';
 import Image from 'next/image';
@@ -27,17 +28,20 @@ const FoodConfirmModal = ({
   onCancel,
   onConfirm,
 }: FoodConfirmModalProps) => {
+  const groupedEntries = useMemo<[string, (typeof selectedFoods)[number][]][]>(() => {
+    const grouped = selectedFoods.reduce<Record<string, (typeof selectedFoods)[number][]>>(
+      (acc, food) => {
+        const key = food.categoryLabel;
+        if (!acc[key]) acc[key] = [];
+        acc[key].push(food);
+        return acc;
+      },
+      {}
+    );
+    return Object.entries(grouped);
+  }, [selectedFoods]);
+
   if (!open) return null;
-
-  // category별 그룹화
-  const grouped = selectedFoods.reduce<Record<string, typeof selectedFoods>>((acc, food) => {
-    const key = food.categoryLabel;
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(food);
-    return acc;
-  }, {});
-
-  const groupedEntries = Object.entries(grouped);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
@@ -58,7 +62,10 @@ const FoodConfirmModal = ({
 
         {/* Title */}
         <div className="flex w-full flex-col items-start gap-1 px-4">
-          <h2 className="bg-gradient-to-r from-orange-900 via-orange-800 to-orange-800 bg-clip-text heading-3 font-bold tracking-tight text-transparent">
+          <h2
+            id="modal-title"
+            className="bg-gradient-to-r from-orange-900 via-orange-800 to-orange-800 bg-clip-text heading-3 font-bold tracking-tight text-transparent"
+          >
             {title}
           </h2>
           {subtitle && <p className="pt-1 subheading-3 font-medium text-neutral-800">{subtitle}</p>}
