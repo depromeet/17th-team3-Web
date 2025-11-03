@@ -1,7 +1,3 @@
-/**
- * 모달의 기본 레이아웃 컴포넌트
- * 배경 오버레이와 모달 컨테이너 제공
- */
 interface BaseModalProps {
   isOpen: boolean;
   onClose: () => void;

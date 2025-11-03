@@ -9,6 +9,7 @@ import { HomeMenu } from '@/app/(home)/_components';
 import { ErrorModal } from '@/app/_components/ui/Modal';
 import { getErrorConfig } from '@/app/_constants/errorConfig';
 import { useToast } from '@/app/_features/toast';
+import { useDisclosure } from '@/app/_hooks/useDisclosure';
 
 interface HomePageLayoutProps {
   children: React.ReactNode;
@@ -16,8 +17,8 @@ interface HomePageLayoutProps {
 
 const HomePageLayout = ({ children }: HomePageLayoutProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const { success: toast } = useToast();
+  const { isOpen: showErrorModal, handler: errorModalHandler } = useDisclosure();
 
   const searchParams = useSearchParams();
   const errorCode = searchParams.get('error');
@@ -25,7 +26,7 @@ const HomePageLayout = ({ children }: HomePageLayoutProps) => {
 
   useEffect(() => {
     if (errorCode) {
-      setIsErrorModalOpen(true);
+      errorModalHandler.open();
       window.history.replaceState({}, '', '/');
     }
   }, [errorCode]);
@@ -38,10 +39,10 @@ const HomePageLayout = ({ children }: HomePageLayoutProps) => {
   return (
     <div className="no-scrollbar flex h-[100dvh] flex-col overflow-auto bg-neutral-100">
       <ErrorModal
-        isOpen={isErrorModalOpen}
+        isOpen={showErrorModal}
         title={error?.title ?? ''}
         message={error?.message ?? ''}
-        onClose={() => setIsErrorModalOpen(false)}
+        onClose={() => errorModalHandler.close()}
       />
 
       <header className="flex items-center justify-between px-5 pt-9 pb-5 select-none">

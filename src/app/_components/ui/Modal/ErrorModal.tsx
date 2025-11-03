@@ -14,7 +14,13 @@ const ErrorModal = ({ isOpen, title, message, onClose }: ErrorModalProps) => {
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
       <div className="flex flex-col items-center gap-4">
-        <Image src="/images/momuzzi-error.svg" alt="모무찌 에러 아이콘" width={80} height={20} />
+        <Image
+          src="/images/momuzzi-error.svg"
+          alt="모무찌 에러 아이콘"
+          width={80}
+          height={0}
+          style={{ width: 'auto', height: 'auto' }}
+        />
 
         <div className="mb-2 flex flex-col gap-1">
           <h3 className="text-center body-2 font-semibold">{title}</h3>
