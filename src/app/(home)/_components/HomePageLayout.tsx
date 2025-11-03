@@ -23,7 +23,13 @@ const HomePageLayout = ({ children }: HomePageLayoutProps) => {
   return (
     <div className="no-scrollbar flex h-[100dvh] flex-col overflow-auto bg-neutral-100">
       <header className="flex items-center justify-between px-5 pt-9 pb-5 select-none">
-        <Image src="/images/momuzzi-wordmark.svg" alt="모무찌 작은 로고" width={72} height={26} />
+        <Image
+          src="/images/momuzzi-wordmark.svg"
+          alt="모무찌 작은 로고"
+          width={72}
+          height={0}
+          style={{ width: 'auto', height: 'auto' }}
+        />
         <button onClick={handleProfileClick} className="cursor-pointer">
           <Image src="/icons/profile.svg" alt="프로필 아이콘" width={32} height={32} />
         </button>
