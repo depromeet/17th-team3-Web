@@ -30,8 +30,9 @@ const handleTokenValidationAndJoin = async (eventId: string, token: string): Pro
     if (isAlreadyJoined(apiError)) {
       return;
     }
+
     if (isAccessDenied(apiError)) {
-      redirect('/');
+      redirect(`/?error=${apiError.code}`);
     }
 
     redirect('/');
