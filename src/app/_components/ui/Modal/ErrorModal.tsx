@@ -1,6 +1,7 @@
 import Image from 'next/image';
 
 import Button from '@/app/_components/ui/Button';
+import BaseModal from '@/app/_components/ui/Modal/BaseModal';
 
 interface ErrorModalProps {
   isOpen: boolean;
@@ -10,13 +11,9 @@ interface ErrorModalProps {
 }
 
 const ErrorModal = ({ isOpen, title, message, onClose }: ErrorModalProps) => {
-  if (!isOpen) return null;
-
   return (
-    <div className="absolute inset-0 z-10 flex items-center justify-center">
-      <div role="presentation" className="absolute inset-0 bg-black/60" onClick={onClose} />
-
-      <div className="relative flex w-full max-w-[85%] flex-col items-center gap-4 rounded-2xl bg-white p-4 pt-6">
+    <BaseModal isOpen={isOpen} onClose={onClose}>
+      <div className="flex flex-col items-center gap-4">
         <Image src="/images/momuzzi-error.svg" alt="모무찌 에러 아이콘" width={80} height={20} />
 
         <div className="mb-2 flex flex-col gap-1">
@@ -28,7 +25,7 @@ const ErrorModal = ({ isOpen, title, message, onClose }: ErrorModalProps) => {
           확인
         </Button>
       </div>
-    </div>
+    </BaseModal>
   );
 };
 
