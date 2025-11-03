@@ -24,11 +24,11 @@ const HomePageLayout = ({ children }: HomePageLayoutProps) => {
   const error = errorCode ? getErrorConfig(errorCode) : null;
 
   useEffect(() => {
-    if (error) {
+    if (errorCode) {
       setIsErrorModalOpen(true);
       window.history.replaceState({}, '', '/');
     }
-  }, [error]);
+  }, [errorCode]);
 
   const handleProfileClick = () => {
     toast('아직 준비 중인 기능이에요!', { preventDuplicate: true, position: 'top' });

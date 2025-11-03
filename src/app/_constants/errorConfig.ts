@@ -24,10 +24,15 @@ export const ERROR_CONFIG = {
     title: '존재하지 않은 모임이에요',
     message: `찾으시는 모임이 변경 혹은 삭제되어\n찾을 수 없어요.`,
   },
+  DEFAULT: {
+    code: 'DEFAULT',
+    title: '문제가 발생했어요',
+    message: `예상치 못한 오류가 발생했어요.\n잠시 후 다시 시도해주세요.`,
+  },
 } as const;
 
 export const getErrorConfig = (
   errorCode: string
-): (typeof ERROR_CONFIG)[keyof typeof ERROR_CONFIG] | null => {
-  return ERROR_CONFIG[errorCode as keyof typeof ERROR_CONFIG] ?? null;
+): (typeof ERROR_CONFIG)[keyof typeof ERROR_CONFIG] => {
+  return ERROR_CONFIG[errorCode as keyof typeof ERROR_CONFIG] ?? ERROR_CONFIG.DEFAULT;
 };
