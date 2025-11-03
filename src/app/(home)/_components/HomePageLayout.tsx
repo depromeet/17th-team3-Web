@@ -5,6 +5,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 
 import { HomeMenu } from '@/app/(home)/_components';
+import { useToast } from '@/app/_features/toast';
 
 interface HomePageLayoutProps {
   children: React.ReactNode;
@@ -12,9 +13,10 @@ interface HomePageLayoutProps {
 
 const HomePageLayout = ({ children }: HomePageLayoutProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { success: toast } = useToast();
 
   const handleProfileClick = () => {
-    // TODO: 프로필 페이지로 이동
+    toast('아직 준비 중인 기능이에요!', { preventDuplicate: true, position: 'top' });
     setIsMenuOpen(false);
   };
 
