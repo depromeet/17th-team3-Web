@@ -20,15 +20,17 @@ const ConfirmModal = ({
 }: ConfirmModalProps) => {
   return (
     <BaseModal isOpen={isOpen} onClose={onCancel}>
-      <h3 className="text-center body-3 font-semibold">{title}</h3>
+      <div className="flex flex-col gap-6">
+        <h3 className="text-center body-3 font-semibold">{title}</h3>
 
-      <div className="flex gap-4">
-        <Button theme="gray" className="flex-1" onClick={onCancel}>
-          {cancelText}
-        </Button>
-        <Button className="flex-1" onClick={onConfirm}>
-          {confirmText}
-        </Button>
+        <div className="flex gap-4">
+          <Button theme="gray" className="flex-1" onClick={onCancel}>
+            {cancelText}
+          </Button>
+          <Button className="flex-1" onClick={onConfirm}>
+            {confirmText}
+          </Button>
+        </div>
       </div>
     </BaseModal>
   );
