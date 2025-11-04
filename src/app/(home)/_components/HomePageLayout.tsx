@@ -1,14 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 
 import { HomeMenu } from '@/app/(home)/_components';
 import { ErrorModal } from '@/app/_components/ui/Modal';
+import ComingSoonModal from '@/app/_components/ui/Modal/ComingSoonModal';
 import { getErrorConfig } from '@/app/_constants/errorConfig';
-import { useToast } from '@/app/_features/toast';
 import { useDisclosure } from '@/app/_hooks/useDisclosure';
 
 interface HomePageLayoutProps {
@@ -16,9 +16,9 @@ interface HomePageLayoutProps {
 }
 
 const HomePageLayout = ({ children }: HomePageLayoutProps) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { success: toast } = useToast();
   const { isOpen: showErrorModal, handler: errorModalHandler } = useDisclosure();
+  const { isOpen: showComingSoonMadal, handler: comingSoonModalHandler } = useDisclosure();
+  const { isOpen: showHomeMenu, handler: homeMenuHandler } = useDisclosure();
 
   const searchParams = useSearchParams();
   const errorCode = searchParams.get('error');
@@ -31,19 +31,15 @@ const HomePageLayout = ({ children }: HomePageLayoutProps) => {
     }
   }, [errorCode]);
 
-  const handleProfileClick = () => {
-    toast('아직 준비 중인 기능이에요!', { preventDuplicate: true, position: 'top' });
-    setIsMenuOpen(false);
-  };
-
   return (
     <div className="no-scrollbar flex h-[100dvh] flex-col overflow-auto bg-neutral-100">
       <ErrorModal
         isOpen={showErrorModal}
         title={error?.title ?? ''}
         message={error?.message ?? ''}
-        onClose={() => errorModalHandler.close()}
+        onClose={errorModalHandler.close}
       />
+      <ComingSoonModal isOpen={showComingSoonMadal} onClose={comingSoonModalHandler.close} />
 
       <header className="flex items-center justify-between px-5 pt-9 pb-5 select-none">
         <Image
@@ -53,13 +49,13 @@ const HomePageLayout = ({ children }: HomePageLayoutProps) => {
           height={0}
           style={{ width: 'auto', height: 'auto' }}
         />
-        <button onClick={handleProfileClick} className="cursor-pointer">
+        <button onClick={comingSoonModalHandler.open} className="cursor-pointer">
           <Image src="/icons/profile.svg" alt="프로필 아이콘" width={32} height={32} />
         </button>
       </header>
       <main>{children}</main>
 
-      <HomeMenu isOpen={isMenuOpen} onToggle={setIsMenuOpen} />
+      <HomeMenu isOpen={showHomeMenu} onToggle={homeMenuHandler.toggle} />
     </div>
   );
 };
