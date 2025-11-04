@@ -9,3 +9,14 @@ export interface MeetingInfo {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface MeetingResponse {
+  meetingInfo: MeetingInfo;
+  participantList: Participant[];
+}
+
+export interface Participant {
+  userId: number;
+  attendeeNickname: string;
+  color: string; // TODO: 아이콘 Union 타입으로 변경 필요
+}

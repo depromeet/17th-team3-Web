@@ -4,13 +4,11 @@
  */
 export const exchangeCodeForCookie = async (code: string) => {
   const redirectUrl = window.location.origin;
-  const response = await fetch(
-    `/api/auth/kakao/callback?code=${code}&redirect_uri=${redirectUrl}/auth/callback`,
-    {
-      method: 'GET',
-      credentials: 'include',
-    }
-  );
+  const params = new URLSearchParams({ code, redirect_uri: `${redirectUrl}/auth/callback` });
+  const response = await fetch(`/api/auth/kakao/callback?${params}`, {
+    method: 'GET',
+    credentials: 'include',
+  });
 
   if (!response.ok) {
     const errorText = await response.text();

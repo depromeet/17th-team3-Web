@@ -8,3 +8,4 @@ export { default as CountdownDisplay } from './CountdownDisplay';
 export { default as HomeMenu } from './HomeMenu';
 export { default as HomePageLayout } from './HomePageLayout';
 export { default as HomePageClient } from './HomePageClient';
+export { default as FloatingActionButton } from './FloatingActionButton';

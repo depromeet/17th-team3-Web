@@ -26,7 +26,7 @@ const EndedMeetingCard = ({ meeting, onClick }: EndedMeetingCardProps) => {
       tabIndex={0}
       onClick={onClick}
       onKeyDown={(event: React.KeyboardEvent<HTMLDivElement>) => {
-        if (event.key === 'Enter') {
+        if (event.key === 'Enter' || event.key === ' ') {
           event.preventDefault();
           onClick?.();
         }

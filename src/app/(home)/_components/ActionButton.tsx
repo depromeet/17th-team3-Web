@@ -14,7 +14,7 @@ const ActionButton = ({ icon, label, onClick }: ActionButtonProps) => {
         type="button"
         onClick={onClick}
         onKeyDown={(event: React.KeyboardEvent<HTMLButtonElement>) => {
-          if (event.key === 'Enter') {
+          if (event.key === 'Enter' || event.key === ' ') {
             event.preventDefault();
             onClick();
           }

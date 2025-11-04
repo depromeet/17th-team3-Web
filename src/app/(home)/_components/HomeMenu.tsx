@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 
 import { ActionButton } from '@/app/(home)/_components';
-import FloatingActionButton from '@/app/_components/ui/FloatingActionButton';
+import FloatingActionButton from '@/app/(home)/_components/FloatingActionButton';
 import ComingSoonModal from '@/app/_components/ui/Modal/ComingSoonModal';
 import { useDisclosure } from '@/app/_hooks/useDisclosure';
 
