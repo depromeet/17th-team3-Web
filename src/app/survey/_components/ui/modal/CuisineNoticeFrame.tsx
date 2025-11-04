@@ -1,4 +1,3 @@
-// src/app/survey/_components/ui/CuisineNoticeFrame.tsx
 const CuisineNoticeFrame = () => {
   return (
     <div

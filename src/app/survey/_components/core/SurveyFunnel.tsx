@@ -5,10 +5,10 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import SurveyLayout from '@/app/survey/_components/core/SurveyLayout';
-import SurveyCuisineStepV2 from '@/app/survey/_components/step/SurveyCuisineStepV2';
-import SurveyNameStep from '@/app/survey/_components/step/SurveyNameStep';
-import ConfirmModal from '@/app/survey/_components/ui/ConfirmModal';
-import LoadingOverlay from '@/app/survey/_components/ui/LoadingOverlay';
+import SurveyCuisineStep from '@/app/survey/_components/step/SurveyCuisineStep';
+import SurveyProfileStep from '@/app/survey/_components/step/SurveyProfileStep';
+import ConfirmModal from '@/app/survey/_components/ui/modal/ConfirmModal';
+import LoadingOverlay from '@/app/survey/_components/ui/modal/LoadingOverlay';
 import { useSurveyFunnel } from '@/app/survey/_hooks/useSurveyFunnel';
 import { getPrevStepKey, SURVEY_TOTAL_STEPS } from '@/app/survey/_models/constants';
 
@@ -51,7 +51,7 @@ const SurveyFunnel = ({
           totalSteps={SURVEY_TOTAL_STEPS}
           onBack={() => setIsSkipModalOpen(true)}
         >
-          <SurveyNameStep
+          <SurveyProfileStep
             initialValue={context.name}
             initialProfileKey={context.profileKey}
             onNext={({ name, profileKey }) =>
@@ -83,7 +83,7 @@ const SurveyFunnel = ({
           rightLabel="건너뛰기"
           onRightClick={() => setIsSkipModalOpen(true)}
         >
-          <SurveyCuisineStepV2
+          <SurveyCuisineStep
             title={`좋아하는 음식을\n최대 5개까지 선택해주세요`}
             defaultSelectedIds={context.preferCuisineIds}
             onCancel={handleBack}

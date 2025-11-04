@@ -1,6 +1,6 @@
 import { TitleGroup } from '@/app/_components/typography';
 import Button from '@/app/_components/ui/Button';
-import CuisineNoticeFrame from '@/app/survey/_components/ui/CuisineNoticeFrame';
+import CuisineNoticeFrame from '@/app/survey/_components/ui/modal/CuisineNoticeFrame';
 
 interface StepFormLayoutProps {
   title: string;

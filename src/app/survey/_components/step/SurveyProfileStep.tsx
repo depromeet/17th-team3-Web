@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react';
 
 import Input from '@/app/_components/ui/Input';
 import { validateText } from '@/app/meetings/_utils/validation';
-import ProfileSelector from '@/app/survey/_components/ui/ProfileSelector';
-import StepFormLayout from '@/app/survey/_components/ui/StepFormLayout';
+import StepFormLayout from '@/app/survey/_components/ui/form/StepFormLayout';
+import ProfileSelector from '@/app/survey/_components/ui/selector/ProfileSelector';
 
-interface SurveyNameStepProps {
+interface SurveyProfileStepProps {
   onNext: (payload: { name: string; profileKey: string }) => void;
   onCancel: () => void;
   initialValue?: string;
@@ -16,14 +16,14 @@ interface SurveyNameStepProps {
   description?: string;
 }
 
-const SurveyNameStep = ({
+const SurveyProfileStep = ({
   onNext,
   onCancel,
   initialValue = '',
   initialProfileKey = 'default',
   title = '사용하실 프로필과\n이름을 알려주세요',
   description = '',
-}: SurveyNameStepProps) => {
+}: SurveyProfileStepProps) => {
   const [name, setName] = useState(initialValue);
   const [profileKey, setProfileKey] = useState(initialProfileKey);
   const [isError, setIsError] = useState(false);
@@ -77,4 +77,4 @@ const SurveyNameStep = ({
   );
 };
 
-export default SurveyNameStep;
+export default SurveyProfileStep;

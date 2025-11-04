@@ -8,16 +8,16 @@ import { useRouter } from 'next/navigation';
 import { FOOD_MAP } from '@/app/_constants/menu';
 import ChipGroupMultiSelect, {
   type ChipOption,
-} from '@/app/survey/_components/ui/ChipGroupMultiSelect';
-import FoodConfirmModal from '@/app/survey/_components/ui/FoodConfirmModal';
-import LoadingOverlay from '@/app/survey/_components/ui/LoadingOverlay';
-import StepFormLayout from '@/app/survey/_components/ui/StepFormLayout';
+} from '@/app/survey/_components/ui/form/ChipGroupMultiSelect';
+import StepFormLayout from '@/app/survey/_components/ui/form/StepFormLayout';
+import FoodConfirmModal from '@/app/survey/_components/ui/modal/FoodConfirmModal';
+import LoadingOverlay from '@/app/survey/_components/ui/modal/LoadingOverlay';
 import { useSurveyCategories } from '@/app/survey/_hooks/useSurveyCategories';
 import { ANY_ID } from '@/app/survey/_models/constants';
 
 import type { FoodCategory } from '@/app/survey/_models/types';
 
-const SurveyCuisineStepV2 = ({
+const SurveyCuisineStep = ({
   title,
   defaultSelectedIds = [],
   onCancel,
@@ -143,4 +143,4 @@ const SurveyCuisineStepV2 = ({
   );
 };
 
-export default SurveyCuisineStepV2;
+export default SurveyCuisineStep;

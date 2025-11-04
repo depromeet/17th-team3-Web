@@ -3,7 +3,7 @@
 import { useCallback, useMemo } from 'react';
 
 import { useToast } from '@/app/_features/toast';
-import Chip from '@/app/survey/_components/ui/Chip';
+import Chip from '@/app/survey/_components/ui/form/Chip';
 import { MAX_SELECT_COUNT } from '@/app/survey/_models/constants';
 
 export interface ChipOption {
