@@ -2,7 +2,7 @@ import { CalendarDays, ChevronRight, Clock, MapPin } from 'lucide-react';
 
 import CountdownDisplay from '@/app/(home)/_components/CountdownDisplay';
 import { Meeting } from '@/app/(home)/_models/types';
-import MeetingParticipantProgress from '@/app/_components/ui/MeetingParticipantProgress';
+import ParticipantProgressIndicator from '@/app/_components/ui/ParticipantProgressIndicator';
 import { formatDateTime } from '@/app/_utils/format';
 
 interface ActiveMeetingCardProps {
@@ -59,7 +59,7 @@ const ActiveMeetingCard = ({ meeting, onClick }: ActiveMeetingCardProps) => {
       </div>
 
       <div className="mt-8 rounded-3xl bg-white px-4 py-3 pt-12">
-        <MeetingParticipantProgress
+        <ParticipantProgressIndicator
           surveyCompletedParticipants={2} // TODO: API 구현 후, 설문 참여 인원으로 변경 필요
           totalParticipants={totalParticipantCnt}
         />

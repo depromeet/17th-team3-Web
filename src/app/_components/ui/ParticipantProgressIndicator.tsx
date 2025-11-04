@@ -4,15 +4,15 @@ import Image from 'next/image';
 import StepIndicator from '@/app/_components/ui/StepIndicator';
 import { getProgressPercent } from '@/app/_utils/ui';
 
-interface MeetingParticipantProgressProps {
+interface ParticipantProgressIndicatorProps {
   surveyCompletedParticipants: number;
   totalParticipants: number;
 }
 
-const MeetingParticipantProgress = ({
+const ParticipantProgressIndicator = ({
   surveyCompletedParticipants,
   totalParticipants,
-}: MeetingParticipantProgressProps) => {
+}: ParticipantProgressIndicatorProps) => {
   const progressPercent = getProgressPercent(surveyCompletedParticipants, totalParticipants);
 
   return (
@@ -56,4 +56,4 @@ const MeetingParticipantProgress = ({
   );
 };
 
-export default MeetingParticipantProgress;
+export default ParticipantProgressIndicator;

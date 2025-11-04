@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 
 import { ActionButton } from '@/app/(home)/_components';
-import FloatingActionButton from '@/app/_components/ui/FloatingActionButton';
+import FloatingActionButton from '@/app/(home)/_components/FloatingActionButton';
 import { useToast } from '@/app/_features/toast';
 
 interface HomeMenuProps {
