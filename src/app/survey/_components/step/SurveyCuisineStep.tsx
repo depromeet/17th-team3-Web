@@ -1,31 +1,35 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 import { FOOD_MAP } from '@/app/_constants/menu';
-import ChipGroupMultiSelect, {
-  type ChipOption,
-} from '@/app/survey/_components/ui/form/ChipGroupMultiSelect';
+import ChipGroupMultiSelect from '@/app/survey/_components/ui/form/ChipGroupMultiSelect';
 import StepFormLayout from '@/app/survey/_components/ui/form/StepFormLayout';
 import FoodConfirmModal from '@/app/survey/_components/ui/modal/FoodConfirmModal';
 import LoadingOverlay from '@/app/survey/_components/ui/modal/LoadingOverlay';
 import { useSurveyCategories } from '@/app/survey/_hooks/useSurveyCategories';
 import { ANY_ID } from '@/app/survey/_models/constants';
 
-import type { FoodCategory } from '@/app/survey/_models/types';
+import type { FoodCategory, CommonCtx } from '@/app/survey/_models/types';
+
+interface SurveyCuisineStepProps {
+  title: string;
+  defaultSelectedIds?: string[];
+  onCancel: () => void;
+  context: CommonCtx;
+  history: any;
+}
 
 const SurveyCuisineStep = ({
   title,
   defaultSelectedIds = [],
   onCancel,
-}: {
-  title: string;
-  defaultSelectedIds?: string[];
-  onCancel: () => void;
-}) => {
+  context,
+  history,
+}: SurveyCuisineStepProps) => {
   const router = useRouter();
   const { categories } = useSurveyCategories();
 
@@ -33,6 +37,21 @@ const SurveyCuisineStep = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+
+  /** Step 다시 들어올 때 context 반영 */
+  useEffect(() => {
+    setSelectedIds(context.preferCuisineIds || []);
+  }, [context.preferCuisineIds]);
+
+  /** 선택 변경 시 즉시 context에 반영 */
+  const handleSelectChange = (ids: string[]) => {
+    if (ids.length > 5) return alert('최대 5개까지 선택이 가능합니다.');
+    setSelectedIds(ids);
+    history.replace('PreferCuisine', (prev: CommonCtx) => ({
+      ...prev,
+      preferCuisineIds: ids,
+    }));
+  };
 
   const handleNext = () => {
     if (selectedIds.length === 0) return;
@@ -46,13 +65,6 @@ const SurveyCuisineStep = ({
     await new Promise((res) => setTimeout(res, 1000));
     router.push(`/events/123/overview?selected=${encodeURIComponent(selectedIds.join(','))}`);
   };
-
-  const toChipOptions = (children: FoodCategory[]): ChipOption[] =>
-    children.map((c) => ({
-      id: c.id.toString(),
-      label: c.name,
-      variant: 'cuisine',
-    }));
 
   return (
     <>
@@ -73,7 +85,6 @@ const SurveyCuisineStep = ({
                 name: category.name,
               };
 
-              // 반드시 return 추가
               return (
                 <div key={category.id}>
                   <div className="mb-2 flex items-center gap-2">
@@ -94,10 +105,7 @@ const SurveyCuisineStep = ({
                       variant: 'cuisine' as const,
                     }))}
                     selectedIds={selectedIds}
-                    onChange={(ids) => {
-                      if (ids.length > 5) alert('최대 5개까지 선택이 가능합니다.');
-                      else setSelectedIds(ids);
-                    }}
+                    onChange={handleSelectChange}
                     exclusiveIds={[ANY_ID]}
                   />
                 </div>

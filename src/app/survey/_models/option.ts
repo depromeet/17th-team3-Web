@@ -18,7 +18,7 @@ export const CUISINE_OPTIONS = [
   { id: 'c:japanese', label: '일식' },
   { id: 'c:chinese', label: '중식' },
   { id: 'c:western', label: '양식' },
-  { id: 'c:southeast', label: '동남아 음식' },
+  { id: 'c:southeast', label: '기타 해외 음식' },
 ] as const satisfies ReadonlyArray<Option>;
 
 /** 음식 카테고리 옵션 (데이터 모델 확장) */
@@ -64,5 +64,5 @@ export const CUISINE_CATEGORY_LABELS = {
   chinese: '중식',
   western: '양식',
   japanese: '일식',
-  southeast: '동남아 음식',
+  southeast: '기타 해외 음식',
 } as const;

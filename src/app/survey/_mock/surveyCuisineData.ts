@@ -57,7 +57,7 @@ export const mockSurveyCuisineData: FoodCategoryResponse = {
     {
       id: 7,
       level: 'BRANCH',
-      name: '동남아 음식',
+      name: '기타 해외 음식',
       sortOrder: 5,
       children: [
         { id: 28, level: 'LEAF', name: '베트남 음식', sortOrder: 1, children: [] },

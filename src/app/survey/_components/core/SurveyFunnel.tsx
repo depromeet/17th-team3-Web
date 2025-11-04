@@ -87,6 +87,8 @@ const SurveyFunnel = ({
             title={`좋아하는 음식을\n최대 5개까지 선택해주세요`}
             defaultSelectedIds={context.preferCuisineIds}
             onCancel={handleBack}
+            context={context}
+            history={history}
           />
 
           <ConfirmModal
