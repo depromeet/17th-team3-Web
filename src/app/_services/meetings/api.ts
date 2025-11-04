@@ -7,7 +7,7 @@ import {
 
 import { formatMeetingResponse } from './format';
 
-import type { MeetingResponse } from '@/app/(home)/_models/types';
+import type { MeetingResponse } from '@/app/_models/meeting';
 
 export const meetingsApi = {
   getMeetings: async () => {
