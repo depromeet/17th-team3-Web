@@ -1,5 +1,4 @@
 import { CuisineId } from '@/app/_constants/cuisine';
-import { api } from '@/app/_lib/api';
 import overviewMockData from '@/app/_mocks/overview';
 import { AvatarVariantKey } from '@/app/_models/avator';
 
@@ -27,6 +26,6 @@ export interface Overview {
   endAt: string;
 }
 
-export const getMockOverview = async (eventId: string): Promise<Overview> => {
+export const getMockOverview = async (_eventId: string): Promise<Overview> => {
   return overviewMockData;
 };
