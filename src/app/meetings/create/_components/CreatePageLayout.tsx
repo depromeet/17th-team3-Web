@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import TopNavigation from '@/app/_components/layout/TopNavigation';
 import { Heading } from '@/app/_components/typography';
 import Badge from '@/app/_components/ui/Badge';
-import ConfirmModal from '@/app/_components/ui/Modal/ConfirmModal';
+import { ConfirmModal } from '@/app/_components/ui/Modal';
 import { useDisclosure } from '@/app/_hooks/useDisclosure';
 
 interface CreatePageLayoutProps {

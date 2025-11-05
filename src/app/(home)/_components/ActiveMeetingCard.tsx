@@ -7,25 +7,13 @@ import { formatDateTime } from '@/app/_utils/format';
 
 interface ActiveMeetingCardProps {
   meeting: Meeting;
-  onClick?: () => void;
 }
 
-const ActiveMeetingCard = ({ meeting, onClick }: ActiveMeetingCardProps) => {
+const ActiveMeetingCard = ({ meeting }: ActiveMeetingCardProps) => {
   const { title, stationName, totalParticipantCnt, endAt } = meeting;
 
   return (
-    <div
-      role="button"
-      tabIndex={0}
-      onClick={onClick}
-      onKeyDown={(event: React.KeyboardEvent<HTMLDivElement>) => {
-        if (event.key === 'Enter') {
-          event.preventDefault();
-          onClick?.();
-        }
-      }}
-      className="cursor-pointer rounded-3xl p-3 pt-4 select-none gathering-card"
-    >
+    <div className="cursor-pointer rounded-3xl p-3 pt-4 select-none gathering-card">
       <div className="flex flex-col gap-4 px-2">
         <div className="flex flex-col gap-2">
           <div className="flex justify-between">

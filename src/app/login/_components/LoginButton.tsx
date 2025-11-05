@@ -18,13 +18,18 @@ const PROVIDER_CONFIG = {
 
 interface LoginButtonProps {
   provider?: 'kakao';
+  redirectTo?: string | null;
 }
 
-const LoginButton = ({ provider = 'kakao' }: LoginButtonProps) => {
+const LoginButton = ({ provider = 'kakao', redirectTo }: LoginButtonProps) => {
   const config = PROVIDER_CONFIG[provider];
 
   const handleLogin = () => {
-    window.location.href = config.redirectUrl;
+    const loginUrl = new URL(config.redirectUrl);
+    if (redirectTo) {
+      loginUrl.searchParams.set('state', redirectTo);
+    }
+    window.location.href = String(loginUrl);
   };
 
   return (

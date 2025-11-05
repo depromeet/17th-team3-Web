@@ -1,24 +1,23 @@
 import { api } from '@/app/_lib/api';
-import {
-  CreateMeetingRequest,
-  CreateMeetingResponse,
-  Station,
-} from '@/app/meetings/create/_models/types';
+import { CreateMeetingRequest, CreateMeetingResponse } from '@/app/meetings/create/_models/types';
 
-import { formatMeetingResponse } from './format';
+import { formatCreateMeetingResponse, formatMeetingResponse } from './format';
 
 import type { MeetingResponse } from '@/app/_models/meeting';
 
 export const meetingsApi = {
   getMeetings: async () => {
-    const responses = await api.get<MeetingResponse[]>('/meetings');
-    return responses.map(formatMeetingResponse);
+    const response = await api.get<MeetingResponse[]>('/meetings');
+    return response.map(formatMeetingResponse);
   },
-  createMeeting: (form: CreateMeetingRequest) =>
-    api.post<CreateMeetingResponse, CreateMeetingRequest>('/meetings', form),
-  getMeetingToken: (meetingId: number) => api.post(`/meetings/${meetingId}/invite-token`, {}),
-  getStations: (query?: string) =>
-    api.get<Station[]>('/stations', {
-      params: query ? { q: query } : undefined,
+  createMeeting: async (form: CreateMeetingRequest) => {
+    const response = await api.post<CreateMeetingResponse, CreateMeetingRequest>('/meetings', form);
+    return formatCreateMeetingResponse(response);
+  },
+  joinMeeting: async (token: string) => api.post('/meetings/join', { token }),
+  validateToken: (token: string) =>
+    api.get<{ token: string }>(`/meetings/validate-invite`, {
+      params: { token },
     }),
+  getMeetingToken: (meetingId: number) => api.get(`/meetings/${meetingId}/invite-token`),
 } as const;

@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import BottomSheet from '@/app/_components/ui/BottomSheet';
 import Input from '@/app/_components/ui/Input';
 import { useInputState } from '@/app/_hooks/useInputState';
-import { meetingsApi } from '@/app/_services/meetings';
+import { stationsApi } from '@/app/_services/stations';
 import { Station } from '@/app/meetings/create/_models/types';
 
 import LocationItem from './LocationItem';
@@ -22,7 +22,7 @@ const LocationBottomSheet = ({ isOpen, onStationSelect, onClose }: LocationBotto
 
   useEffect(() => {
     const getStations = async () => {
-      const stations = await meetingsApi.getStations();
+      const stations = await stationsApi.getStations();
       setStations(stations);
     };
 

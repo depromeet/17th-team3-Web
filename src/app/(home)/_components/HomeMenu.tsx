@@ -4,7 +4,8 @@ import { useRouter } from 'next/navigation';
 
 import { ActionButton } from '@/app/(home)/_components';
 import FloatingActionButton from '@/app/(home)/_components/FloatingActionButton';
-import { useToast } from '@/app/_features/toast';
+import ComingSoonModal from '@/app/_components/ui/Modal/ComingSoonModal';
+import { useDisclosure } from '@/app/_hooks/useDisclosure';
 
 interface HomeMenuProps {
   isOpen: boolean;
@@ -12,8 +13,9 @@ interface HomeMenuProps {
 }
 
 const HomeMenu = ({ isOpen, onToggle }: HomeMenuProps) => {
+  const { isOpen: showComingSoonMadal, handler: comingSoonModalHandler } = useDisclosure();
+
   const router = useRouter();
-  const { success: toast } = useToast();
 
   const handleCreateMeeting = () => {
     router.push('/meetings/create');
@@ -21,8 +23,8 @@ const HomeMenu = ({ isOpen, onToggle }: HomeMenuProps) => {
   };
 
   const handleComingSoon = () => {
-    toast('아직 준비 중인 기능이에요!', { preventDuplicate: true, position: 'top' });
     onToggle(false);
+    comingSoonModalHandler.open();
   };
 
   return (
@@ -48,6 +50,7 @@ const HomeMenu = ({ isOpen, onToggle }: HomeMenuProps) => {
         </div>
       )}
       <FloatingActionButton isOpen={isOpen} onClick={() => onToggle(!isOpen)} />
+      <ComingSoonModal isOpen={showComingSoonMadal} onClose={comingSoonModalHandler.close} />
     </>
   );
 };

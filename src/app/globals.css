@@ -425,7 +425,7 @@
 }
 
 @utility skeleton-gradient {
-  background: linear-gradient(224.49deg, #f1f2f4 3.05%, #f9fafb 96.12%);
+  background: linear-gradient(224.49deg, #e5e7eb 3.05%, #f4f5f6 96.12%);
 }
 
 @keyframes result-text-flow {

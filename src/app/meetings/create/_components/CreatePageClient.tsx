@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { MapPin } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 import Button from '@/app/_components/ui/Button';
 import Input from '@/app/_components/ui/Input';
@@ -23,6 +24,8 @@ const CreatePageClient = () => {
 
   const { isOpen: isLocationSheetOpen, handler: locationSheetHandler } = useDisclosure();
 
+  const router = useRouter();
+
   const handleSubmit = async () => {
     if (!meetingForm.isFormValid || !meetingForm.formData.station || isLoading) return;
 
@@ -34,9 +37,8 @@ const CreatePageClient = () => {
         stationId: meetingForm.formData.station.id,
         endAt: `${meetingForm.formData.date}T${meetingForm.formData.time}:00:00`,
       };
-      const { id: _id, validateTokenUrl: _validateTokenUrl } =
-        await meetingsApi.createMeeting(formattedForm);
-      // TODO: 모임현황 페이지로 이동 로직 구현
+      const { id, token } = await meetingsApi.createMeeting(formattedForm);
+      router.replace(`/events/${id}/overview?token=${token}`);
     } catch (error) {
       console.error('모임 생성 실패:', error);
       // TODO: 모임 생성 실패 에러 처리

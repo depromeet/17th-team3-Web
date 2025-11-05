@@ -2,7 +2,9 @@ import Image from 'next/image';
 
 import LoginButton from '@/app/login/_components/LoginButton';
 
-const LoginPage = () => {
+const LoginPage = async ({ searchParams }: { searchParams: Promise<{ redirectTo?: string }> }) => {
+  const { redirectTo } = await searchParams;
+
   return (
     <div className="flex h-[100dvh] w-full flex-col items-center justify-center px-5 gathering-card">
       <main className="flex flex-col justify-between gap-6 pt-15 pb-10">
@@ -26,7 +28,7 @@ const LoginPage = () => {
         />
       </main>
 
-      <LoginButton />
+      <LoginButton redirectTo={redirectTo} />
     </div>
   );
 };
