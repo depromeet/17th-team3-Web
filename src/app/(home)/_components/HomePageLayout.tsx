@@ -3,7 +3,6 @@
 import { useEffect } from 'react';
 
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
 
 import { HomeMenu } from '@/app/(home)/_components';
 import { ErrorModal } from '@/app/_components/ui/Modal';
@@ -13,15 +12,14 @@ import { useDisclosure } from '@/app/_hooks/useDisclosure';
 
 interface HomePageLayoutProps {
   children: React.ReactNode;
+  errorCode?: string;
 }
 
-const HomePageLayout = ({ children }: HomePageLayoutProps) => {
+const HomePageLayout = ({ children, errorCode }: HomePageLayoutProps) => {
   const { isOpen: showErrorModal, handler: errorModalHandler } = useDisclosure();
   const { isOpen: showComingSoonMadal, handler: comingSoonModalHandler } = useDisclosure();
   const { isOpen: showHomeMenu, handler: homeMenuHandler } = useDisclosure();
 
-  const searchParams = useSearchParams();
-  const errorCode = searchParams.get('error');
   const error = errorCode ? getErrorConfig(errorCode) : null;
 
   useEffect(() => {
@@ -29,7 +27,7 @@ const HomePageLayout = ({ children }: HomePageLayoutProps) => {
       errorModalHandler.open();
       window.history.replaceState({}, '', '/');
     }
-  }, [errorCode]);
+  }, [errorCode, errorModalHandler]);
 
   return (
     <div className="no-scrollbar flex h-[100dvh] flex-col overflow-auto bg-neutral-100">

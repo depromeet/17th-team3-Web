@@ -8,7 +8,6 @@ import ErrorIcon from '@/app/_components/icons/toast/ErrorIcon';
 import InfoIcon from '@/app/_components/icons/toast/InfoIcon';
 import SuccessIcon from '@/app/_components/icons/toast/SuccessIcon';
 import WarningIcon from '@/app/_components/icons/toast/WarningIcon';
-import { useToast } from '@/app/_features/toast';
 import { cn } from '@/app/_lib/cn';
 
 import type { Toast as ToastType } from '../types';

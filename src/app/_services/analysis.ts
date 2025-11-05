@@ -1,5 +1,4 @@
 import { api } from '@/app/_lib/api';
-import { ApiSuccessResponse } from '@/app/_models/api';
 
 const ANALYSIS_CACHE_DURATION = 300; // 5분
 
@@ -24,7 +23,7 @@ export const getAnalysis = async (eventId: string): Promise<AnalysisData> => {
 };
 
 // 임시 Mock 데이터 (백엔드 API 준비 전까지)
-export const getMockAnalysis = async (eventId: string): Promise<AnalysisData> => {
+export const getMockAnalysis = async (_eventId: string): Promise<AnalysisData> => {
   // 실제로는 API 호출, 지금은 mock
   return {
     summary: '이번 모임에서의 \n 한식과 일식을 원해요',

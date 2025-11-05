@@ -8,12 +8,17 @@ import { ApiError, ApiSuccessResponse, FetchOptions, HTTPMethod } from '@/app/_m
 
 const BACKEND_API = process.env.NEXT_PUBLIC_API_URL!;
 
-const toQueryString = (params?: Record<string, any>): string => {
+const toQueryString = (
+  params?: Record<string, string | number | boolean | null | undefined>
+): string => {
   if (!params) return '';
 
   const query = Object.entries(params)
     .filter(([, value]) => value !== undefined && value !== null)
-    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+    .map(
+      ([key, value]) =>
+        `${encodeURIComponent(key)}=${encodeURIComponent(value as string | number | boolean)}`
+    )
     .join('&');
 
   return query ? `?${query}` : '';
