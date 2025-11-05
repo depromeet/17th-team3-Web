@@ -9,7 +9,6 @@ import { useRouter } from 'next/navigation';
 import BottomSheet from '@/app/_components/ui/BottomSheet';
 import Button from '@/app/_components/ui/Button';
 import { useToast } from '@/app/_features/toast';
-import { exhaustiveCheck } from '@/app/_utils/typeGuards';
 import { SHARE_OPTIONS } from '@/app/meetings/create/_models/constants';
 // import { ShareType } from '@/app/meetings/create/_models/types';
 import ResultCard from '@/app/survey/_components/ResultCard';
