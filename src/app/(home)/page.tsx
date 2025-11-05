@@ -16,13 +16,17 @@ const HomeSkeleton = () => (
   </>
 );
 
-const HomePage = () => {
+const HomePage = async ({ searchParams }: { searchParams: Promise<{ error?: string }> }) => {
+  const { error: errorCode } = await searchParams;
+
   return (
-    <HomePageLayout>
-      <Suspense fallback={<HomeSkeleton />}>
-        <HomePageContent />
-      </Suspense>
-    </HomePageLayout>
+    <Suspense>
+      <HomePageLayout errorCode={errorCode}>
+        <Suspense fallback={<HomeSkeleton />}>
+          <HomePageContent />
+        </Suspense>
+      </HomePageLayout>
+    </Suspense>
   );
 };
 
