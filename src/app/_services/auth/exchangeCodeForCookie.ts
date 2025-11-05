@@ -3,7 +3,9 @@
  * @param code - 카카오로부터 받은 인가 코드(code)
  */
 export const exchangeCodeForCookie = async (code: string) => {
-  const response = await fetch(`/api/auth/kakao/callback?code=${code}`, {
+  const redirectUrl = window.location.origin;
+  const params = new URLSearchParams({ code, redirect_uri: `${redirectUrl}/auth/callback` });
+  const response = await fetch(`/api/auth/kakao/callback?${params}`, {
     method: 'GET',
     credentials: 'include',
   });
