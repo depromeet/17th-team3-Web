@@ -14,21 +14,20 @@ import { getPrevStepKey, SURVEY_TOTAL_STEPS } from '@/app/survey/_models/constan
 
 import type { RoleLabel, SurveyResult } from '@/app/survey/_models/types';
 
+interface SurveyFunnelProps {
+  role: RoleLabel;
+  meetingId: number;
+  initial?: Partial<SurveyResult>;
+  onComplete?: (r: SurveyResult) => void;
+}
+
 /**
  * SurveyFunnel
  * - 설문 퍼널 전체 플로우를 제어하는 메인 오케스트레이터
  * - 현재 step 상태에 따라 해당 Step 컴포넌트를 렌더링
  * - 이름 입력 → 음식 선택 → (분기) 한식 추가 질문 → 완료
  */
-const SurveyFunnel = ({
-  role,
-  initial,
-  onComplete: _onComplete, // eslint 무시 없이 OK
-}: {
-  role: RoleLabel;
-  initial?: Partial<SurveyResult>;
-  onComplete?: (r: SurveyResult) => void;
-}) => {
+const SurveyFunnel = ({ role, meetingId, initial, onComplete: _onComplete }: SurveyFunnelProps) => {
   const { step, context, history } = useSurveyFunnel({ ...initial, role });
   const router = useRouter();
 
@@ -37,8 +36,7 @@ const SurveyFunnel = ({
 
   /** 공통 뒤로가기 핸들러 */
   const handleBack = () => {
-    // TODO: 모임방 임시 하드코딩 설정
-    if (step === 'Name') return router.push('/meetings/1');
+    if (step === 'Name') return router.push(`/meetings/${meetingId}`);
     history.replace(getPrevStepKey(step), (p) => p);
   };
 
@@ -58,6 +56,7 @@ const SurveyFunnel = ({
               history.push('PreferCuisine', (prev) => ({ ...prev, name, profileKey }))
             }
             onCancel={() => setIsSkipModalOpen(true)}
+            meetingId={meetingId}
           />
 
           <ConfirmModal
@@ -67,7 +66,7 @@ const SurveyFunnel = ({
             cancelText="계속하기"
             confirmText="나가기"
             onCancel={() => setIsSkipModalOpen(false)}
-            onConfirm={() => router.push('/meetings/1')}
+            onConfirm={() => router.push(`/meetings/${meetingId}`)}
           />
         </SurveyLayout>
       );
@@ -89,6 +88,7 @@ const SurveyFunnel = ({
             onCancel={handleBack}
             context={context}
             history={history}
+            meetingId={meetingId}
           />
 
           <ConfirmModal
@@ -101,7 +101,14 @@ const SurveyFunnel = ({
             onConfirm={async () => {
               setIsLoading(true);
               await new Promise((r) => setTimeout(r, 1000));
-              router.push(`/events/123/overview?selected=${encodeURIComponent('다 괜찮아요')}`);
+              /**
+               * TODO
+               * - `events/{meetingId}/overview` 불러오기
+               * - queryString 제거
+               */
+              router.push(
+                `/events/${meetingId}/overview?selected=${encodeURIComponent('다 괜찮아요')}`
+              );
               setIsLoading(false);
             }}
           />

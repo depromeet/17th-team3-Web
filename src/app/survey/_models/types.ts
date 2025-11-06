@@ -61,3 +61,12 @@ export interface FoodCategoryResponse {
   data: FoodCategory[];
   error: null | string;
 }
+
+export interface UpdateAttendeeProfileRequest {
+  attendeeNickname: string;
+  color: string;
+}
+
+export interface FunnelHistory<T> {
+  replace: (step: string, updater: (prev: T) => T) => void;
+}

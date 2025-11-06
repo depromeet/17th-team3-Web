@@ -72,7 +72,6 @@ const ProfileSelectModal = ({
         {Array.from({ length: Math.ceil(AVATAR_OPTIONS.length / 5) }).map((_, rowIdx) => (
           <div key={rowIdx} className="flex justify-center gap-3">
             {AVATAR_OPTIONS.slice(rowIdx * 5, rowIdx * 5 + 5).map((a) => {
-              const isSelected = selectedKey === a.key;
               const isLocked = lockedKeys.includes(a.key);
 
               return (

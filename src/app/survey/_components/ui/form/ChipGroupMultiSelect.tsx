@@ -2,6 +2,8 @@
 
 import { useCallback, useMemo } from 'react';
 
+import Image from 'next/image';
+
 import { useToast } from '@/app/_features/toast';
 import Chip from '@/app/survey/_components/ui/form/Chip';
 import { MAX_SELECT_COUNT } from '@/app/survey/_models/constants';
@@ -59,7 +61,7 @@ const ChipGroupMultiSelect = ({
       if (base.length >= MAX_SELECT_COUNT) {
         customToast(
           <div className="flex items-center gap-2">
-            <img src="/icons/exclamation.svg" alt="!" className="h-8 w-8" />
+            <Image src="/icons/exclamation.svg" alt="!" className="h-8 w-8" />
             <span className="text-gray-1500 body-3 font-semibold">
               최대 5개까지 선택 가능합니다
             </span>
@@ -71,10 +73,10 @@ const ChipGroupMultiSelect = ({
 
       onChange?.([...base, id]);
     },
-    [selectedIds, exclusiveIds, activeExclusive, onChange]
+    [selectedIds, exclusiveIds, activeExclusive, onChange, customToast]
   );
 
-  // ✅ disabled 로직 수정 — 더 이상 maxedOut으로 막지 않음
+  // disabled 로직 수정 — 더 이상 maxedOut으로 막지 않음
   const isDisabled = (id: string) => {
     const isExclusive = exclusiveIds.includes(id);
     return Boolean(activeExclusive && !isExclusive);
