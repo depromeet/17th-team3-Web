@@ -2,8 +2,8 @@ name: Build & Deploy Docker
 
 on:
   push:
-    branches: [ main ] # main 브랜치에서만 실행
-    tags: [ 'v*' ] # 태그 push 시 실행 (선택)
+    branches: [main] # main 브랜치에서만 실행
+    tags: ['v*'] # 태그 push 시 실행 (선택)
   workflow_dispatch: {} # 수동 실행 지원
 
 concurrency:
@@ -82,7 +82,6 @@ jobs:
       - name: Show image digest
         run: echo "Pushed digest ${{ steps.build.outputs.digest }}"
 
-
   deploy-prod:
     name: Deploy to PROD (self-hosted)
     needs: docker
@@ -107,9 +106,9 @@ jobs:
       - name: Deploy with compose
         run: |
           set -Eeuo pipefail
-          test -f "$PROJECT_DIR/deploy/compose.yaml" || { echo "compose.yaml not found"; exit 1; }
+          test -f "$PROJECT_DIR/module-infrastructure/nextjs/compose.yaml" || { echo "compose.yaml not found"; exit 1; }
           cd "$PROJECT_DIR"
-          IMAGE='${{ env.IMAGE }}' docker compose -f deploy/compose.yaml pull web
-          IMAGE='${{ env.IMAGE }}' docker compose -f deploy/compose.yaml up -d web
+          IMAGE='${{ env.IMAGE }}' docker compose -f module-infrastructure/nextjs/compose.yaml pull web
+          IMAGE='${{ env.IMAGE }}' docker compose -f module-infrastructure/nextjs/compose.yaml up -d web
           sleep 2
           curl -fsS http://127.0.0.1:3000 >/dev/null && echo "Health OK" || (docker logs web --tail=200 && exit 1)
