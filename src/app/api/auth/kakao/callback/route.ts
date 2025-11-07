@@ -13,14 +13,20 @@ const BACKEND_API = process.env.NEXT_PUBLIC_API_URL!;
 export const GET = async (request: NextRequest) => {
   const { searchParams } = request.nextUrl;
   const code = searchParams.get('code');
+  const redirectUrl = searchParams.get('redirect_uri');
 
   if (!code) {
     return NextResponse.json({ errorMessage: 'code 파라미터가 없습니다' }, { status: 400 });
   }
 
+  if (!redirectUrl) {
+    return NextResponse.json({ errorMessage: 'redirect_uri 파라미터가 없습니다' }, { status: 400 });
+  }
+
   try {
     const url = new URL(`${BACKEND_API}/auth/kakao-login`);
     url.searchParams.set('code', code);
+    url.searchParams.set('redirect_uri', redirectUrl);
 
     const response = await fetch(String(url), {
       method: 'GET',
