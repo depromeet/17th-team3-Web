@@ -1,10 +1,13 @@
 'use client';
 
+import { useEffect } from 'react';
+
 import { Copy } from 'lucide-react';
 import Image from 'next/image';
 
 import BaseModal from '@/app/_components/ui/Modal/BaseModal';
 import { useToast } from '@/app/_features/toast';
+import { initKakaoSDK, shareKakaoLink } from '@/app/_lib/kakao';
 
 interface CreateMeetingSuccessModalProps {
   isOpen: boolean;
@@ -14,13 +17,54 @@ interface CreateMeetingSuccessModalProps {
 const CreateMeetingSuccessModal = ({ isOpen, onClose }: CreateMeetingSuccessModalProps) => {
   const { success } = useToast();
 
+  useEffect(() => {
+    // 카카오 SDK 초기화 (API 키는 환경변수로 관리)
+    const kakaoAppKey = process.env.NEXT_PUBLIC_KAKAO_APP_KEY;
+    if (kakaoAppKey) {
+      initKakaoSDK(kakaoAppKey);
+    }
+  }, []);
+
   const handleCopyUrl = async () => {
     try {
       const url = typeof window !== 'undefined' ? window.location.href : '';
       await navigator.clipboard.writeText(url);
       success(`참여 링크가 복사되었어요.\n공유해서 참여를 독촉해보세요.`, { duration: 2500 });
+    } catch (err) {
+      console.error('URL 복사 실패:', err);
+      success('링크 복사에 실패했습니다.', { duration: 2500 });
+    }
+  };
+
+  // const handleShareKakao = () => {
+  //   try {
+  //     const url = typeof window !== 'undefined' ? window.location.href : '';
+  //     shareKakaoLink(url, '모임 설문에 초대합니다!', '당신의 취향을 알려주세요');
+  //     success('카카오톡으로 공유했습니다.', { duration: 2000 });
+  //   } catch (err) {
+  //     console.error('카카오톡 공유 실패:', err);
+  //     success('카카오톡 공유에 실패했습니다.', { duration: 2500 });
+  //   }
+  // };
+
+  const handleShareKakao = async () => {
+    try {
+      const url = typeof window !== 'undefined' ? window.location.href : '';
+
+      if (navigator.share) {
+        await navigator.share({
+          title: '모임 설문에 초대합니다!',
+          text: '당신의 취향을 알려주세요',
+          url,
+        });
+        success('공유했습니다.', { duration: 2000 });
+      } else {
+        shareKakaoLink(url, '모임 설문에 초대합니다!', '당신의 취향을 알려주세요');
+        success('카카오톡으로 공유했습니다.', { duration: 2000 });
+      }
     } catch (error) {
-      console.error('URL 복사 실패:', error);
+      console.error('카카오톡 공유 실패:', error);
+      success('카카오톡 공유에 실패했습니다.', { duration: 2500 });
     }
   };
 
@@ -35,7 +79,10 @@ const CreateMeetingSuccessModal = ({ isOpen, onClose }: CreateMeetingSuccessModa
           </p>
         </div>
         <div className="flex gap-4">
-          <button className="flex cursor-pointer flex-col gap-3 px-4 py-3 transition-opacity hover:opacity-70">
+          <button
+            onClick={handleShareKakao}
+            className="flex cursor-pointer flex-col gap-3 px-4 py-3 transition-opacity hover:opacity-70"
+          >
             <Image src="/icons/kakaotalk.svg" alt="카카오톡 아이콘" width={52} height={52} />
             <div className="label-1 text-neutral-1000">카카오톡</div>
           </button>
