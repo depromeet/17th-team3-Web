@@ -10,7 +10,7 @@ interface CreateMeetingSuccessModalProps {
 
 const CreateMeetingSuccessModal = ({ isOpen, onClose }: CreateMeetingSuccessModalProps) => {
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose}>
+    <BaseModal isOpen={isOpen} onClose={onClose} showCloseButton className="max-w-[335px] pt-4">
       <div className="flex flex-col items-center pb-13 select-none">
         <Image src="/images/confetti.svg" alt="폭죽 아이콘" width={100} height={100} />
         <div className="flex flex-col items-center gap-2 pt-1 pb-2">
