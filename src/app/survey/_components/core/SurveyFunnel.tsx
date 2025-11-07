@@ -4,11 +4,11 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import Loading from '@/app/_components/ui/Loading';
 import SurveyLayout from '@/app/survey/_components/core/SurveyLayout';
 import SurveyCuisineStep from '@/app/survey/_components/step/SurveyCuisineStep';
 import SurveyProfileStep from '@/app/survey/_components/step/SurveyProfileStep';
 import ConfirmModal from '@/app/survey/_components/ui/modal/ConfirmModal';
-import LoadingOverlay from '@/app/survey/_components/ui/modal/LoadingOverlay';
 import { useSurveyFunnel } from '@/app/survey/_hooks/useSurveyFunnel';
 import { getPrevStepKey, SURVEY_TOTAL_STEPS } from '@/app/survey/_models/constants';
 
@@ -112,7 +112,7 @@ const SurveyFunnel = ({ role, meetingId, initial, onComplete: _onComplete }: Sur
               setIsLoading(false);
             }}
           />
-          {isLoading && <LoadingOverlay />}
+          {isLoading && <Loading />}
         </SurveyLayout>
       );
 

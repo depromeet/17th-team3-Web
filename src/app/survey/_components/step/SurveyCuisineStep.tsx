@@ -5,13 +5,13 @@ import { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
+import Loading from '@/app/_components/ui/Loading';
 import { getCuisineImageSrc } from '@/app/_constants/cuisine';
 import { FOOD_MAP } from '@/app/_constants/menu';
 import { surveyApi } from '@/app/_services/survey/api';
 import ChipGroupMultiSelect from '@/app/survey/_components/ui/form/ChipGroupMultiSelect';
 import StepFormLayout from '@/app/survey/_components/ui/form/StepFormLayout';
 import FoodConfirmModal from '@/app/survey/_components/ui/modal/FoodConfirmModal';
-import LoadingOverlay from '@/app/survey/_components/ui/modal/LoadingOverlay';
 import { useSurveyCategories } from '@/app/survey/_hooks/useSurveyCategories';
 import { ANY_ID } from '@/app/survey/_models/constants';
 
@@ -183,7 +183,7 @@ const SurveyCuisineStep = ({
       )}
 
       {/* API 저장 / 카테고리 로딩 중 전체 오버레이 */}
-      {isBusy && <LoadingOverlay />}
+      {isBusy && <Loading />}
     </>
   );
 };

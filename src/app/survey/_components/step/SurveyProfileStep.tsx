@@ -3,10 +3,10 @@
 import { useEffect, useState } from 'react';
 
 import Input from '@/app/_components/ui/Input';
+import Loading from '@/app/_components/ui/Loading';
 import { surveyApi } from '@/app/_services/survey/api';
 import { validateText } from '@/app/meetings/_utils/validation';
 import StepFormLayout from '@/app/survey/_components/ui/form/StepFormLayout';
-import LoadingOverlay from '@/app/survey/_components/ui/modal/LoadingOverlay';
 import ProfileSelector from '@/app/survey/_components/ui/selector/ProfileSelector';
 
 interface SurveyProfileStepProps {
@@ -98,7 +98,7 @@ const SurveyProfileStep = ({
         />
       </StepFormLayout>
 
-      {isSubmitting && <LoadingOverlay />}
+      {isSubmitting && <Loading />}
     </>
   );
 };
