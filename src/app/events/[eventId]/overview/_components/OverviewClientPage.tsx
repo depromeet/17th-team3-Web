@@ -18,10 +18,8 @@ const OverviewClientPage = ({ overviewData }: { overviewData: Overview }) => {
   const created = searchParam.get('created');
   const { isOpen, handler } = useDisclosure();
 
-  console.log('ccccccccccccccc', created);
   useEffect(() => {
     if (created) {
-      console.log('zxcv');
       handler.open();
       // router.replace(`/events/${eventId}/overview`);
     }

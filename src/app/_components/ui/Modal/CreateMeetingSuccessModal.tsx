@@ -1,7 +1,10 @@
+'use client';
+
 import { Copy } from 'lucide-react';
 import Image from 'next/image';
 
 import BaseModal from '@/app/_components/ui/Modal/BaseModal';
+import { useToast } from '@/app/_features/toast';
 
 interface CreateMeetingSuccessModalProps {
   isOpen: boolean;
@@ -9,6 +12,18 @@ interface CreateMeetingSuccessModalProps {
 }
 
 const CreateMeetingSuccessModal = ({ isOpen, onClose }: CreateMeetingSuccessModalProps) => {
+  const { success } = useToast();
+
+  const handleCopyUrl = async () => {
+    try {
+      const url = typeof window !== 'undefined' ? window.location.href : '';
+      await navigator.clipboard.writeText(url);
+      success(`참여 링크가 복사되었어요.\n공유해서 참여를 독촉해보세요.`, { duration: 2500 });
+    } catch (error) {
+      console.error('URL 복사 실패:', error);
+    }
+  };
+
   return (
     <BaseModal isOpen={isOpen} onClose={onClose} showCloseButton className="max-w-[335px] pt-4">
       <div className="flex flex-col items-center pb-13 select-none">
@@ -20,16 +35,19 @@ const CreateMeetingSuccessModal = ({ isOpen, onClose }: CreateMeetingSuccessModa
           </p>
         </div>
         <div className="flex gap-4">
-          <div className="flex flex-col gap-3 px-4 py-3">
+          <button className="flex cursor-pointer flex-col gap-3 px-4 py-3 transition-opacity hover:opacity-70">
             <Image src="/icons/kakaotalk.svg" alt="카카오톡 아이콘" width={52} height={52} />
             <div className="label-1 text-neutral-1000">카카오톡</div>
-          </div>
-          <div className="flex flex-col gap-3 px-4 py-3">
+          </button>
+          <button
+            onClick={handleCopyUrl}
+            className="flex cursor-pointer flex-col gap-3 px-4 py-3 transition-opacity hover:opacity-70"
+          >
             <div className="flex h-13 w-13 items-center justify-center rounded-full bg-neutral-200">
               <Copy size={27} className="text-neutral-1300" />
             </div>
             <div className="label-1 text-neutral-1000">URL 복사</div>
-          </div>
+          </button>
         </div>
       </div>
     </BaseModal>
