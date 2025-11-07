@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import Loading from '@/app/_components/ui/Loading';
+import { surveyApi } from '@/app/_services/survey/api';
 import SurveyLayout from '@/app/survey/_components/core/SurveyLayout';
 import SurveyCuisineStep from '@/app/survey/_components/step/SurveyCuisineStep';
 import SurveyProfileStep from '@/app/survey/_components/step/SurveyProfileStep';
@@ -100,16 +101,14 @@ const SurveyFunnel = ({ role, meetingId, initial, onComplete: _onComplete }: Sur
             onCancel={() => setIsSkipModalOpen(false)}
             onConfirm={async () => {
               setIsLoading(true);
-              await new Promise((r) => setTimeout(r, 1000));
-              /**
-               * TODO
-               * - `events/{meetingId}/overview` 불러오기
-               * - queryString 제거
-               */
-              router.push(
-                `/events/${meetingId}/overview?selected=${encodeURIComponent('다 괜찮아요')}`
-              );
-              setIsLoading(false);
+              try {
+                await surveyApi.postSurveyResult(meetingId, [3]); // '다 괜찮아요'
+                router.push(
+                  `/events/${meetingId}/overview?selected=${encodeURIComponent('다 괜찮아요')}`
+                );
+              } finally {
+                setIsLoading(false);
+              }
             }}
           />
           {isLoading && <Loading />}

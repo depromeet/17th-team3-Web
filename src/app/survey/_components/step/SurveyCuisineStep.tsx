@@ -83,7 +83,16 @@ const SurveyCuisineStep = ({
       setIsModalOpen(false);
       setIsSubmitting(true);
 
-      const categoryIds = selectedIds.map((id) => Number(id));
+      // Leaf + Branch ID 모두 포함
+      const selectedLeafIds = selectedIds.map(Number);
+      const branchIds: number[] = [];
+
+      selectedLeafIds.forEach((leafId) => {
+        const parent = categories.find((cat) => cat.children.some((child) => child.id === leafId));
+        if (parent) branchIds.push(parent.id);
+      });
+
+      const categoryIds = Array.from(new Set([...branchIds, ...selectedLeafIds]));
       await surveyApi.postSurveyResult(meetingId, categoryIds);
 
       router.push(
