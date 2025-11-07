@@ -4,15 +4,11 @@ import Image from 'next/image';
 
 import { cn } from '@/app/_lib/cn';
 
-const REDIRECT_URL = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URL!;
-const CLIENT_ID = process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID;
-
 const PROVIDER_CONFIG = {
   kakao: {
     text: '카카오톡으로 시작하기',
     icon: '/icons/kakao-icon.svg',
     className: 'bg-yellow-400',
-    redirectUrl: `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URL)}`,
   },
 };
 
@@ -25,11 +21,11 @@ const LoginButton = ({ provider = 'kakao', redirectTo }: LoginButtonProps) => {
   const config = PROVIDER_CONFIG[provider];
 
   const handleLogin = () => {
-    const loginUrl = new URL(config.redirectUrl);
+    const apiUrl = new URL('/api/auth/kakao', window.location.origin);
     if (redirectTo) {
-      loginUrl.searchParams.set('state', redirectTo);
+      apiUrl.searchParams.set('redirectTo', redirectTo);
     }
-    window.location.href = String(loginUrl);
+    window.location.href = String(apiUrl);
   };
 
   return (

@@ -5,6 +5,11 @@ services:
       - "3000:3000"            # dev와 충돌나면 "3001:3000" 등으로 조정
     environment:
       NODE_ENV: production
+      # 카카오 OAuth 환경변수
+      NEXT_PUBLIC_KAKAO_CLIENT_ID: ${NEXT_PUBLIC_KAKAO_CLIENT_ID}
+      NEXT_PUBLIC_KAKAO_REDIRECT_URL: ${NEXT_PUBLIC_KAKAO_REDIRECT_URL}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+      NEXT_PUBLIC_KAKAO_APP_KEY: ${NEXT_PUBLIC_KAKAO_APP_KEY}
       # HOSTNAME/PORT는 Dockerfile에서 이미 기본값 지정(0.0.0.0 / 3000)
       # 필요 시 여기서 덮어써도 됨
     restart: unless-stopped
