@@ -16,12 +16,12 @@ const OverviewClientPage = ({ overviewData }: { overviewData: Overview }) => {
   const searchParam = useSearchParams();
   const { eventId } = useParams();
   const created = searchParam.get('created');
-  const { isOpen, handler } = useDisclosure();
+  const { isOpen: modalOpen, handler: modalHandler } = useDisclosure();
 
   useEffect(() => {
     if (created) {
-      handler.open();
-      // router.replace(`/events/${eventId}/overview`);
+      modalHandler.open();
+      router.replace(`/events/${eventId}/overview`);
     }
   }, []);
 
@@ -38,7 +38,7 @@ const OverviewClientPage = ({ overviewData }: { overviewData: Overview }) => {
         </div>
         <SurveyActionButton variant="join" />
       </div>
-      <CreateMeetingSuccessModal isOpen={isOpen} onClose={handler.close} />
+      <CreateMeetingSuccessModal isOpen={modalOpen} onClose={modalHandler.close} />
     </>
   );
 };

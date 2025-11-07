@@ -1,11 +1,11 @@
-/**
- * 카카오 SDK 초기화 및 공유 기능
- * 카카오 JavaScript SDK를 로드하고 초기화
- * @param appKey - 카카오 앱 키
- */
-export const initKakaoSDK = (appKey: string) => {
+export const initKakaoSDK = () => {
   if (typeof window === 'undefined') return;
 
+  const appKey = process.env.NEXT_PUBLIC_KAKAO_APP_KEY;
+  if (!appKey) {
+    console.error('카카오 앱 키가 설정되지 않았습니다.');
+    return;
+  }
   const script = document.createElement('script');
   script.src = 'https://developers.kakao.com/sdk/js/kakao.min.js';
   script.async = true;
@@ -19,28 +19,20 @@ export const initKakaoSDK = (appKey: string) => {
   document.head.appendChild(script);
 };
 
-/**
- * 카카오톡으로 링크 공유
- * @param url - 공유할 URL
- * @param title - 메시지 제목
- * @param description - 메시지 설명
- */
-export const shareKakaoLink = (
-  url: string,
-  title: string = '모임 초대',
-  description: string = '모임 설문에 참여해주세요!'
-) => {
+export const shareKakaoLink = () => {
   if (typeof window === 'undefined' || !window.Kakao) {
     console.error('카카오 SDK가 로드되지 않았습니다.');
     return;
   }
 
+  const url = window.location.href;
+
   window.Kakao.Link.sendDefault({
     objectType: 'feed',
     content: {
-      title,
-      description,
-      imageUrl: 'https://example.com/image.jpg', // 썸네일 이미지 URL
+      title: '🎉 모임에 초대합니다!',
+      description: '그냥 맛집? 나만의 맛집!',
+      imageUrl: '/images/example-kakao-bg.png',
       link: {
         mobileWebUrl: url,
         webUrl: url,
@@ -48,7 +40,7 @@ export const shareKakaoLink = (
     },
     buttons: [
       {
-        title: '설문 참여하기',
+        title: '모임 참여하러 가기',
         link: {
           mobileWebUrl: url,
           webUrl: url,
@@ -58,9 +50,32 @@ export const shareKakaoLink = (
   });
 };
 
-// 전역 Kakao 타입 선언
 declare global {
   interface Window {
-    Kakao: any;
+    Kakao: {
+      isInitialized: () => boolean;
+      init: (appKey: string) => void;
+      Link: {
+        sendDefault: (config: {
+          objectType: string;
+          content: {
+            title: string;
+            description: string;
+            imageUrl: string;
+            link: {
+              mobileWebUrl: string;
+              webUrl: string;
+            };
+          };
+          buttons: Array<{
+            title: string;
+            link: {
+              mobileWebUrl: string;
+              webUrl: string;
+            };
+          }>;
+        }) => void;
+      };
+    };
   }
 }
