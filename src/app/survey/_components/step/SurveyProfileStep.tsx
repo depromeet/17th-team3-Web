@@ -5,9 +5,9 @@ import { useEffect, useState } from 'react';
 import Input from '@/app/_components/ui/Input';
 import Loading from '@/app/_components/ui/Loading';
 import { surveyApi } from '@/app/_services/survey/api';
-import { validateText } from '@/app/meetings/_utils/validation';
 import StepFormLayout from '@/app/survey/_components/ui/form/StepFormLayout';
 import ProfileSelector from '@/app/survey/_components/ui/selector/ProfileSelector';
+import { useProfileValidation } from '@/app/survey/_hooks/useProfileValidation';
 
 interface SurveyProfileStepProps {
   onNext: (payload: { name: string; profileKey: string }) => void;
@@ -30,95 +30,54 @@ const SurveyProfileStep = ({
   initialValue = '',
   initialProfileKey = 'default',
   title = '사용하실 프로필과\n이름을 알려주세요',
-  description = '',
+  description = '다음 단계로 넘어가면 수정할 수 없어요.',
   meetingId = 0, // TODO: 실제 모임 ID 전달받기
 }: SurveyProfileStepProps) => {
   const [name, setName] = useState(initialValue);
   const [profileKey, setProfileKey] = useState(initialProfileKey);
-  const [isError, setIsError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [usedNicknames, setUsedNicknames] = useState<string[]>([]);
+  const [lockedProfileKeys, setLockedProfileKeys] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [lockedProfileKeys, setLockedProfileKeys] = useState<string[]>([]);
-  const [usedNicknames, setUsedNicknames] = useState<string[]>([]);
+  const { error, setError, validateNickname, validateColor, handleApiError } = useProfileValidation(
+    {
+      usedNicknames,
+      lockedProfileKeys,
+    }
+  );
 
-  /** 모임 참가자 목록 조회 → 닉네임 / 프로필 색상 중복 확인용 데이터 저장 */
+  /** 모임 참가자 데이터 로드 (닉네임/색상 중복검사용) */
   useEffect(() => {
     if (!meetingId) return;
-
-    const fetchMeetingDetail = async () => {
+    (async () => {
       try {
         const res = await surveyApi.getMeetingDetail(meetingId);
-
-        console.warn('meetingDetail:', res); // { currentUserId: 3, meetingInfo: {...}, participantList: [...] }
-
-        const { currentUserId, participantList = [] } = res;
-        const participants = participantList;
-
-        // 본인 제외
-        const others = participants.filter((p) => p.userId !== currentUserId);
-
-        setLockedProfileKeys(others.map((p) => p.profileColor.toLowerCase()));
+        const others = res.participantList.filter((p) => p.userId !== res.currentUserId);
         setUsedNicknames(others.map((p) => p.nickname));
+        setLockedProfileKeys(others.map((p) => p.profileColor.toLowerCase()));
       } catch (err) {
-        console.error('모임 상세 조회 실패:', err);
+        console.error('모임 상세 조회(getMeetingDetail) 실패:', err);
       }
-    };
-
-    fetchMeetingDetail();
+    })();
   }, [meetingId]);
 
-  /** 닉네임 검증 (본인 예외 반영) */
-  useEffect(() => {
-    const trimmed = name.trim();
-    const result = validateText(trimmed);
-
-    // 기본 텍스트 형식 검증
-    if (!result.isValid) {
-      setIsError(true);
-      setErrorMessage(result.error);
-      return;
-    }
-
-    // 이미 존재하는 닉네임(본인 제외) 검사
-    if (usedNicknames.includes(trimmed)) {
-      setIsError(true);
-      setErrorMessage('이미 사용 중인 닉네임입니다.');
-      return;
-    }
-
-    setIsError(false);
-    setErrorMessage('');
-  }, [name, usedNicknames]);
-
-  /** 프로필 저장 및 다음 단계 이동 */
-  useEffect(() => {
-    setProfileKey(initialProfileKey);
-  }, [initialProfileKey]);
-
-  /** 프로필 저장 및 다음 단계 이동 */
+  /** 프로필 저장 + 다음 단계 이동 */
   const handleNext = async () => {
-    const trimmed = name.trim();
-    if (isError || !trimmed) return;
+    const nicknameError = validateNickname(name);
+    if (nicknameError) return setError(nicknameError);
 
-    // 캐릭터 중복 (본인 제외)
-    if (lockedProfileKeys.includes(profileKey.toLowerCase())) {
-      alert('이미 사용 중인 프로필 색상입니다.');
-      return;
-    }
+    const colorError = validateColor(profileKey);
+    if (colorError) return setError(colorError);
 
     try {
       setIsSubmitting(true);
-
       await surveyApi.putAttendeeProfile(meetingId, {
-        attendeeNickname: trimmed,
+        attendeeNickname: name.trim(),
         color: profileKey.toUpperCase(),
       });
-
-      onNext({ name: trimmed, profileKey });
-    } catch (error: unknown) {
-      console.error('프로필 저장 실패:', (error as Error).message);
-      alert('프로필 저장 중 오류가 발생했습니다.');
+      onNext({ name, profileKey });
+    } catch (e) {
+      handleApiError(e);
     } finally {
       setIsSubmitting(false);
     }
@@ -131,28 +90,26 @@ const SurveyProfileStep = ({
         description={description}
         onNext={handleNext}
         onCancel={onCancel}
-        isNextDisabled={!name || isError || isSubmitting}
-        prevButtonText="이전"
+        isNextDisabled={!name.trim() || !!error || isSubmitting}
         nextButtonText="다음 단계로"
       >
         <ProfileSelector
           value={profileKey}
-          onChange={(selected) => setProfileKey(selected)}
+          onChange={setProfileKey}
           lockedKeys={lockedProfileKeys}
         />
-
         <Input
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => {
+            setName(e.target.value);
+            setError(validateNickname(e.target.value));
+          }}
           onClear={() => setName('')}
-          hasError={isError}
-          errorMessage={errorMessage}
-          showClearButton
-          maxLength={21}
+          hasError={!!error}
+          errorMessage={error}
           placeholder="이름 입력"
         />
       </StepFormLayout>
-
       {isSubmitting && <Loading />}
     </>
   );
