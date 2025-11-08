@@ -1,30 +1,30 @@
+'use client';
+
+import { useMemo } from 'react';
+
 import { cn } from '@/app/_lib/cn';
-
-type SurveyStatusVariant = 'progress' | 'closed' | 'completed';
-
-const SURVEY_STATUS_MAP = {
-  progress: {
-    label: '취향 설문 진행 중이에요',
-    className: 'title-gradient',
-  },
-  closed: {
-    label: '설문 기간이 종료됐어요',
-    className: 'text-neutral-1400',
-  },
-  completed: {
-    label: '모두 설문을 완료했어요',
-    className: 'text-neutral-1400',
-  },
-} as const satisfies Record<SurveyStatusVariant, { label: string; className: string }>;
+import { MeetingOverview } from '@/app/_services/overview';
+import useOverviewState from '@/app/events/[eventId]/overview/_hooks/useOverviewState';
 
 interface SurveyStatusBannerProps {
-  variant: SurveyStatusVariant;
+  overview: MeetingOverview;
 }
 
-const SurveyStatusBanner = ({ variant }: SurveyStatusBannerProps) => {
-  const { label, className } = SURVEY_STATUS_MAP[variant];
+const SurveyStatusBanner = ({ overview }: SurveyStatusBannerProps) => {
+  const { isEveryoneCompleted } = useOverviewState(overview);
 
-  return <p className={cn('heading-2 font-bold', className)}>{label}</p>;
+  const isSurveyClosed = overview.meetingInfo.isClosed;
+
+  const label = useMemo(() => {
+    if (isSurveyClosed) return { label: '설문 기간이 종료됐어요', className: 'text-neutral-1400' };
+
+    if (isEveryoneCompleted)
+      return { label: '모두 설문을 완료했어요', className: 'text-neutral-1400' };
+
+    return { label: '취향 설문 진행 중이에요', className: 'title-gradient' };
+  }, [isSurveyClosed, isEveryoneCompleted]);
+
+  return <p className={cn('heading-2 font-bold', label.className)}>{label.label}</p>;
 };
 
 export default SurveyStatusBanner;

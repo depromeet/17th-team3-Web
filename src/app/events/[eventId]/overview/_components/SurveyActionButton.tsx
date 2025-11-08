@@ -1,44 +1,50 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useEffect, useMemo } from 'react';
+
 import { useParams, useRouter } from 'next/navigation';
 
 import Button from '@/app/_components/ui/Button';
-import { ApiError } from '@/app/_models/api';
-import { getOverviewQueryOptions } from '@/app/_queries/overviewQueries';
+import { useCountdownDisplay } from '@/app/_hooks/useCountdownDisplay';
 import { MeetingOverview } from '@/app/_services/overview';
+import useOverviewState from '@/app/events/[eventId]/overview/_hooks/useOverviewState';
 
-type SurveyActionVariant = 'join' | 'closing-soon' | 'show-result';
-
-interface SurveyActionButtonProps {
-  variant: SurveyActionVariant;
-}
-
-const BUTTON_LABEL_MAP: Record<SurveyActionVariant, string> = {
-  join: '설문 참여하기',
-  'closing-soon': '설문 마감임박', // 추후 카운트다운 붙일 자리
-  'show-result': '추천 결과 보기',
-};
-
-const SurveyActionButton = ({ variant }: SurveyActionButtonProps) => {
+const SurveyActionButton = ({ overview }: { overview: MeetingOverview }) => {
   const router = useRouter();
-  const params = useParams();
-  const { eventId } = params;
+  const { eventId } = useParams();
 
-  const { data: overview, isPending } = useQuery<MeetingOverview, ApiError>({
-    ...getOverviewQueryOptions(Number(eventId)),
-  });
+  const { hasParticipated } = useOverviewState(overview);
+  const isSurveyClosed = overview.meetingInfo.isClosed;
+  const countdown = useCountdownDisplay(new Date(overview.meetingInfo.endAt));
+
+  const buttonState = useMemo(() => {
+    if (!hasParticipated) return { label: '설문 참여하기', path: '/survey' };
+    if (isSurveyClosed) return { label: '추천 결과 보기', path: `/events/${eventId}/analysis` };
+    return {
+      label: (
+        <>
+          <span className="body-3 font-semibold">설문 마감까지</span> {countdown}
+        </>
+      ),
+      path: null,
+    };
+  }, [hasParticipated, isSurveyClosed, countdown, eventId]);
 
   const handleClick = () => {
-    if (variant === 'join') {
-      router.push('/survey');
-    } else if (variant === 'closing-soon') {
-      router.push('/recommendations/sAmCHo/result');
-    }
+    if (buttonState.path) router.push(buttonState.path);
   };
+
+  useEffect(() => {
+    if (isSurveyClosed) {
+      router.prefetch(`/events/${eventId}/analysis`);
+    }
+  }, [isSurveyClosed, eventId, router]); // 설문 마감 후 추천 결과 페이지 미리 로드
+
   return (
     <div className="sticky bottom-0 px-5 pt-3 pb-6">
-      <Button onClick={handleClick}>{BUTTON_LABEL_MAP[variant]}</Button>
+      <Button onClick={handleClick}>
+        <span className="body-3 font-semibold text-white">{buttonState.label}</span>
+      </Button>
     </div>
   );
 };
