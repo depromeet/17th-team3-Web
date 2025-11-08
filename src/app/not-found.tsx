@@ -15,10 +15,10 @@ const NotFoundPage = () => {
         />
         <div className="flex flex-col gap-1 text-center">
           <h3 className="body-1 font-semibold text-neutral-1600">
-            원하시는 페이지를 찾을 수 없어요
+            찾으시는 페이지를 찾을 수 없어요.
           </h3>
           <p className="body-3 whitespace-pre text-neutral-800">
-            {`찾으시는 페이지의 주소 혹은 이름이 변경되었거나,\n일시적으로 사용할 수 없는 상태에요.\n문제가 또 발생한다면, [이메일 주소]로 알려주세요.`}
+            {`페이지 주소가 바뀌었거나, 잠시 접근이 어려운 상태예요.\n홈으로 돌아가 다시 시작해보세요.`}
           </p>
         </div>
       </div>
