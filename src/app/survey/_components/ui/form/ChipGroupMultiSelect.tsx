@@ -61,7 +61,13 @@ const ChipGroupMultiSelect = ({
       if (base.length >= MAX_SELECT_COUNT) {
         customToast(
           <div className="flex items-center gap-2">
-            <Image src="/icons/exclamation.svg" alt="!" className="h-8 w-8" />
+            <Image
+              src="/icons/exclamation.svg"
+              alt="!"
+              width={24}
+              height={24}
+              className="h-8 w-8"
+            />
             <span className="text-gray-1500 body-3 font-semibold">
               최대 5개까지 선택 가능합니다
             </span>
