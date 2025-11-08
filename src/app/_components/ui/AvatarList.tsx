@@ -1,22 +1,27 @@
 import Image from 'next/image';
 
+import { Participant } from '@/app/_models/meeting';
+
 interface AvatarListProps {
-  // TODO: 추후 아바타 ID로 변경해, 타입 체크 강화
-  avatars: string[];
-  additionalCount: number;
+  surveyParticipantList: Participant[];
 }
 
-const AvatarList = ({ avatars, additionalCount }: AvatarListProps) => {
+const AvatarList = ({ surveyParticipantList }: AvatarListProps) => {
   return (
     <div className="flex w-fit items-center justify-center gap-3 rounded-[20px] bg-neutral-100 px-2 py-1">
       <div className="flex">
-        {avatars.map((avatar, index) => (
-          <div key={index} className="-mr-2 h-5 w-5 rounded-full bg-neutral-100">
-            <Image alt="avatar" src={avatar} width={20} height={20} />
+        {surveyParticipantList.map((participant) => (
+          <div key={participant.userId} className="-mr-2 h-5 w-5 rounded-full bg-neutral-100">
+            <Image
+              alt="설문 참여자 프로필 아이콘"
+              src={`/images/avatar/${participant.color.toLowerCase()}.svg`}
+              width={20}
+              height={20}
+            />
           </div>
         ))}
       </div>
-      <p className="label-2 font-semibold text-orange-800">{`+${additionalCount}`}</p>
+      <p className="label-2 font-semibold text-orange-800">{`+${surveyParticipantList.length ?? []}`}</p>
     </div>
   );
 };

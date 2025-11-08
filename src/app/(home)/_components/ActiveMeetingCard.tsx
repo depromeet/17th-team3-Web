@@ -10,7 +10,7 @@ interface ActiveMeetingCardProps {
 }
 
 const ActiveMeetingCard = ({ meeting }: ActiveMeetingCardProps) => {
-  const { title, stationName, totalParticipantCnt, endAt } = meeting;
+  const { title, stationName, totalParticipantCnt, endAt, participantList } = meeting;
 
   return (
     <div className="cursor-pointer rounded-3xl p-3 pt-4 select-none gathering-card">
@@ -48,7 +48,7 @@ const ActiveMeetingCard = ({ meeting }: ActiveMeetingCardProps) => {
 
       <div className="mt-8 rounded-3xl bg-white px-4 py-3 pt-12">
         <ParticipantProgressIndicator
-          surveyCompletedParticipants={2} // TODO: API 구현 후, 설문 참여 인원으로 변경 필요
+          surveyCompletedParticipants={participantList.length ?? []}
           totalParticipants={totalParticipantCnt}
         />
       </div>
