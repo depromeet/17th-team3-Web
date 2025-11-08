@@ -7,7 +7,7 @@ import Button from '@/app/_components/ui/Button';
 
 const ErrorBoundary = ({ reset }: { reset: () => void }) => {
   return (
-    <main className="flex h-[100dvh] flex-col">
+    <main className="flex h-[100dvh] flex-col select-none">
       <div className="flex flex-1 flex-col items-center justify-center gap-5">
         <Image
           src="/images/momuzzi-not-found.svg"
