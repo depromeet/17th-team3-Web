@@ -13,6 +13,7 @@ interface TopNavigationProps {
   onRightClick?: () => void;
   leftAriaLabel?: string; // 왼쪽 버튼 접근성 라벨
   rightAriaLabel?: string; // 오른쪽 버튼 접근성 라벨
+  rightLabel?: string; // 오른쪽 버튼 텍스트 (아이콘 대신 표시)
   className?: string;
 }
 
@@ -33,6 +34,7 @@ interface TopNavigationProps {
  * @param onRightClick - 오른쪽 버튼 클릭 이벤트(기본값: router.forward())
  * @param leftAriaLabel - 왼쪽 버튼의 접근성 라벨 (기본값: "뒤로가기")
  * @param rightAriaLabel - 오른쪽 버튼의 접근성 라벨 (기본값: "메뉴")
+ * @param rightLabel - 오른쪽 버튼 텍스트 (기본값: "아이콘")
  * @param className - 추가 CSS 클래스
  *
  * @note 기본 버튼 텍스트의 색상은 neutral-1200입니다. 필요시 className="text-[color]"로 변경할 수 있습니다.
@@ -47,6 +49,7 @@ const TopNavigation = ({
   onRightClick,
   leftAriaLabel = '뒤로가기',
   rightAriaLabel = '다음',
+  rightLabel,
   className,
 }: TopNavigationProps) => {
   const router = useRouter();
@@ -68,42 +71,56 @@ const TopNavigation = ({
   return (
     <div
       className={cn(
-        'sticky top-0 z-10 flex w-full shrink-0 items-center justify-between bg-inherit p-4 pb-3',
+        'sticky top-0 z-10 flex w-full shrink-0 items-center justify-between bg-inherit p-4',
         className
       )}
     >
-      <div className="flex h-6 w-6 shrink-0 items-center justify-center">
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center">
         {showBackButton && (
           <button
             type="button"
             onClick={handleLeftClick}
             aria-label={leftAriaLabel}
-            className={cn(
-              'flex cursor-pointer items-center justify-center bg-transparent text-orange-800',
-              className
-            )}
+            className="flex cursor-pointer items-center justify-center bg-transparent text-current"
           >
-            <ChevronLeft size={24} strokeWidth={2} absoluteStrokeWidth />
+            <ChevronLeft
+              size={32}
+              strokeWidth={2}
+              absoluteStrokeWidth
+              className="text-orange-800"
+            />
           </button>
         )}
       </div>
 
-      <span className={cn('body-3 font-semibold text-orange-800', className)}>{title}</span>
+      <span className="body-3 font-semibold text-orange-800">{title}</span>
 
-      <div className="flex h-6 w-6 shrink-0 items-center justify-center">
-        {showNextButton && (
-          <button
-            type="button"
-            onClick={handleRightClick}
-            aria-label={rightAriaLabel}
-            className={cn(
-              'flex cursor-pointer items-center justify-center bg-transparent text-orange-800',
-              className
-            )}
-          >
-            <ChevronRight size={24} strokeWidth={2} absoluteStrokeWidth />
-          </button>
-        )}
+      <div className="flex h-9 shrink-0 items-center justify-center">
+        {showNextButton &&
+          (rightLabel ? (
+            <button
+              type="button"
+              onClick={handleRightClick}
+              aria-label={rightAriaLabel}
+              className="cursor-pointer text-sm font-semibold text-orange-600 hover:text-orange-700"
+            >
+              {rightLabel}
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={handleRightClick}
+              aria-label={rightAriaLabel}
+              className="flex cursor-pointer items-center justify-center bg-transparent text-current"
+            >
+              <ChevronRight
+                size={32}
+                strokeWidth={2}
+                absoluteStrokeWidth
+                className="text-orange-800"
+              />
+            </button>
+          ))}
       </div>
     </div>
   );
