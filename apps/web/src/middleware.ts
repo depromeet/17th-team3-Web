@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 const AUTH_PAGES = ['/login'];
-const PROTECTED_ROUTES = ['/meetings'];
+const PROTECTED_ROUTES = ['/meetings', '/events', '/survey']; // TODO: 일관된 폴더 구조로 변경 필요
 
 const middleware = async (req: NextRequest) => {
   if (req.nextUrl.pathname === '/healthz') {
@@ -40,14 +40,20 @@ const middleware = async (req: NextRequest) => {
         return response;
       }
 
-      const response = NextResponse.redirect(new URL('/login', req.url));
+      const redirectTo = `${pathname}${req.nextUrl.search}`;
+      const loginUrl = new URL('/login', req.url);
+      loginUrl.searchParams.set('redirectTo', redirectTo);
+      const response = NextResponse.redirect(loginUrl);
       response.cookies.delete('accessToken');
       response.cookies.delete('refreshToken');
       return response;
     }
 
     if (!accessToken) {
-      return NextResponse.redirect(new URL('/login', req.url));
+      const redirectTo = `${pathname}${req.nextUrl.search}`;
+      const loginUrl = new URL('/login', req.url);
+      loginUrl.searchParams.set('redirectTo', redirectTo);
+      return NextResponse.redirect(loginUrl);
     }
   }
 

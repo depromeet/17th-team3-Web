@@ -4,11 +4,21 @@ import { Suspense, useEffect } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import Loading from '@/app/_components/ui/Loading';
 import { exchangeCodeForCookie } from '@/app/_services/auth';
 import { useAuthParams } from '@/app/auth/_hooks/useAuthParams';
 
+// 유효한 리다이렉트 경로인지 확인 (Open Redirect 공격 방지)
+const isValidRedirectUrl = (url: string | null): boolean => {
+  if (!url) return false;
+  if (!url.startsWith('/')) return false;
+
+  const validPaths = ['/events', '/survey', '/meetings'];
+  return validPaths.some((path) => url.startsWith(path));
+};
+
 const CallbackContent = () => {
-  const { code, error } = useAuthParams();
+  const { code, error, state } = useAuthParams();
 
   const router = useRouter();
 
@@ -28,7 +38,10 @@ const CallbackContent = () => {
 
       try {
         await exchangeCodeForCookie(code);
-        router.replace('/');
+
+        // 유효한 redirectUrl이면 해당 경로로, 아니면 홈으로
+        const redirectUrl = isValidRedirectUrl(state) ? (state as string) : '/';
+        router.replace(redirectUrl);
       } catch (error) {
         console.error('로그인 실패:', error);
         router.replace('/login');
@@ -36,14 +49,14 @@ const CallbackContent = () => {
     };
 
     processAuth();
-  }, [code, error, router]);
+  }, [code, error, state, router]);
 
-  return <div className="mx-auto flex items-center justify-center">로그인 처리중...</div>;
+  return <Loading />;
 };
 
 const CallbackPage = () => {
   return (
-    <Suspense>
+    <Suspense fallback={<Loading />}>
       <CallbackContent />
     </Suspense>
   );

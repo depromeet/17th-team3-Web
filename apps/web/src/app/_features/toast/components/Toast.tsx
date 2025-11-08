@@ -119,7 +119,7 @@ const Toast = ({ toast, onClose }: ToastProps) => {
         </div>
 
         {/* 메시지 영역 ReactNode 또는 string */}
-        <div className="flex-1">
+        <div className="flex flex-1 items-center">
           {typeof toast.message === 'string' ? (
             <p className="body-3 font-semibold whitespace-pre-line">{toast.message}</p>
           ) : (

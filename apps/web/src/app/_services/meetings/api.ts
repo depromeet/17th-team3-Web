@@ -1,27 +1,23 @@
 import { api } from '@/app/_lib/api';
+import { CreateMeetingRequest, CreateMeetingResponse } from '@/app/meetings/create/_models/types';
+
+import { formatCreateMeetingResponse, formatMeetingResponse } from './format';
+
+import type { MeetingResponse } from '@/app/_models/meeting';
 
 export const meetingsApi = {
-  // 사용자 모임 목록 조회
-  getMeetings: () => api.get('/meetings'),
-  // 모임 생성
-  createMeeting: () => {
-    const mockForm = {
-      name: '오늘 뭐먹을건데',
-      attendeeNickname: '나야 혁준',
-      attendeeCount: 10,
-      stationId: 1,
-      endAt: '2025-10-15T09:00:00.000Z',
-    };
-    return api.post('/meetings', mockForm);
+  getMeetings: async () => {
+    const response = await api.get<MeetingResponse[]>('/meetings');
+    return response.map(formatMeetingResponse);
   },
-  // 모임 초대 토큰 생성
-  getMeetingToken: (meetingId: string) => api.post(`/meetings/${meetingId}/invite-token`),
-  // 모임 참여
-  joinMeeting: (meetingId: string, attendeeNickname: string) =>
-    api.post('/meetings/join', { meetingId, attendeeNickname }),
-  // 모임 초대 토큰 검증
+  createMeeting: async (form: CreateMeetingRequest) => {
+    const response = await api.post<CreateMeetingResponse, CreateMeetingRequest>('/meetings', form);
+    return formatCreateMeetingResponse(response);
+  },
+  joinMeeting: async (token: string) => api.post('/meetings/join', { token }),
   validateToken: (token: string) =>
-    api.get('/meetings/validate-invite', {
+    api.get<{ token: string }>(`/meetings/validate-invite`, {
       params: { token },
     }),
-};
+  getMeetingToken: (meetingId: number) => api.get(`/meetings/${meetingId}/invite-token`),
+} as const;

@@ -424,6 +424,10 @@
   animation-delay: 0s;
 }
 
+@utility skeleton-gradient {
+  background: linear-gradient(224.49deg, #e5e7eb 3.05%, #f4f5f6 96.12%);
+}
+
 @keyframes result-text-flow {
   0% {
     background-position: 100% 50%;
@@ -431,6 +435,21 @@
   100% {
     background-position: -100% 50%;
   }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility animate-slide-up {
+  animation: slide-up 0.3s ease-out forwards;
 }
 
 /** 버튼에 배경에 사용되는 그라데이션, 스크롤시 경계선이 보이지 않도록 사용 */
@@ -475,4 +494,16 @@
     )
   );
 }
+
+@utility gathering-card {
+  background: var(
+    --Gathering-Card,
+    linear-gradient(
+      180deg,
+      var(--Saturated-Yellow-Yellow50, #fffdf5) 20%,
+      var(--Saturated-Orange-Orange50, #fff7f5) 100%
+    )
+  );
+}
+
 /* 그 외 전역 리셋/유틸은 기존 그대로 두면 됩니다 */
