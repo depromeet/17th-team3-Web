@@ -85,7 +85,7 @@ const SurveyFunnel = ({ role, meetingId, initial, onComplete: _onComplete }: Sur
         <SurveyLayout
           stepValue={2}
           totalSteps={SURVEY_TOTAL_STEPS}
-          onBack={handleBack}
+          // onBack={handleBack}
           showNextButton
           rightLabel="건너뛰기"
           onRightClick={() => setIsSkipModalOpen(true)}

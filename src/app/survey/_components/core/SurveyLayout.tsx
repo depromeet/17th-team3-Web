@@ -10,7 +10,7 @@ interface SurveyLayoutProps {
   /** 전체 스텝 수 */
   totalSteps: number;
   /** 상단 뒤로가기 핸들러 */
-  onBack: () => void;
+  onBack?: () => void;
   /** 상단 타이틀(옵션) */
   title?: string;
   /** 본문 */
@@ -49,7 +49,7 @@ const SurveyLayout = ({
     >
       <TopNavigation
         title={title}
-        showBackButton
+        showBackButton={false}
         showNextButton={showNextButton}
         onLeftClick={onBack}
         onRightClick={onRightClick}

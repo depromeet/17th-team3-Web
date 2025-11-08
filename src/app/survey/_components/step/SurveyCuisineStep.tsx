@@ -125,7 +125,7 @@ const SurveyCuisineStep = ({
     <>
       <StepFormLayout
         title={title}
-        onCancel={onCancel}
+        // onCancel={onCancel}
         onNext={handleNext}
         isNextDisabled={selectedIds.length === 0 || isBusy}
         nextButtonText={isSubmitting ? '저장 중...' : '다음으로'}

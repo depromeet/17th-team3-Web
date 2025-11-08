@@ -7,7 +7,7 @@ interface StepFormLayoutProps {
   description?: string;
   children: React.ReactNode;
   onNext: () => void;
-  onCancel: () => void;
+  onCancel?: () => void;
   isNextDisabled?: boolean;
   prevButtonText?: string;
   nextButtonText?: string;
@@ -38,9 +38,11 @@ const StepFormLayout = ({
       <div className="sticky bottom-0 flex w-full flex-col">
         {showNotice && <CuisineNoticeFrame />}
         <div className="flex gap-3 bg-orange-50 pt-3 pb-6">
-          <Button theme="gray" onClick={onCancel} className="w-[114px]">
-            {prevButtonText}
-          </Button>
+          {onCancel && (
+            <Button theme="gray" onClick={onCancel} className="w-[114px]">
+              {prevButtonText}
+            </Button>
+          )}
           <Button
             status={isNextDisabled ? 'disabled' : 'normal'}
             onClick={onNext}
