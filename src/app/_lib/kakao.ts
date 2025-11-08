@@ -19,13 +19,13 @@ export const initKakaoSDK = () => {
   document.head.appendChild(script);
 };
 
-export const shareKakaoLink = () => {
+export const shareKakaoLink = (shareUrl?: string) => {
   if (typeof window === 'undefined' || !window.Kakao) {
     console.error('카카오 SDK가 로드되지 않았습니다.');
     return;
   }
 
-  const url = window.location.href;
+  const url = shareUrl || window.location.href;
 
   window.Kakao.Link.sendDefault({
     objectType: 'feed',
