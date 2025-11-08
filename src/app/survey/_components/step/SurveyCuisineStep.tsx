@@ -101,9 +101,7 @@ const SurveyCuisineStep = ({
       const categoryIds = Array.from(new Set([...branchIds, ...selectedLeafIds]));
       await surveyApi.postSurveyResult(meetingId, categoryIds);
 
-      router.push(
-        `/events/${meetingId}/overview?selected=${encodeURIComponent(selectedIds.join(','))}`
-      );
+      router.push(`/events/${meetingId}/overview`);
     } catch (error: unknown) {
       const err = error as Error;
       console.error('설문 제출 실패:', err.message);
@@ -128,7 +126,7 @@ const SurveyCuisineStep = ({
         // onCancel={onCancel}
         onNext={handleNext}
         isNextDisabled={selectedIds.length === 0 || isBusy}
-        nextButtonText={isSubmitting ? '저장 중...' : '다음으로'}
+        nextButtonText={isSubmitting ? '저장 중...' : '저장하기'}
         showNotice
       >
         {isCategoryLoading ? (

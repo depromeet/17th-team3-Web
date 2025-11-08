@@ -17,7 +17,12 @@ const SurveyPage = async ({
   // todo: 쿼리스트링 -> 상태 관리
   // URL ?role=주최자 일 때만 주최자, 그 외엔 참여자
   const roleLabel: RoleLabel = role === '주최자' ? '주최자' : '참여자';
-  const meetingIdNumber = Number(meetingId ?? '106'); // TEST: 모임 방 번호 설정
-  return <SurveyClientShell role={roleLabel} meetingId={meetingIdNumber} />;
+
+  // meetingId 없을 경우 에러 처리
+  if (!meetingId) {
+    throw new Error('유효하지 않은 모임 ID입니다.');
+  }
+
+  return <SurveyClientShell role={roleLabel} meetingId={Number(127)} />; // Number(meetingID)
 };
 export default SurveyPage;

@@ -130,7 +130,7 @@ const FoodConfirmModal = ({
               'bg-gradient-to-r from-orange-400 via-orange-500 to-orange-400'
             )}
           >
-            저장하기
+            제출하기
           </button>
         </div>
       </div>
