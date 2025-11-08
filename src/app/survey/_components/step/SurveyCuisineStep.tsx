@@ -26,6 +26,12 @@ interface SurveyCuisineStepProps {
   meetingId?: number;
 }
 
+/** SurveyCuisineStep
+ * - 음식 카테고리(Branch → Leaf) 선택 단계
+ * - 최대 5개 선택 가능 / 선택 시 context 동기화
+ * - 확인 모달(FoodConfirmModal)에서 최종 확인 후 저장
+ * - 저장 시 Leaf + 상위 Branch ID를 모두 포함하여 전송
+ */
 const SurveyCuisineStep = ({
   title,
   defaultSelectedIds = [],

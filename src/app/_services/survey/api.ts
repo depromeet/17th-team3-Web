@@ -1,12 +1,24 @@
 import { api } from '@/app/_lib/api';
-import { FoodCategoryResponse, UpdateAttendeeProfileRequest } from '@/app/survey/_models/types';
+import {
+  FoodCategoryResponse,
+  UpdateAttendeeProfileRequest,
+  MeetingDetailResponse,
+} from '@/app/survey/_models/types';
 
+/**
+ * 설문 관련 API 모듈
+ */
 export const surveyApi = {
   /** 음식 카테고리 조회 */
   getSurveyCategories: (query?: string) =>
     api.get<FoodCategoryResponse>('/survey-categories', {
       params: query ? { q: query } : undefined,
     }),
+
+  /** 모임 상세 조회 (참가자 목록 포함) */
+  getMeetingDetail: (meetingId: number) => {
+    return api.get<MeetingDetailResponse>(`/meetings/${meetingId}`);
+  },
 
   /** 참석자 프로필 확정 (닉네임 + 색상) */
   putAttendeeProfile: (meetingId: number, body: UpdateAttendeeProfileRequest) => {

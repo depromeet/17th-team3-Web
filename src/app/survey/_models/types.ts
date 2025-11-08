@@ -70,3 +70,33 @@ export interface UpdateAttendeeProfileRequest {
 export interface FunnelHistory<T> {
   replace: (step: string, updater: (prev: T) => T) => void;
 }
+
+/** 모임 상세 정보 조회 */
+export interface Participant {
+  userId: number;
+  nickname: string;
+  profileColor: string;
+  selectedCategories: {
+    id: number;
+    name: string;
+    leafCategoryList: { id: number; name: string }[];
+  }[];
+}
+
+export interface MeetingInfo {
+  id: number;
+  title: string;
+  hostUserId: number;
+  totalParticipantCnt: number;
+  isClosed: boolean;
+  stationName: string;
+  endAt: string;
+  createdAt: string;
+  updatedAt: string | null;
+}
+
+export interface MeetingDetailResponse {
+  currentUserId: number;
+  meetingInfo: MeetingInfo;
+  participantList: Participant[];
+}

@@ -6,10 +6,10 @@ import { surveyApi } from '@/app/_services/survey/api';
 
 import type { FoodCategory } from '@/app/survey/_models/types';
 
-/**
- * useSurveyCategories
- * - /survey-categories API 호출
- * - (추가) 에러/로딩 상태 관리
+/** useSurveyCategories
+ * - /survey-categories API를 호출하여 카테고리 목록 조회
+ * - 로딩/에러 상태를 포함해 반환
+ * - FoodCategoryResponse → FoodCategory[] 구조로 변환하여 setCategories
  */
 export const useSurveyCategories = () => {
   const [categories, setCategories] = useState<FoodCategory[]>([]);

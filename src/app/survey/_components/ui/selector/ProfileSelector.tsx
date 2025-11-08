@@ -12,13 +12,18 @@ import ProfileSelectModal from './ProfileSelectModal';
 interface ProfileSelectorProps {
   value?: string;
   onChange: (avatar: string) => void;
+  lockedKeys?: string[];
 }
 
 /**
  * ProfileSelector
  * - 프로필 이미지 클릭 + 수정 버튼 클릭 → 모두 모달 열기
  */
-const ProfileSelector = ({ value = 'default', onChange }: ProfileSelectorProps) => {
+const ProfileSelector = ({
+  value = 'default',
+  onChange,
+  lockedKeys = [],
+}: ProfileSelectorProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const selected = AVATAR_OPTIONS.find((a) => a.key === value) ?? AVATAR_OPTIONS[0];
 
@@ -58,7 +63,7 @@ const ProfileSelector = ({ value = 'default', onChange }: ProfileSelectorProps) 
       {isModalOpen && (
         <ProfileSelectModal
           open={isModalOpen}
-          lockedKeys={['orange', 'grape']}
+          lockedKeys={lockedKeys}
           onClose={() => setIsModalOpen(false)}
           onSelect={(key) => {
             onChange(key);

@@ -22,12 +22,19 @@ interface SurveyFunnelProps {
   onComplete?: (r: SurveyResult) => void;
 }
 
-/**
- * SurveyFunnel
- * - 설문 퍼널 전체 플로우를 제어하는 메인 오케스트레이터
- * - 현재 step 상태에 따라 해당 Step 컴포넌트를 렌더링
- * - 이름 입력 → 음식 선택 → (분기) 한식 추가 질문 → 완료
+/** SurveyFunnel
+ * - 설문 퍼널 전체 플로우를 제어하는 핵심 오케스트레이터
+ * - useSurveyFunnel Hook으로 현재 step/context/history를 관리
+ * - step에 따라 다음 컴포넌트 렌더링:
+ *   ① Name (프로필 입력)
+ *   ② PreferCuisine (음식 선택)
+ * - 추가 분기(예: 한식 세부 질문)는 이후 단계로 확장 가능
+ *
+ * State:
+ * - isSkipModalOpen: 건너뛰기/나가기 모달 표시
+ * - isLoading: API 호출 중 로딩 표시
  */
+
 const SurveyFunnel = ({ role, meetingId, initial, onComplete: _onComplete }: SurveyFunnelProps) => {
   const { step, context, history } = useSurveyFunnel({ ...initial, role });
   const router = useRouter();

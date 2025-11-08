@@ -117,7 +117,7 @@ const ProfileSelectModal = ({
     </BottomSheet>
   );
 
-  // 🔥 Portal로 body 밑으로 렌더링 (즉, SurveyLayout 전체 기준)
+  // Portal로 body 밑으로 렌더링 (즉, SurveyLayout 전체 기준)
   const rootEl = document.getElementById('survey-layout-root') ?? document.body;
   return createPortal(modalContent, rootEl);
 };

@@ -12,8 +12,10 @@ interface ConfirmModalProps {
   onConfirm: () => void;
 }
 
-/**
- * ConfirmModal (건너뛰기 / 확인용 모달)
+/** ConfirmModal
+ * - 공통 확인/취소 모달
+ * - 설문 중 "건너뛰기" 동작에서 재사용
+ * - open 여부에 따라 렌더링 제어
  */
 const ConfirmModal = ({
   open,
