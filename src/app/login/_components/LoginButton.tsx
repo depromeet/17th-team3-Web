@@ -4,15 +4,11 @@ import Image from 'next/image';
 
 import { cn } from '@/app/_lib/cn';
 
-const REDIRECT_URL = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URL!;
-const CLIENT_ID = process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID;
-
 const PROVIDER_CONFIG = {
   kakao: {
     text: '카카오톡으로 시작하기',
     icon: '/icons/kakao-icon.svg',
     className: 'bg-yellow-400',
-    redirectUrl: `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URL)}`,
   },
 };
 
@@ -24,12 +20,27 @@ interface LoginButtonProps {
 const LoginButton = ({ provider = 'kakao', redirectTo }: LoginButtonProps) => {
   const config = PROVIDER_CONFIG[provider];
 
-  const handleLogin = () => {
-    const loginUrl = new URL(config.redirectUrl);
-    if (redirectTo) {
-      loginUrl.searchParams.set('state', redirectTo);
+  const handleLogin = async () => {
+    try {
+      const params = new URLSearchParams();
+      if (redirectTo) {
+        params.append('state', redirectTo);
+      }
+      const queryString = params.toString();
+      const apiUrl = `/api/auth/kakao${queryString ? `?${queryString}` : ''}`;
+
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+        const error = await response.json();
+        console.error('Failed to get Kakao auth URL:', error);
+        return;
+      }
+
+      const { url } = await response.json();
+      window.location.href = url;
+    } catch (error) {
+      console.error('Login error:', error);
     }
-    window.location.href = String(loginUrl);
   };
 
   return (

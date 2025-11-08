@@ -1,3 +1,5 @@
+import { AvatarVariantKey } from '@/app/_models/avator';
+
 export interface MeetingInfo {
   id: number;
   title: string;
@@ -18,5 +20,5 @@ export interface MeetingResponse {
 export interface Participant {
   userId: number;
   attendeeNickname: string;
-  color: string; // TODO: 아이콘 Union 타입으로 변경 필요
+  color: AvatarVariantKey;
 }
