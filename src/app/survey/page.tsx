@@ -19,9 +19,9 @@ const SurveyPage = async ({
   const roleLabel: RoleLabel = role === '주최자' ? '주최자' : '참여자';
 
   // meetingId 없을 경우 에러 처리
-  if (!meetingId) {
-    throw new Error('유효하지 않은 모임 ID입니다.');
-  }
+  // if (!meetingId) {
+  //   throw new Error('유효하지 않은 모임 ID입니다.');
+  // }
 
   return <SurveyClientShell role={roleLabel} meetingId={Number(127)} />; // Number(meetingID)
 };

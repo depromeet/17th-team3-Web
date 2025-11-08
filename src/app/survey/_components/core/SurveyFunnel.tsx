@@ -44,7 +44,7 @@ const SurveyFunnel = ({ role, meetingId, initial, onComplete: _onComplete }: Sur
 
   /** 공통 뒤로가기 핸들러 */
   const handleBack = () => {
-    if (step === 'Name') return router.push(`/meetings/${meetingId}`);
+    if (step === 'Name') return router.push(`/events/${meetingId}/overview`);
     history.replace(getPrevStepKey(step), (p) => p);
   };
 
@@ -74,7 +74,7 @@ const SurveyFunnel = ({ role, meetingId, initial, onComplete: _onComplete }: Sur
             cancelText="계속하기"
             confirmText="나가기"
             onCancel={() => setIsSkipModalOpen(false)}
-            onConfirm={() => router.push(`/meetings/${meetingId}`)}
+            onConfirm={() => router.push(`/events/${meetingId}/overview`)}
           />
         </SurveyLayout>
       );
