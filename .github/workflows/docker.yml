@@ -52,6 +52,7 @@ jobs:
           # - 모든 커밋: sha-<7자리>
           # - 태그 이벤트(v*): 그 태그 이름으로도 푸시
           tags: |
+            type=raw,value=latest,enable=true
             type=raw,value=latest,enable={{is_default_branch}}
             type=raw,value=sha-${{ steps.vars.outputs.SHORT_SHA }}
             type=ref,event=tag
@@ -103,12 +104,9 @@ jobs:
           echo "PROJECT_DIR=${PROJECT_DIR}"
       - name: Docker login
         run: echo '${{ secrets.REGISTRY_PASSWORD }}' | docker login "$REGISTRY" -u '${{ secrets.REGISTRY_USER }}' --password-stdin
-      - name: Deploy with compose
+      - name: Update image tag in .env
         run: |
-          set -Eeuo pipefail
           cd "$PROJECT_DIR"
-          test -f "compose.yaml" || { echo "compose.yaml not found"; exit 1; }
-          IMAGE='${{ env.IMAGE }}' docker compose -f compose.yaml pull web
-          IMAGE='${{ env.IMAGE }}' docker compose -f compose.yaml up -d web
-          sleep 2
-          curl -fsS http://127.0.0.1:3000 >/dev/null && echo "Health OK" || (docker logs web --tail=200 && exit 1)
+          sed -i "s|^IMAGE=.*|IMAGE=${{ env.IMAGE }}|" .env
+          docker compose -f deploy/compose.yml pull web
+          docker compose -f deploy/compose.yml up -d web
