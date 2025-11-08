@@ -3,10 +3,11 @@
 import { useEffect } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 
+import CreateMeetingSuccessModal from '@/app/_components/ui/Modal/CreateMeetingSuccessModal';
 import ParticipantProgressIndicator from '@/app/_components/ui/ParticipantProgressIndicator';
-import { ERROR_CODES } from '@/app/_constants/errorCodes';
+import { useDisclosure } from '@/app/_hooks/useDisclosure';
 import { ApiError } from '@/app/_models/api';
 import { getOverviewQueryOptions } from '@/app/_queries/overviewQueries';
 import { MeetingOverview } from '@/app/_services/overview';
@@ -18,7 +19,13 @@ import SurveyStatusBanner from '@/app/events/[eventId]/overview/_components/Surv
 const OverviewClient = () => {
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
+
   const { eventId } = params;
+  const created = searchParams.get('created');
+  const token = searchParams.get('token');
+
+  const { isOpen: modalOpen, handler: modalHandler } = useDisclosure();
 
   const {
     data: overview,
@@ -30,38 +37,38 @@ const OverviewClient = () => {
   });
 
   useEffect(() => {
-    if (error && error.code) {
-      router.push(`/?error=${error.code}`);
+    if (created) {
+      modalHandler.open();
+      router.replace(`/events/${eventId}/overview?token=${token}`);
     }
-  }, [error, router]);
+  }, [created, eventId, router, token, modalHandler]);
 
   if (isPending) return <OverviewSkeleton />;
-
   if (error) {
-    if (error.code === ERROR_CODES.MEETING_ENDED) {
-      return null;
-    }
-    return <div>Error: {error.message}</div>;
+    throw error;
   }
 
   return (
-    <div className="flex flex-1 flex-col">
-      <div className="flex w-full flex-col items-center gap-6 px-5 py-4">
-        <SurveyStatusBanner overview={overview} />
-        <div className="flex w-full px-4">
-          <ParticipantProgressIndicator
-            surveyCompletedParticipants={overview.participantList.length}
-            totalParticipants={overview.meetingInfo.totalParticipantCnt}
-            isSurveyClosed={overview.meetingInfo.isClosed}
-            className="w-full pt-10"
-          />
-        </div>
-      </div>
+    <>
       <div className="flex flex-1 flex-col">
-        <PersonaCardSwiper overview={overview} />
+        <div className="flex w-full flex-col items-center gap-6 px-5 py-4">
+          <SurveyStatusBanner overview={overview} />
+          <div className="flex w-full px-4">
+            <ParticipantProgressIndicator
+              surveyCompletedParticipants={overview.participantList.length}
+              totalParticipants={overview.meetingInfo.totalParticipantCnt}
+              isSurveyClosed={overview.meetingInfo.isClosed}
+              className="w-full pt-10"
+            />
+          </div>
+        </div>
+        <div className="flex flex-1 flex-col">
+          <PersonaCardSwiper overview={overview} />
+        </div>
+        <SurveyActionButton overview={overview} />
       </div>
-      <SurveyActionButton overview={overview} />
-    </div>
+      <CreateMeetingSuccessModal isOpen={modalOpen} onClose={modalHandler.close} />
+    </>
   );
 };
 

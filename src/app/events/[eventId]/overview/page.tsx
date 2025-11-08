@@ -1,10 +1,13 @@
 import { Suspense } from 'react';
 
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
+import { redirect } from 'next/navigation';
 
+import { ERROR_CODES } from '@/app/_constants/errorCodes';
 import { ApiError } from '@/app/_models/api';
 import { getOverviewQueryOptions } from '@/app/_queries/overviewQueries';
 import { MeetingOverview } from '@/app/_services/overview';
+import { isAccessDenied } from '@/app/_utils/errorGuards';
 import OverviewSkeleton from '@/app/events/[eventId]/overview/_components/Skeleton';
 import OverviewClient from '@/app/events/[eventId]/overview/OverviewClient';
 
@@ -17,14 +20,26 @@ const OverviewPageContent = async ({ params }: OverviewPageProps) => {
 
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery<MeetingOverview, ApiError>({
-    ...getOverviewQueryOptions(Number(eventId)),
-  });
+  let apiError: ApiError | null = null;
 
-  const dehydratedState = dehydrate(queryClient);
+  try {
+    await queryClient.fetchQuery<MeetingOverview, ApiError>({
+      ...getOverviewQueryOptions(Number(eventId)),
+    });
+  } catch (error) {
+    apiError = error as ApiError;
+  }
+
+  if (apiError) {
+    if (isAccessDenied(apiError)) {
+      return redirect(`/?error=${apiError.code}`);
+    }
+
+    return redirect('/');
+  }
 
   return (
-    <HydrationBoundary state={dehydratedState}>
+    <HydrationBoundary state={dehydrate(queryClient)}>
       <OverviewClient />
     </HydrationBoundary>
   );
