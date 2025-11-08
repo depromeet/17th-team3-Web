@@ -26,6 +26,7 @@ export const shareKakaoLink = () => {
   }
 
   const url = window.location.href;
+  console.log('url: ', url);
 
   window.Kakao.Link.sendDefault({
     objectType: 'feed',
