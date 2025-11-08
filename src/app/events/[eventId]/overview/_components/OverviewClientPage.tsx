@@ -12,16 +12,18 @@ import SurveyActionButton from '@/app/events/[eventId]/overview/_components/Surv
 import SurveyStatusBanner from '@/app/events/[eventId]/overview/_components/SurveyStatusBanner';
 
 const OverviewClientPage = ({ overviewData }: { overviewData: Overview }) => {
-  const router = useRouter();
-  const searchParam = useSearchParams();
-  const { eventId } = useParams();
-  const created = searchParam.get('created');
   const { isOpen: modalOpen, handler: modalHandler } = useDisclosure();
+
+  const router = useRouter();
+  const { eventId } = useParams();
+  const searchParam = useSearchParams();
+  const created = searchParam.get('created');
+  const token = searchParam.get('token');
 
   useEffect(() => {
     if (created) {
       modalHandler.open();
-      router.replace(`/events/${eventId}/overview`);
+      router.replace(`/events/${eventId}/overview?token=${token}`);
     }
   }, []);
 
