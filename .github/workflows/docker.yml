@@ -108,5 +108,5 @@ jobs:
         run: |
           cd "$PROJECT_DIR"
           sed -i "s|^IMAGE=.*|IMAGE=${{ env.IMAGE }}|" .env
-          docker compose -f deploy/compose.yml pull web
-          docker compose -f deploy/compose.yml up -d web
+          docker compose -f deploy/compose.yaml pull web
+          docker compose -f deploy/compose.yaml up -d web
