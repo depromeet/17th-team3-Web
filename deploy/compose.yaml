@@ -1,6 +1,6 @@
 services:
   web:
-    image: docker.io/journey1019/depromeet-team3:latest
+    image: ${IMAGE}
     ports:
       - '3000:3000' # dev와 충돌나면 "3001:3000" 등으로 조정
     environment:
