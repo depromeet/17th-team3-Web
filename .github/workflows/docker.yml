@@ -93,6 +93,5 @@ jobs:
         run: echo '${{ secrets.REGISTRY_PASSWORD }}' | docker login "$REGISTRY" -u '${{ secrets.REGISTRY_USER }}' --password-stdin
       - name: Deploy latest image
         run: |
-          cd "$PROJECT_DIR"
-          IMAGE=docker.io/journey1019/depromeet-team3:latest docker compose -f module-infrastructure/nextjs/compose.yaml pull web
-          IMAGE=docker.io/journey1019/depromeet-team3:latest docker compose -f module-infrastructure/nextjs/compose.yaml up -d web
+          docker compose -f module-infrastructure/nextjs/compose.yaml pull web
+          docker compose -f module-infrastructure/nextjs/compose.yaml up -d web
