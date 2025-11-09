@@ -106,7 +106,6 @@ jobs:
         run: echo '${{ secrets.REGISTRY_PASSWORD }}' | docker login "$REGISTRY" -u '${{ secrets.REGISTRY_USER }}' --password-stdin
       - name: Update image tag in .env
         run: |
-          cd "$PROJECT_DIR"
-          sed -i "s|^IMAGE=.*|IMAGE=${{ env.IMAGE }}|" .env
-          docker compose -f module-infrastructure/nextjs/compose.yaml pull web
-          docker compose -f module-infrastructure/nextjs/compose.yaml up -d web
+          sed -i "s|^IMAGE=.*|IMAGE=${{ env.IMAGE }}|" /srv/momuzzi/module-infrastructure/nextjs/.env
+          docker compose -f /srv/momuzzi/module-infrastructure/nextjs/compose.yaml pull web
+          docker compose -f /srv/momuzzi/module-infrastructure/nextjs/compose.yaml up -d web
