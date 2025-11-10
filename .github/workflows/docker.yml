@@ -2,8 +2,8 @@ name: Build & Deploy Docker
 
 on:
   push:
-    branches: [main] # main 브랜치에서만 실행
-    tags: ['v*'] # 태그 push 시 실행 (선택)
+    branches: [ main ] # main 브랜치에서만 실행
+    tags: [ 'v*' ] # 태그 push 시 실행 (선택)
   workflow_dispatch: {} # 수동 실행 지원
 
 concurrency:
@@ -16,6 +16,9 @@ jobs:
     permissions:
       contents: read
       packages: write
+    outputs:
+      short_sha: ${{ steps.vars.outputs.SHORT_SHA }}
+      image_url: ${{ steps.outs.outputs.IMAGE_URL }} # docker.io/journey1019/depromeet-team3
 
     env:
       # 레지스트리/리포는 Secrets로 주입 (Docker Hub 예시)
@@ -39,7 +42,21 @@ jobs:
         id: vars
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
 
-      - name: Build & Push Docker Image
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}
+          # 태그 정책:
+          # - main 브랜치: latest
+          # - 모든 커밋: sha-<7자리>
+          # - 태그 이벤트(v*): 그 태그 이름으로도 푸시
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=sha-${{ steps.vars.outputs.SHORT_SHA }}
+            type=ref,event=tag
+
+      - name: Build & Push
         id: build
         uses: docker/build-push-action@v6
         with:
@@ -47,14 +64,24 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64
           push: true
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest
-            ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:sha-${{ steps.vars.outputs.SHORT_SHA }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Show pushed digest
+      - name: Compute image URL
+        id: outs
+        run: |
+          set -e
+          if [ -z "${{ env.REGISTRY }}" ] || [ -z "${{ env.IMAGE_REPO }}" ]; then
+            echo "REGISTRY or IMAGE_REPO is empty"; exit 1
+          fi
+          echo "IMAGE_URL=${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}" >> "$GITHUB_OUTPUT"
+          echo "Resolved IMAGE_URL=${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}"
+
+      - name: Show image digest
         run: echo "Pushed digest ${{ steps.build.outputs.digest }}"
+
 
   deploy-prod:
     name: Deploy to PROD (self-hosted)
@@ -62,15 +89,27 @@ jobs:
     runs-on: [self-hosted, Linux, X64]
     if: github.ref == 'refs/heads/main' # main일 때만 실행
     environment: production
-
     env:
+      IMAGE: ${{ format(
+        '{0}/{1}:sha-{2}',
+        (vars.REGISTRY || 'docker.io'),
+        (vars.IMAGE_REPO || 'journey1019/depromeet-team3'),
+        needs.docker.outputs.short_sha) }}
+      PROJECT_DIR: ${{ secrets.PROD_PROJECT_DIR }}
       REGISTRY: ${{ vars.REGISTRY || 'docker.io' }}
-      IMAGE_REPO: ${{ vars.IMAGE_REPO || 'journey1019/depromeet-team3' }}
-
     steps:
+      - name: Print resolved image (debug)
+        run: |
+          echo "IMAGE=${IMAGE}"
+          echo "PROJECT_DIR=${PROJECT_DIR}"
       - name: Docker login
         run: echo '${{ secrets.REGISTRY_PASSWORD }}' | docker login "$REGISTRY" -u '${{ secrets.REGISTRY_USER }}' --password-stdin
-      - name: Deploy latest image
+      - name: Deploy with compose
         run: |
-          docker compose -f module-infrastructure/nextjs/compose.yaml pull web
-          docker compose -f module-infrastructure/nextjs/compose.yaml up -d web
+          set -Eeuo pipefail
+          test -f "$PROJECT_DIR/deploy/compose.yaml" || { echo "compose.yaml not found"; exit 1; }
+          cd "$PROJECT_DIR"
+          IMAGE='${{ env.IMAGE }}' docker compose -f deploy/compose.yaml pull web
+          IMAGE='${{ env.IMAGE }}' docker compose -f deploy/compose.yaml up -d web
+          sleep 2
+          curl -fsS http://127.0.0.1:3000 >/dev/null && echo "Health OK" || (docker logs web --tail=200 && exit 1)
