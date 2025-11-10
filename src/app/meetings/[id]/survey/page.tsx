@@ -8,11 +8,14 @@ import type { RoleLabel } from '@/app/survey/_models/types';
  * - 실제 CSR 퍼널은 SurveyClientShell에서 렌더링됨
  */
 const SurveyPage = async ({
+  params,
   searchParams,
 }: {
-  searchParams: Promise<{ role?: string; meetingId?: string }>;
+  params: Promise<{ id: number }>;
+  searchParams: Promise<{ role?: string }>;
 }) => {
-  const { role, meetingId } = await searchParams;
+  const { id } = await params;
+  const { role } = await searchParams;
 
   // todo: 쿼리스트링 -> 상태 관리
   // URL ?role=주최자 일 때만 주최자, 그 외엔 참여자
@@ -23,6 +26,6 @@ const SurveyPage = async ({
   //   throw new Error('유효하지 않은 모임 ID입니다.');
   // }
 
-  return <SurveyClientShell role={roleLabel} meetingId={Number(127)} />; // Number(meetingID)
+  return <SurveyClientShell role={roleLabel} meetingId={Number(id)} />; // Number(meetingID)
 };
 export default SurveyPage;
