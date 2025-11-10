@@ -31,7 +31,7 @@ const SurveyActionButton = ({ overview }: { overview: MeetingOverview }) => {
       ),
       path: null,
     };
-  }, [hasParticipated, isSurveyClosed, countdown, eventId]);
+  }, [hasParticipated, isSurveyClosed, countdown, eventId, isEveryoneCompleted]);
 
   const handleClick = () => {
     if (buttonState.path) router.push(buttonState.path);
