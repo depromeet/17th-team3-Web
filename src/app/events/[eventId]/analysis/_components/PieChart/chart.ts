@@ -1,5 +1,3 @@
-export type AnalysisType = 'preferred' | 'disliked';
-
 interface AnalysisTheme {
   background: string;
   label: string;
@@ -47,6 +45,27 @@ export const PIE_GRADIENTS = [
     stops: [
       { offset: '100%', color: '#6D89F0' },
       { offset: '0%', color: '#EDF0FD' },
+    ],
+  },
+  {
+    id: 'color3',
+    stops: [
+      { offset: '0%', color: '#F59E0B' }, // 앰버 (따뜻한 오렌지)
+      { offset: '100%', color: '#FEF3C7' },
+    ],
+  },
+  {
+    id: 'color4',
+    stops: [
+      { offset: '0%', color: '#EF4444' }, // 코랄 레드 (따뜻한 빨강)
+      { offset: '100%', color: '#FEE2E2' },
+    ],
+  },
+  {
+    id: 'color5',
+    stops: [
+      { offset: '0%', color: '#14B8A6' }, // 틸 (청록색)
+      { offset: '100%', color: '#CCFBF1' },
     ],
   },
 ];
