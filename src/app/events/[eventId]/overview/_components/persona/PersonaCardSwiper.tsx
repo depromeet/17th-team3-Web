@@ -41,7 +41,11 @@ const PersonaCardSwiper = ({ overview }: { overview: MeetingOverview }) => {
           {overview.participantList.map((participant, index) => (
             <div
               key={participant.userId}
-              className={cn('flex w-[84%] shrink-0', index === 0 && 'ml-[8%]')}
+              className={cn(
+                'flex w-[84%] shrink-0',
+                index === 0 && 'ml-[8%]',
+                index === overview.meetingInfo.totalParticipantCnt - 1 && 'mr-[8%]'
+              )}
             >
               <PersonaCard
                 key={participant.userId}
