@@ -14,6 +14,7 @@ interface TopNavigationProps {
   leftAriaLabel?: string; // 왼쪽 버튼 접근성 라벨
   rightAriaLabel?: string; // 오른쪽 버튼 접근성 라벨
   rightLabel?: string; // 오른쪽 버튼 텍스트 (아이콘 대신 표시)
+  rightComponent?: React.ReactNode; // 오른쪽에 표시할 커스텀 컴포넌트 (화살표 대신)
   className?: string;
 }
 
@@ -51,9 +52,9 @@ const TopNavigation = ({
   leftAriaLabel = '뒤로가기',
   rightAriaLabel = '다음',
   rightLabel,
+  rightComponent,
   className,
 }: TopNavigationProps) => {
-  // 왼쪽 버튼 렌더링
   const renderLeftButton = () => {
     if (!showBackButton) return null;
 
@@ -85,9 +86,12 @@ const TopNavigation = ({
     );
   };
 
-  // 오른쪽 버튼 렌더링
   const renderRightButton = () => {
     if (!showNextButton) return null;
+
+    if (rightComponent) {
+      return rightComponent;
+    }
 
     if (rightLabel) {
       const buttonContent = rightLabel;
@@ -97,7 +101,7 @@ const TopNavigation = ({
           <Link
             href={rightHref}
             aria-label={rightAriaLabel}
-            className="cursor-pointer text-sm font-semibold text-orange-600 hover:text-orange-700"
+            className="cursor-pointer text-orange-700"
           >
             {buttonContent}
           </Link>
@@ -109,7 +113,7 @@ const TopNavigation = ({
           type="button"
           onClick={onRightClick}
           aria-label={rightAriaLabel}
-          className="cursor-pointer text-sm font-semibold text-orange-600 hover:text-orange-700"
+          className="cursor-pointer text-inherit"
         >
           {buttonContent}
         </button>
