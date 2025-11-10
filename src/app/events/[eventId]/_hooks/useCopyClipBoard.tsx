@@ -1,0 +1,75 @@
+import { useCallback, useEffect, useMemo } from 'react';
+
+import { useQuery } from '@tanstack/react-query';
+import { useSearchParams } from 'next/navigation';
+
+import { useToast } from '@/app/_features/toast';
+import { initKakaoSDK, shareKakaoLink } from '@/app/_lib/kakao';
+import { getInviteTokenQueryOptions } from '@/app/_queries/inviteToken';
+
+interface UseCopyClipBoardProps {
+  meetingId: number;
+}
+
+const addTokenToUrl = (url: string, token: string): string => {
+  try {
+    const urlObj = new URL(url);
+    urlObj.searchParams.set('token', token);
+    return urlObj.toString();
+  } catch {
+    // 상대 경로나 URL 파싱 실패 시 기본 동작
+    const separator = url.includes('?') ? '&' : '?';
+    return `${url}${separator}token=${token}`;
+  }
+};
+
+/**
+ * 클립보드 복사 및 카카오톡 공유 훅
+ * @returns {Object} - 클립보드 복사 및 카카오톡 공유 함수
+ * @returns {Function} handleCopyUrl - 클립보드 복사 함수
+ * @returns {Function} handleShareKakao - 카카오톡 공유 함수
+ */
+const useCopyClipBoard = ({ meetingId }: UseCopyClipBoardProps) => {
+  const { success: successToast, error: errorToast } = useToast();
+  const searchParams = useSearchParams();
+
+  const hasTokenParam = useMemo(() => !!searchParams.get('token'), [searchParams]);
+
+  const currentUrl = useMemo(() => {
+    if (typeof window === 'undefined') return '';
+    return window.location.href;
+  }, []);
+
+  const { data: token } = useQuery({
+    ...getInviteTokenQueryOptions(meetingId),
+    enabled: !hasTokenParam,
+  });
+
+  useEffect(() => {
+    initKakaoSDK();
+  }, []);
+
+  const shareUrlWithToken = useMemo(() => {
+    if (!currentUrl) return '';
+    if (hasTokenParam || !token) return currentUrl;
+    return addTokenToUrl(currentUrl, token);
+  }, [currentUrl, token, hasTokenParam]);
+
+  const handleCopyUrl = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrlWithToken);
+      successToast(`참여 링크가 복사되었어요.\n공유해서 참여를 독촉해보세요.`, { duration: 2500 });
+    } catch (err) {
+      console.error('URL 복사 실패:', err);
+      errorToast('링크 복사에 실패했습니다.', { duration: 2500 });
+    }
+  }, [shareUrlWithToken, successToast, errorToast]);
+
+  const handleShareKakao = useCallback(() => {
+    shareKakaoLink(shareUrlWithToken);
+  }, [shareUrlWithToken]);
+
+  return { handleCopyUrl, handleShareKakao };
+};
+
+export default useCopyClipBoard;
