@@ -15,11 +15,14 @@ const SurveyActionButton = ({ overview }: { overview: MeetingOverview }) => {
 
   const { hasParticipated } = useOverviewState(overview);
   const isSurveyClosed = overview.meetingInfo.isClosed;
+  const isEveryoneCompleted =
+    overview.participantList.length === overview.meetingInfo.totalParticipantCnt;
   const countdown = useCountdownDisplay(new Date(overview.meetingInfo.endAt));
 
   const buttonState = useMemo(() => {
     if (!hasParticipated) return { label: '설문 참여하기', path: `/meetings/${eventId}/survey` };
-    if (isSurveyClosed) return { label: '추천 결과 보기', path: `/events/${eventId}/analysis` };
+    if (isSurveyClosed || isEveryoneCompleted)
+      return { label: '추천 결과 보기', path: `/events/${eventId}/analysis` };
     return {
       label: (
         <>
