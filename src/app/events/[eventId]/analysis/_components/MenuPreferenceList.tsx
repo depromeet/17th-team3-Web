@@ -51,7 +51,12 @@ const MenuPreferenceList = () => {
             />
             <span className="body-3 font-semibold text-white">{mainCategory.mainName}</span>
           </div>
-          <div className="flex flex-wrap gap-3 px-4 pb-4">
+          <div
+            className={cn(
+              'flex flex-wrap gap-3 px-4 pb-4',
+              mainCategory.leaves.length === 0 && 'hidden'
+            )}
+          >
             {mainCategory.leaves.map((leaf) => {
               const isMyLeaf = myLeafIdsByMain.get(mainCategory.mainId)?.has(leaf.id);
 
