@@ -1,7 +1,12 @@
 'use client';
+
 import { useCallback, useMemo } from 'react';
 
-import Chip from '@/app/survey/_components/ui/Chip';
+import Image from 'next/image';
+
+import { useToast } from '@/app/_features/toast';
+import Chip from '@/app/survey/_components/ui/form/Chip';
+import { MAX_SELECT_COUNT } from '@/app/survey/_models/constants';
 
 export interface ChipOption {
   id: string;
@@ -12,11 +17,8 @@ export interface ChipOption {
 
 export interface ChipGroupMultiSelectProps {
   options: ReadonlyArray<ChipOption>;
-  /** 부모가 관리하는 선택값 */
   selectedIds: string[];
-  /** 예: ['c:any'] */
   exclusiveIds?: readonly string[];
-  /** 토글 시 새로운 배열을 부모에 통지 */
   onChange?: (ids: string[]) => void;
   className?: string;
 }
@@ -28,6 +30,8 @@ const ChipGroupMultiSelect = ({
   onChange,
   className,
 }: ChipGroupMultiSelectProps) => {
+  const { toast: customToast } = useToast();
+
   const activeExclusive = useMemo(
     () => selectedIds.find((id) => exclusiveIds.includes(id)),
     [selectedIds, exclusiveIds]
@@ -38,31 +42,59 @@ const ChipGroupMultiSelect = ({
       const has = selectedIds.includes(id);
       const isExclusive = exclusiveIds.includes(id);
 
+      // 1. 이미 선택된 경우 → 제거
       if (has) {
         onChange?.(selectedIds.filter((v) => v !== id));
         return;
       }
+
+      // 2. 배타 옵션 선택 시 → 단독 선택
       if (isExclusive) {
         onChange?.([id]);
         return;
       }
+
+      // 3. 일반 옵션 선택 시
       const base = activeExclusive ? [] : selectedIds;
+
+      // 최대 선택 개수 초과 시 토스트
+      if (base.length >= MAX_SELECT_COUNT) {
+        customToast(
+          <div className="flex items-center gap-2">
+            <Image
+              src="/icons/exclamation.svg"
+              alt="!"
+              width={24}
+              height={24}
+              className="h-8 w-8"
+            />
+            <span className="text-gray-1500 body-3 font-semibold">
+              최대 5개까지 선택 가능합니다
+            </span>
+          </div>,
+          { showIcon: false, duration: 3000 }
+        );
+        return;
+      }
+
       onChange?.([...base, id]);
     },
-    [selectedIds, exclusiveIds, activeExclusive, onChange]
+    [selectedIds, exclusiveIds, activeExclusive, onChange, customToast]
   );
 
-  const isDisabled = (id: string) => Boolean(activeExclusive && !exclusiveIds.includes(id));
+  // disabled 로직 수정 — 더 이상 maxedOut으로 막지 않음
+  const isDisabled = (id: string) => {
+    const isExclusive = exclusiveIds.includes(id);
+    return Boolean(activeExclusive && !isExclusive);
+  };
+
   const orderOf = (id: string) => {
     const option = options.find((o) => o.id === id);
-    // "다 괜찮아요" (variant === "any") → 항상 배지 없음
     if (option?.variant === 'any') return 0;
-
     const idx = selectedIds.indexOf(id);
     return idx >= 0 ? idx + 1 : 0;
   };
 
-  // ANY 칩만 상단에 단독 렌더링
   const anyChip = options.find((o) => o.variant === 'any');
   const restChips = options.filter((o) => o !== anyChip);
 
@@ -84,7 +116,7 @@ const ChipGroupMultiSelect = ({
         </div>
       )}
 
-      {/* 나머지 칩: 내용 너비에 맞춰 wrap */}
+      {/* 나머지 칩 */}
       <div className="flex flex-wrap gap-2">
         {restChips.map((o) => (
           <Chip
