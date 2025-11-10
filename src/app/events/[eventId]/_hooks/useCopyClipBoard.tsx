@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 import { useToast } from '@/app/_features/toast';
 import { initKakaoSDK, shareKakaoLink } from '@/app/_lib/kakao';
@@ -31,14 +31,22 @@ const addTokenToUrl = (url: string, token: string): string => {
  */
 const useCopyClipBoard = ({ meetingId }: UseCopyClipBoardProps) => {
   const { success: successToast, error: errorToast } = useToast();
+
+  const pathname = usePathname();
+
   const searchParams = useSearchParams();
 
   const hasTokenParam = useMemo(() => !!searchParams.get('token'), [searchParams]);
 
   const currentUrl = useMemo(() => {
     if (typeof window === 'undefined') return '';
-    return window.location.href;
-  }, []);
+
+    const { origin } = window.location;
+    const search = searchParams.toString();
+    const queryString = search ? `?${search}` : '';
+
+    return `${origin}${pathname}${queryString}`;
+  }, [pathname, searchParams]);
 
   const { data: token } = useQuery({
     ...getInviteTokenQueryOptions(meetingId),
