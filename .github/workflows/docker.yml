@@ -39,6 +39,11 @@ jobs:
       - name: Build & Push Docker Image
         id: build
         uses: docker/build-push-action@v6
+        env:
+          NEXT_PUBLIC_KAKAO_APP_KEY: ${{ secrets.NEXT_PUBLIC_KAKAO_APP_KEY }}
+          NEXT_PUBLIC_KAKAO_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_KAKAO_CLIENT_ID }}
+          NEXT_PUBLIC_KAKAO_REDIRECT_URL: ${{ secrets.NEXT_PUBLIC_KAKAO_REDIRECT_URL }}
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
         with:
           context: .
           file: ./Dockerfile
