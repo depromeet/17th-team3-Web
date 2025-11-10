@@ -2,9 +2,9 @@ name: Build & Deploy Docker
 
 on:
   push:
-    branches: [ main ] # main 브랜치에서만 실행
-    tags: [ 'v*' ] # 태그 push 시 실행 (선택)
-  workflow_dispatch: {} # 수동 실행 지원
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch: {}
 
 concurrency:
   group: docker-${{ github.ref }}
@@ -16,14 +16,8 @@ jobs:
     permissions:
       contents: read
       packages: write
-    outputs:
-      short_sha: ${{ steps.vars.outputs.SHORT_SHA }}
-      image_url: ${{ steps.outs.outputs.IMAGE_URL }} # docker.io/journey1019/depromeet-team3
 
     env:
-      # 레지스트리/리포는 Secrets로 주입 (Docker Hub 예시)
-      # REGISTRY=docker.io
-      # IMAGE_REPO=<dockerhub-id>/<repo>
       REGISTRY: ${{ vars.REGISTRY != '' && vars.REGISTRY || 'docker.io' }}
       IMAGE_REPO: ${{ vars.IMAGE_REPO != '' && vars.IMAGE_REPO || 'journey1019/depromeet-team3' }}
 
@@ -42,21 +36,7 @@ jobs:
         id: vars
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
 
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}
-          # 태그 정책:
-          # - main 브랜치: latest
-          # - 모든 커밋: sha-<7자리>
-          # - 태그 이벤트(v*): 그 태그 이름으로도 푸시
-          tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
-            type=raw,value=sha-${{ steps.vars.outputs.SHORT_SHA }}
-            type=ref,event=tag
-
-      - name: Build & Push
+      - name: Build & Push Docker Image
         id: build
         uses: docker/build-push-action@v6
         with:
@@ -64,52 +44,44 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          # 항상 latest 로 덮어쓰기
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Compute image URL
-        id: outs
-        run: |
-          set -e
-          if [ -z "${{ env.REGISTRY }}" ] || [ -z "${{ env.IMAGE_REPO }}" ]; then
-            echo "REGISTRY or IMAGE_REPO is empty"; exit 1
-          fi
-          echo "IMAGE_URL=${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}" >> "$GITHUB_OUTPUT"
-          echo "Resolved IMAGE_URL=${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}"
-
-      - name: Show image digest
+      - name: Show pushed digest
         run: echo "Pushed digest ${{ steps.build.outputs.digest }}"
-
 
   deploy-prod:
     name: Deploy to PROD (self-hosted)
     needs: docker
     runs-on: [self-hosted, Linux, X64]
-    if: github.ref == 'refs/heads/main' # main일 때만 실행
+    if: github.ref == 'refs/heads/main'
     environment: production
+
     env:
-      IMAGE: ${{ format(
-        '{0}/{1}:sha-{2}',
-        (vars.REGISTRY || 'docker.io'),
-        (vars.IMAGE_REPO || 'journey1019/depromeet-team3'),
-        needs.docker.outputs.short_sha) }}
-      PROJECT_DIR: ${{ secrets.PROD_PROJECT_DIR }}
+      PROJECT_DIR: ${{ secrets.PROD_PROJECT_DIR }} # /home/ubuntu/momuzzi-server
       REGISTRY: ${{ vars.REGISTRY || 'docker.io' }}
+
     steps:
-      - name: Print resolved image (debug)
-        run: |
-          echo "IMAGE=${IMAGE}"
-          echo "PROJECT_DIR=${PROJECT_DIR}"
-      - name: Docker login
+      - name: Docker Login
         run: echo '${{ secrets.REGISTRY_PASSWORD }}' | docker login "$REGISTRY" -u '${{ secrets.REGISTRY_USER }}' --password-stdin
-      - name: Deploy with compose
+
+      - name: Deploy latest image
         run: |
-          set -Eeuo pipefail
-          test -f "$PROJECT_DIR/deploy/compose.yaml" || { echo "compose.yaml not found"; exit 1; }
-          cd "$PROJECT_DIR"
-          IMAGE='${{ env.IMAGE }}' docker compose -f deploy/compose.yaml pull web
-          IMAGE='${{ env.IMAGE }}' docker compose -f deploy/compose.yaml up -d web
-          sleep 2
-          curl -fsS http://127.0.0.1:3000 >/dev/null && echo "Health OK" || (docker logs web --tail=200 && exit 1)
+          COMPOSE_FILE="$PROJECT_DIR/module-infrastructure/nextjs/compose.yaml"
+
+          if [ ! -f "$COMPOSE_FILE" ]; then
+            echo "ERROR: Compose file not found at $COMPOSE_FILE"
+            echo "현재 디렉토리:"; pwd
+            echo "파일 목록:"; ls -R "$PROJECT_DIR"
+            exit 1
+          fi
+
+          echo "Found compose.yaml at $COMPOSE_FILE"
+
+          docker compose -f "$COMPOSE_FILE" pull web
+          docker compose -f "$COMPOSE_FILE" up -d web
+
+          echo "Deployment successful"
