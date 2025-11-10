@@ -2,9 +2,9 @@ name: Build & Deploy Docker
 
 on:
   push:
-    branches: [main] # main 브랜치에서만 실행
-    tags: ['v*'] # 태그 push 시 실행 (선택)
-  workflow_dispatch: {} # 수동 실행 지원
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch: {}
 
 concurrency:
   group: docker-${{ github.ref }}
@@ -18,9 +18,6 @@ jobs:
       packages: write
 
     env:
-      # 레지스트리/리포는 Secrets로 주입 (Docker Hub 예시)
-      # REGISTRY=docker.io
-      # IMAGE_REPO=<dockerhub-id>/<repo>
       REGISTRY: ${{ vars.REGISTRY != '' && vars.REGISTRY || 'docker.io' }}
       IMAGE_REPO: ${{ vars.IMAGE_REPO != '' && vars.IMAGE_REPO || 'journey1019/depromeet-team3' }}
 
@@ -47,9 +44,9 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64
           push: true
+          # 항상 latest 로 덮어쓰기
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest
-            ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:sha-${{ steps.vars.outputs.SHORT_SHA }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -60,17 +57,31 @@ jobs:
     name: Deploy to PROD (self-hosted)
     needs: docker
     runs-on: [self-hosted, Linux, X64]
-    if: github.ref == 'refs/heads/main' # main일 때만 실행
+    if: github.ref == 'refs/heads/main'
     environment: production
 
     env:
+      PROJECT_DIR: ${{ secrets.PROD_PROJECT_DIR }} # /home/ubuntu/momuzzi-server
       REGISTRY: ${{ vars.REGISTRY || 'docker.io' }}
-      IMAGE_REPO: ${{ vars.IMAGE_REPO || 'journey1019/depromeet-team3' }}
 
     steps:
-      - name: Docker login
+      - name: Docker Login
         run: echo '${{ secrets.REGISTRY_PASSWORD }}' | docker login "$REGISTRY" -u '${{ secrets.REGISTRY_USER }}' --password-stdin
+
       - name: Deploy latest image
         run: |
-          docker compose -f module-infrastructure/nextjs/compose.yaml pull web
-          docker compose -f module-infrastructure/nextjs/compose.yaml up -d web
+          COMPOSE_FILE="$PROJECT_DIR/module-infrastructure/nextjs/compose.yaml"
+
+          if [ ! -f "$COMPOSE_FILE" ]; then
+            echo "ERROR: Compose file not found at $COMPOSE_FILE"
+            echo "현재 디렉토리:"; pwd
+            echo "파일 목록:"; ls -R "$PROJECT_DIR"
+            exit 1
+          fi
+
+          echo "Found compose.yaml at $COMPOSE_FILE"
+
+          docker compose -f "$COMPOSE_FILE" pull web
+          docker compose -f "$COMPOSE_FILE" up -d web
+
+          echo "Deployment successful"
