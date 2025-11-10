@@ -153,7 +153,9 @@ const TopNavigation = ({
     >
       <div className="flex h-9 w-9 shrink-0 items-center justify-center">{renderLeftButton()}</div>
 
-      <span className="body-3 font-semibold text-orange-800">{title}</span>
+      <span className="absolute left-1/2 -translate-x-1/2 transform body-3 font-semibold">
+        {title}
+      </span>
 
       <div className="flex h-9 shrink-0 items-center justify-center">{renderRightButton()}</div>
     </div>
