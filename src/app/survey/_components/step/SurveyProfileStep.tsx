@@ -16,7 +16,7 @@ interface SurveyProfileStepProps {
   initialProfileKey?: string;
   title?: string;
   description?: string;
-  meetingId?: number;
+  meetingId: number;
 }
 
 /** SurveyProfileStep
@@ -31,7 +31,7 @@ const SurveyProfileStep = ({
   initialProfileKey = 'default',
   title = '사용하실 프로필과\n이름을 알려주세요',
   description = '다음 단계로 넘어가면 수정할 수 없어요.',
-  meetingId = 0, // TODO: 실제 모임 ID 전달받기
+  meetingId, // TODO: 실제 모임 ID 전달받기
 }: SurveyProfileStepProps) => {
   const [name, setName] = useState(initialValue);
   const [profileKey, setProfileKey] = useState(initialProfileKey);

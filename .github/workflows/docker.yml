@@ -16,6 +16,9 @@ jobs:
     permissions:
       contents: read
       packages: write
+    outputs:
+      short_sha: ${{ steps.vars.outputs.SHORT_SHA }}
+      image_url: ${{ steps.outs.outputs.IMAGE_URL }} # docker.io/journey1019/depromeet-team3
 
     env:
       REGISTRY: ${{ vars.REGISTRY != '' && vars.REGISTRY || 'docker.io' }}
@@ -36,7 +39,21 @@ jobs:
         id: vars
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
 
-      - name: Build & Push Docker Image
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}
+          # 태그 정책:
+          # - main 브랜치: latest
+          # - 모든 커밋: sha-<7자리>
+          # - 태그 이벤트(v*): 그 태그 이름으로도 푸시
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=sha-${{ steps.vars.outputs.SHORT_SHA }}
+            type=ref,event=tag
+
+      - name: Build & Push
         id: build
         uses: docker/build-push-action@v6
         with:
@@ -57,13 +74,13 @@ jobs:
       - name: Show pushed digest
         run: echo "Pushed digest ${{ steps.build.outputs.digest }}"
 
+
   deploy-prod:
     name: Deploy to PROD (self-hosted)
     needs: docker
     runs-on: [self-hosted, Linux, X64]
     if: github.ref == 'refs/heads/main'
     environment: production
-
     env:
       PROJECT_DIR: ${{ secrets.PROD_PROJECT_DIR }} # /home/ubuntu/momuzzi-server
       REGISTRY: ${{ vars.REGISTRY || 'docker.io' }}

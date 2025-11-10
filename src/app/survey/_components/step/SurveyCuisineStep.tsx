@@ -38,7 +38,7 @@ const SurveyCuisineStep = ({
   onCancel,
   context,
   history,
-  meetingId = 0,
+  meetingId,
 }: SurveyCuisineStepProps) => {
   const router = useRouter();
   const { categories, isLoading: isCategoryLoading } = useSurveyCategories();
