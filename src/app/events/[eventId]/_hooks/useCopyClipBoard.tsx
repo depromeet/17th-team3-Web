@@ -51,8 +51,19 @@ const useCopyClipBoard = ({ meetingId }: UseCopyClipBoardProps) => {
 
   const shareUrlWithToken = useMemo(() => {
     if (!currentUrl) return '';
-    if (hasTokenParam || !token) return currentUrl;
-    return addTokenToUrl(currentUrl, token);
+
+    // 이미 토큰이 URL에 포함되어 있으면 그대로 사용
+    if (hasTokenParam) {
+      return currentUrl;
+    }
+
+    // 서버에서 받은 토큰이 있으면 URL에 추가
+    if (token) {
+      return addTokenToUrl(currentUrl, token);
+    }
+
+    // 토큰이 없으면 현재 URL만 반환
+    return currentUrl;
   }, [currentUrl, token, hasTokenParam]);
 
   const handleCopyUrl = useCallback(async () => {
