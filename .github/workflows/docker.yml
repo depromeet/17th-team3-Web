@@ -57,8 +57,11 @@ jobs:
 
       - name: Show pushed digest
         run: |
-          echo "Pushed digest: ${{ steps.build.outputs.digest }}"
-          echo "Image tag: ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest"
+          echo "Docker Image Build Complete"
+          echo "Digest: ${{ steps.build.outputs.digest }}"
+          echo "Image Tags:"
+          echo " - ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest"
+          echo " - ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:sha-${{ steps.vars.outputs.SHORT_SHA }}"
 
   deploy-prod:
     name: Deploy to PROD (self-hosted)
