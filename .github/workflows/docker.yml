@@ -46,6 +46,7 @@ jobs:
           push: true
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:sha-${{ steps.vars.outputs.SHORT_SHA }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
@@ -87,7 +88,14 @@ jobs:
 
           echo "Found compose.yaml at $COMPOSE_FILE"
 
+          echo "Current image in compose.yaml:"
+          grep "image:" "$COMPOSE_FILE"
+
           docker compose -f "$COMPOSE_FILE" pull web
+
+          echo "Image version after pull:"
+          docker images | grep journey1019/depromeet-team3
+
           docker compose -f "$COMPOSE_FILE" up -d web
 
           echo "Deployment successful"
