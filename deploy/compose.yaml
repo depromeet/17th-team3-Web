@@ -1,3 +1,5 @@
+name: deploy
+
 services:
   web:
     image: docker.io/journey1019/depromeet-team3:latest
