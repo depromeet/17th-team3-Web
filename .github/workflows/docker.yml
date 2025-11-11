@@ -56,11 +56,12 @@ jobs:
             NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
 
       - name: Show pushed digest
-        run: |
-          echo "Pushed digest ${{ steps.build.outputs.digest }}"
-          echo "Image tags pushed:"
-          echo "  - ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest"
-          echo "  - ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:sha-${{ steps.vars.outputs.SHORT_SHA }}"
+        run: echo "Pushed digest ${{ steps.build.outputs.digest }}"
+            echo "Image tag: ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest"
+            echo "Pushed digest ${{ steps.build.outputs.digest }}"
+            echo "Image tags pushed:"
+            echo "  - ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest"
+            echo "  - ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:sha-${{ steps.vars.outputs.SHORT_SHA }}"
 
   deploy-prod:
     name: Deploy to PROD (self-hosted)
