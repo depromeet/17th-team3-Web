@@ -46,6 +46,7 @@ jobs:
           push: true
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:sha-${{ steps.vars.outputs.SHORT_SHA }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
@@ -57,6 +58,10 @@ jobs:
       - name: Show pushed digest
         run: echo "Pushed digest ${{ steps.build.outputs.digest }}"
             echo "Image tag: ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest"
+            echo "Pushed digest ${{ steps.build.outputs.digest }}"
+            echo "Image tags pushed:"
+            echo "  - ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest"
+            echo "  - ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:sha-${{ steps.vars.outputs.SHORT_SHA }}"
 
   deploy-prod:
     name: Deploy to PROD (self-hosted)
@@ -86,7 +91,14 @@ jobs:
 
           echo "Found compose.yaml at $COMPOSE_FILE"
 
+          echo "Current image in compose.yaml:"
+          grep "image:" "$COMPOSE_FILE"
+
           docker compose -f "$COMPOSE_FILE" pull web
+
+          echo "Image version after pull:"
+          docker images | grep journey1019/depromeet-team3
+
           docker compose -f "$COMPOSE_FILE" up -d web
 
           echo "Deployment successful"
