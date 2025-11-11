@@ -12,9 +12,50 @@ import '@mantine/core/styles.layer.css';
 import '@mantine/dates/styles.css';
 import './globals.css';
 
+const APP_NAME = '모무찌';
+const APP_DESCRIPTION = '식당 추천을 위한 설문 플랫폼';
+const APP_URL = 'https://www.momuzzi.site';
+const OG_IMAGE_URL = `${APP_URL}/images/momuzzi-kakao.png`;
+
 export const metadata: Metadata = {
-  title: 'App',
-  description: 'Height-fit 375×668 (CSS-only)',
+  title: {
+    default: APP_NAME,
+    template: `%s | ${APP_NAME}`,
+  },
+  description: APP_DESCRIPTION,
+  keywords: ['식당', '추천', '설문', '맛집', '음식'],
+  authors: [{ name: 'Depromeet_T3' }],
+  openGraph: {
+    type: 'website',
+    locale: 'ko_KR',
+    url: APP_URL,
+    siteName: APP_NAME,
+    title: APP_NAME,
+    description: APP_DESCRIPTION,
+    images: [
+      {
+        url: OG_IMAGE_URL,
+        width: 1200,
+        height: 604,
+        alt: APP_NAME,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: APP_NAME,
+    description: APP_DESCRIPTION,
+    images: [OG_IMAGE_URL],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: APP_NAME,
+  },
 };
 
 export const viewport: Viewport = {
