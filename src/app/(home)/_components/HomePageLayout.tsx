@@ -53,7 +53,11 @@ const HomePageLayout = ({ children, errorCode }: HomePageLayoutProps) => {
       </header>
       <main>{children}</main>
 
-      <HomeMenu isOpen={showHomeMenu} onToggle={homeMenuHandler.toggle} />
+      <HomeMenu
+        isOpen={showHomeMenu}
+        onClose={homeMenuHandler.close}
+        onToggle={homeMenuHandler.toggle}
+      />
     </div>
   );
 };
