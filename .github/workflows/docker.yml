@@ -96,7 +96,10 @@ jobs:
           echo "📦 Pulling latest Docker image..."
           docker compose -f "$COMPOSE_FILE" pull web
 
-          echo "🚀 Restarting container with --force-recreate..."
-          docker compose -f "$COMPOSE_FILE" up -d --force-recreate web
+          echo "🧩 Stopping old containers..."
+          docker compose -f "$COMPOSE_FILE" down || true
+
+          echo "🚀 Restarting container with latest image..."
+          docker compose -f "$COMPOSE_FILE" up -d web
 
           echo "✅ Deployment successful"
