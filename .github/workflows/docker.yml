@@ -18,11 +18,8 @@ jobs:
       packages: write
 
     env:
-      REGISTRY: ${{ vars.REGISTRY || 'docker.io' }}
-      IMAGE_REPO: ${{ vars.IMAGE_REPO || 'journey1019/depromeet-team3' }}
-
-    outputs:
-      SHORT_SHA: ${{ steps.vars.outputs.SHORT_SHA }}
+      REGISTRY: ${{ vars.REGISTRY != '' && vars.REGISTRY || 'docker.io' }}
+      IMAGE_REPO: ${{ vars.IMAGE_REPO != '' && vars.IMAGE_REPO || 'journey1019/depromeet-team3' }}
 
     steps:
       - uses: actions/checkout@v4
@@ -39,7 +36,7 @@ jobs:
         id: vars
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
 
-      - name: Build & Push Docker Image (no cache)
+      - name: Build & Push Docker Image
         id: build
         uses: docker/build-push-action@v6
         with:
@@ -47,25 +44,24 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64
           push: true
-          no-cache: true
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest
             ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:sha-${{ steps.vars.outputs.SHORT_SHA }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           build-args: |
             NEXT_PUBLIC_KAKAO_APP_KEY=${{ secrets.NEXT_PUBLIC_KAKAO_APP_KEY }}
             NEXT_PUBLIC_KAKAO_CLIENT_ID=${{ secrets.NEXT_PUBLIC_KAKAO_CLIENT_ID }}
             NEXT_PUBLIC_KAKAO_REDIRECT_URL=${{ secrets.NEXT_PUBLIC_KAKAO_REDIRECT_URL }}
             NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
 
-      - name: Show pushed digest and image info
-        run: |
-          echo "✅ Docker Image Build Complete"
-          echo "Digest: ${{ steps.build.outputs.digest }}"
-          echo "Image Tags:"
-          echo " - ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest"
-          echo " - ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:sha-${{ steps.vars.outputs.SHORT_SHA }}"
-          echo "🔍 Verify image on Docker Hub:"
-          echo "   https://hub.docker.com/r/journey1019/depromeet-team3/tags"
+      - name: Show pushed digest
+        run: echo "Pushed digest ${{ steps.build.outputs.digest }}"
+            echo "Image tag: ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest"
+            echo "Pushed digest ${{ steps.build.outputs.digest }}"
+            echo "Image tags pushed:"
+            echo "  - ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest"
+            echo "  - ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:sha-${{ steps.vars.outputs.SHORT_SHA }}"
 
   deploy-prod:
     name: Deploy to PROD (self-hosted)
@@ -75,50 +71,35 @@ jobs:
     environment: production
 
     env:
-      PROJECT_DIR: ${{ secrets.PROD_PROJECT_DIR }}
+      PROJECT_DIR: ${{ secrets.PROD_PROJECT_DIR }} # /home/ubuntu/momuzzi-server
       REGISTRY: ${{ vars.REGISTRY || 'docker.io' }}
-      IMAGE_REPO: journey1019/depromeet-team3
 
     steps:
       - name: Docker Login
         run: echo '${{ secrets.REGISTRY_PASSWORD }}' | docker login "$REGISTRY" -u '${{ secrets.REGISTRY_USER }}' --password-stdin
 
-      - name: Deploy latest image by digest
+      - name: Deploy latest image
         run: |
           COMPOSE_FILE="$PROJECT_DIR/module-infrastructure/nextjs/compose.yaml"
-          IMAGE_SHA_TAG="sha-${{ needs.docker.outputs.SHORT_SHA || github.sha }}"
-          IMAGE_SHA_TAG=$(echo "$IMAGE_SHA_TAG" | cut -c1-11)
 
           if [ ! -f "$COMPOSE_FILE" ]; then
-            echo "❌ ERROR: Compose file not found at $COMPOSE_FILE"
+            echo "ERROR: Compose file not found at $COMPOSE_FILE"
             echo "현재 디렉토리:"; pwd
             echo "파일 목록:"; ls -R "$PROJECT_DIR"
             exit 1
           fi
 
-          echo "✅ Found compose.yaml at $COMPOSE_FILE"
+          echo "Found compose.yaml at $COMPOSE_FILE"
 
-          echo "🧾 Updating compose.yaml to use specific digest tag..."
-          sed -i "s|journey1019/depromeet-team3:.*|journey1019/depromeet-team3:${IMAGE_SHA_TAG}|" "$COMPOSE_FILE"
+          echo "Current image in compose.yaml:"
+          grep "image:" "$COMPOSE_FILE"
 
-          echo "🧹 Removing old containers and images..."
-          docker rm -f deploy-web-1 || true
-          docker compose -f "$COMPOSE_FILE" down || true
-          docker image rm -f journey1019/depromeet-team3:latest || true
+          docker compose -f "$COMPOSE_FILE" pull web
 
-          echo "📦 Pulling latest image by tag..."
-          docker compose -f "$COMPOSE_FILE" pull --ignore-pull-failures web
+          echo "Image version after pull:"
+          docker images | grep journey1019/depromeet-team3
 
-          echo "🚀 Recreating container with latest digest..."
-          docker compose -f "$COMPOSE_FILE" up -d --force-recreate web
+          docker compose -f "$COMPOSE_FILE" up -d web
 
-          echo "🧠 Current Docker image versions:"
-          docker images | grep journey1019/depromeet-team3 || echo "(no image found)"
-          echo ""
-          echo "🔎 Running containers info:"
-          docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}'
-          echo ""
-          echo "🔍 Active image digest:"
-          docker inspect deploy-web-1 --format '{{.Image}}' || true
-
-          echo "✅ Deployment completed successfully 🚀"
+          echo "Deployment successful"
+          
