@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+
 import { ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
 
@@ -7,6 +9,7 @@ import AvatarIcon from '@/app/_components/ui/AvatarIcon';
 import { getCuisineImageSrc } from '@/app/_constants/cuisine';
 import { CuisineCategory, MeetingParticipant } from '@/app/_services/overview';
 import PersonaCardLockedOverlay from '@/app/events/[eventId]/overview/_components/persona/PersonaCardLockedOverlay';
+import PersonaCardSurveyModal from '@/app/events/[eventId]/overview/_components/persona/PersonaCardSurveyModal';
 
 interface PersonaCardProps {
   participant: MeetingParticipant;
@@ -14,44 +17,55 @@ interface PersonaCardProps {
   isMe: boolean;
 }
 const PersonaCard = ({ participant, hasParticipated, isMe }: PersonaCardProps) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   return (
-    <div
-      data-id={participant.userId}
-      className="flex w-full flex-col gap-6 overflow-hidden rounded-[1.25rem] bg-white"
-    >
-      <div className="flex items-center gap-3 px-5 pt-5">
-        <div className="relative">
-          <AvatarIcon variant={participant.profileColor} />
-          {isMe && (
-            <span
-              className="absolute rounded-sm bg-orange-600 px-2 py-0.5 label-2 font-medium text-white"
-              style={{ top: '-10px', left: '7px' }} //테일윈드 안먹어서 스타일로 처리
-            >
-              MY
-            </span>
-          )}
-        </div>
-        <span className="line-clamp-1 subheading-1 font-bold text-neutral-1600">
-          {participant.nickname}
-        </span>
-      </div>
-      <div className="relative min-h-48 flex-1">
-        <div className="flex h-full w-full flex-col gap-6 px-5 pb-5">
-          <div className="flex flex-col gap-3 overflow-y-auto">
-            {participant.selectedCategories.map((cuisine) => (
-              <CuisinePreferenceRow key={cuisine.id} cuisine={cuisine} />
-            ))}
+    <>
+      <div
+        data-id={participant.userId}
+        className="flex w-full flex-col gap-6 overflow-hidden rounded-[1.25rem] bg-white"
+      >
+        <div className="flex items-center gap-3 px-5 pt-5">
+          <div className="relative">
+            <AvatarIcon variant={participant.profileColor} />
+            {isMe && (
+              <span
+                className="absolute rounded-sm bg-orange-600 px-2 py-0.5 label-2 font-medium text-white"
+                style={{ top: '-10px', left: '7px' }} //테일윈드 안먹어서 스타일로 처리
+              >
+                MY
+              </span>
+            )}
           </div>
-          <button
-            type="button"
-            className="mt-auto flex items-center justify-center gap-2 rounded-[0.625rem] border border-orange-300 bg-orange-100 px-5 py-3 label-1 font-semibold text-orange-600"
-          >
-            자세히 보기 <ArrowUpRight className="h-5 w-5" strokeWidth={1.5} absoluteStrokeWidth />
-          </button>
+          <span className="line-clamp-1 subheading-1 font-bold text-neutral-1600">
+            {participant.nickname}
+          </span>
         </div>
-        {!hasParticipated && <PersonaCardLockedOverlay />}
+        <div className="relative">
+          <div className="flex w-full flex-col gap-6 px-5 pb-5">
+            <div className="flex flex-col gap-3 overflow-y-auto">
+              {participant.selectedCategories.map((cuisine) => (
+                <CuisinePreferenceRow key={cuisine.id} cuisine={cuisine} />
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsModalOpen(true)}
+              className="mt-auto flex items-center justify-center gap-2 rounded-[0.625rem] border border-orange-300 bg-orange-100 px-5 py-3 label-1 font-semibold text-orange-600"
+            >
+              자세히 보기 <ArrowUpRight className="h-5 w-5" strokeWidth={1.5} absoluteStrokeWidth />
+            </button>
+          </div>
+          {!hasParticipated && <PersonaCardLockedOverlay />}
+        </div>
       </div>
-    </div>
+
+      {/* 설문 결과 모달 */}
+      <PersonaCardSurveyModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        participant={participant}
+      />
+    </>
   );
 };
 

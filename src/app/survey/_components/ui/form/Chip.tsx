@@ -24,33 +24,27 @@ const Chip = ({
   variant = 'cuisine',
   startIcon: _startIcon,
 }: ChipProps) => {
-  // 고정 width 제거 → 내용에 따라 자동 너비
-  // any/cuisine 의 패딩만 다르게
   const padding = variant === 'any' ? 'px-5' : 'px-5';
-  const baseH = 'h-12'; // 48px
+  const baseH = 'h-12';
   const radius = 'rounded-[40px]';
 
   const common = cn(
-    'relative inline-flex select-none items-center justify-center gap-1',
-    'whitespace-nowrap', // 아이콘+텍스트 한 줄 유지
+    'relative inline-flex select-none items-center justify-center gap-1 whitespace-nowrap',
     padding,
     baseH,
-    'px-5', // start/end = 20px
-    'py-3', // top/bottom = 12px
+    'py-3 border transition-colors duration-200',
     radius,
-    'border',
     disabled ? 'bg-gray-500 cursor-not-allowed opacity-60' : 'cursor-pointer'
   );
 
-  const unselectedCls = cn(common, 'bg-white', 'border-gray-300');
-  const selectedCls = cn(common, 'border-transparent text-white');
+  // 선택 안 된 칩
+  const unselectedCls = cn(common, 'bg-white border-gray-300 text-neutral-1500');
 
-  const selectedStyle: React.CSSProperties = selected
-    ? {
-        background:
-          'radial-gradient(120% 120% at 50% 50%, var(--color-orange-500) 0%, var(--color-orange-400) 100%)',
-      }
-    : {};
+  // 선택된 칩 — chip-gradient 배경으로 통일
+  const selectedCls = cn(
+    common,
+    'border-transparent text-white chip-gradient shadow-[0_2px_4px_rgba(255,79,20,0.3)] text-neutral-100'
+  );
 
   return (
     <button
@@ -58,7 +52,6 @@ const Chip = ({
       disabled={disabled}
       onClick={onClick}
       className={selected ? selectedCls : unselectedCls}
-      style={selectedStyle}
     >
       {/* 선택 순서 배지 */}
       {selected && typeof orderBadge === 'number' && orderBadge > 0 && (
@@ -73,7 +66,6 @@ const Chip = ({
 
       <span className="flex items-center gap-1">
         {/* 아이콘: 크기 통일 */}
-        {/* {startIcon && <span className="inline-flex h-6 w-6 shrink-0">{startIcon}</span>} */}
         <Text
           className={cn(
             'body-3 leading-6 font-semibold',
