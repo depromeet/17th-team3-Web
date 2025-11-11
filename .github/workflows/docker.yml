@@ -46,7 +46,6 @@ jobs:
           push: true
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest
-            ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:sha-${{ steps.vars.outputs.SHORT_SHA }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
