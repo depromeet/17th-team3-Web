@@ -96,7 +96,10 @@ jobs:
           echo "📦 Pulling latest Docker image..."
           docker compose -f "$COMPOSE_FILE" pull web
 
-          echo "🧩 Stopping old containers..."
+          echo "🧨 Removing old container if exists..."
+          docker rm -f deploy-web-1 || true
+
+          echo "🧩 Stopping old containers (safety fallback)..."
           docker compose -f "$COMPOSE_FILE" down || true
 
           echo "🚀 Restarting container with latest image..."
