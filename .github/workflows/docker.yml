@@ -18,8 +18,8 @@ jobs:
       packages: write
 
     env:
-      REGISTRY: ${{ vars.REGISTRY != '' && vars.REGISTRY || 'docker.io' }}
-      IMAGE_REPO: ${{ vars.IMAGE_REPO != '' && vars.IMAGE_REPO || 'journey1019/depromeet-team3' }}
+      REGISTRY: ${{ vars.REGISTRY || 'docker.io' }}
+      IMAGE_REPO: ${{ vars.IMAGE_REPO || 'journey1019/depromeet-team3' }}
 
     steps:
       - uses: actions/checkout@v4
@@ -36,7 +36,7 @@ jobs:
         id: vars
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
 
-      - name: Build & Push Docker Image
+      - name: Build & Push Docker Image (no cache)
         id: build
         uses: docker/build-push-action@v6
         with:
@@ -44,10 +44,10 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64
           push: true
+          no-cache: true
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+            ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:sha-${{ steps.vars.outputs.SHORT_SHA }}
           build-args: |
             NEXT_PUBLIC_KAKAO_APP_KEY=${{ secrets.NEXT_PUBLIC_KAKAO_APP_KEY }}
             NEXT_PUBLIC_KAKAO_CLIENT_ID=${{ secrets.NEXT_PUBLIC_KAKAO_CLIENT_ID }}
@@ -70,7 +70,7 @@ jobs:
     environment: production
 
     env:
-      PROJECT_DIR: ${{ secrets.PROD_PROJECT_DIR }} # /home/ubuntu/momuzzi-server
+      PROJECT_DIR: ${{ secrets.PROD_PROJECT_DIR }}
       REGISTRY: ${{ vars.REGISTRY || 'docker.io' }}
 
     steps:
@@ -88,9 +88,21 @@ jobs:
             exit 1
           fi
 
-          echo "Found compose.yaml at $COMPOSE_FILE"
+          echo "✅ Found compose.yaml at $COMPOSE_FILE"
 
+          echo "🔍 Current image in compose.yaml:"
+          grep "image:" "$COMPOSE_FILE" || echo "(image line not found)"
+
+          echo "🧹 Removing old image cache..."
+          docker image rm -f journey1019/depromeet-team3:latest || true
+
+          echo "📦 Pulling latest Docker image..."
           docker compose -f "$COMPOSE_FILE" pull web
+
+          echo "🧾 Image version after pull:"
+          docker images | grep journey1019/depromeet-team3 || echo "(no matching image found)"
+
+          echo "🚀 Restarting container..."
           docker compose -f "$COMPOSE_FILE" up -d web
 
-          echo "Deployment successful"
+          echo "✅ Deployment successful"
