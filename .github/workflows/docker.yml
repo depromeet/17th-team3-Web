@@ -74,7 +74,6 @@ jobs:
       - name: Show pushed digest
         run: echo "Pushed digest ${{ steps.build.outputs.digest }}"
 
-
   deploy-prod:
     name: Deploy to PROD (self-hosted)
     needs: docker
