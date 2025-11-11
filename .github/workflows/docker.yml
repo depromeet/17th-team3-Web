@@ -21,6 +21,9 @@ jobs:
       REGISTRY: ${{ vars.REGISTRY || 'docker.io' }}
       IMAGE_REPO: ${{ vars.IMAGE_REPO || 'journey1019/depromeet-team3' }}
 
+    outputs:
+      SHORT_SHA: ${{ steps.vars.outputs.SHORT_SHA }}
+
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-buildx-action@v3
@@ -56,12 +59,12 @@ jobs:
 
       - name: Show pushed digest and image info
         run: |
-          echo "Docker Image Build Complete"
+          echo "✅ Docker Image Build Complete"
           echo "Digest: ${{ steps.build.outputs.digest }}"
           echo "Image Tags:"
           echo " - ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest"
           echo " - ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:sha-${{ steps.vars.outputs.SHORT_SHA }}"
-          echo "Verify image on Docker Hub:"
+          echo "🔍 Verify image on Docker Hub:"
           echo "   https://hub.docker.com/r/journey1019/depromeet-team3/tags"
 
   deploy-prod:
@@ -83,7 +86,8 @@ jobs:
       - name: Deploy latest image by digest
         run: |
           COMPOSE_FILE="$PROJECT_DIR/module-infrastructure/nextjs/compose.yaml"
-          IMAGE_SHA_TAG="sha-${{ needs.docker.outputs.SHORT_SHA || github.sha::7 }}"
+          IMAGE_SHA_TAG="sha-${{ needs.docker.outputs.SHORT_SHA || github.sha }}"
+          IMAGE_SHA_TAG=$(echo "$IMAGE_SHA_TAG" | cut -c1-11)
 
           if [ ! -f "$COMPOSE_FILE" ]; then
             echo "❌ ERROR: Compose file not found at $COMPOSE_FILE"
