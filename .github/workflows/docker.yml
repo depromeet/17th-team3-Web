@@ -55,7 +55,12 @@ jobs:
             NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
 
       - name: Show pushed digest
-        run: echo "Pushed digest ${{ steps.build.outputs.digest }}"
+        run: |
+          echo "Docker Image Build Complete"
+          echo "Digest: ${{ steps.build.outputs.digest }}"
+          echo "Image Tags:"
+          echo " - ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest"
+          echo " - ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:sha-${{ steps.vars.outputs.SHORT_SHA }}"
 
   deploy-prod:
     name: Deploy to PROD (self-hosted)
