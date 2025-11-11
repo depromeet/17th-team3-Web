@@ -16,10 +16,13 @@ jobs:
     permissions:
       contents: read
       packages: write
+    outputs:
+      short_sha: ${{ steps.vars.outputs.SHORT_SHA }}
+      image_url: ${{ steps.outs.outputs.IMAGE_URL }} # docker.io/journey1019/depromeet-team3
 
     env:
-      REGISTRY: ${{ vars.REGISTRY || 'docker.io' }}
-      IMAGE_REPO: ${{ vars.IMAGE_REPO || 'journey1019/depromeet-team3' }}
+      REGISTRY: ${{ vars.REGISTRY != '' && vars.REGISTRY || 'docker.io' }}
+      IMAGE_REPO: ${{ vars.IMAGE_REPO != '' && vars.IMAGE_REPO || 'journey1019/depromeet-team3' }}
 
     steps:
       - uses: actions/checkout@v4
@@ -36,7 +39,21 @@ jobs:
         id: vars
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
 
-      - name: Build & Push Docker Image (no cache)
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}
+          # 태그 정책:
+          # - main 브랜치: latest
+          # - 모든 커밋: sha-<7자리>
+          # - 태그 이벤트(v*): 그 태그 이름으로도 푸시
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=sha-${{ steps.vars.outputs.SHORT_SHA }}
+            type=ref,event=tag
+
+      - name: Build & Push
         id: build
         uses: docker/build-push-action@v6
         with:
@@ -44,10 +61,10 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64
           push: true
-          no-cache: true
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest
-            ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:sha-${{ steps.vars.outputs.SHORT_SHA }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           build-args: |
             NEXT_PUBLIC_KAKAO_APP_KEY=${{ secrets.NEXT_PUBLIC_KAKAO_APP_KEY }}
             NEXT_PUBLIC_KAKAO_CLIENT_ID=${{ secrets.NEXT_PUBLIC_KAKAO_CLIENT_ID }}
@@ -55,12 +72,7 @@ jobs:
             NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
 
       - name: Show pushed digest
-        run: |
-          echo "Docker Image Build Complete"
-          echo "Digest: ${{ steps.build.outputs.digest }}"
-          echo "Image Tags:"
-          echo " - ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest"
-          echo " - ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:sha-${{ steps.vars.outputs.SHORT_SHA }}"
+        run: echo "Pushed digest ${{ steps.build.outputs.digest }}"
 
   deploy-prod:
     name: Deploy to PROD (self-hosted)
@@ -68,9 +80,8 @@ jobs:
     runs-on: [self-hosted, Linux, X64]
     if: github.ref == 'refs/heads/main'
     environment: production
-
     env:
-      PROJECT_DIR: ${{ secrets.PROD_PROJECT_DIR }}
+      PROJECT_DIR: ${{ secrets.PROD_PROJECT_DIR }} # /home/ubuntu/momuzzi-server
       REGISTRY: ${{ vars.REGISTRY || 'docker.io' }}
 
     steps:
@@ -88,21 +99,9 @@ jobs:
             exit 1
           fi
 
-          echo "✅ Found compose.yaml at $COMPOSE_FILE"
+          echo "Found compose.yaml at $COMPOSE_FILE"
 
-          echo "🔍 Current image in compose.yaml:"
-          grep "image:" "$COMPOSE_FILE" || echo "(image line not found)"
-
-          echo "🧹 Removing old image cache..."
-          docker image rm -f journey1019/depromeet-team3:latest || true
-
-          echo "📦 Pulling latest Docker image..."
           docker compose -f "$COMPOSE_FILE" pull web
-
-          echo "🧾 Image version after pull:"
-          docker images | grep journey1019/depromeet-team3 || echo "(no matching image found)"
-
-          echo "🚀 Restarting container..."
           docker compose -f "$COMPOSE_FILE" up -d web
 
-          echo "✅ Deployment successful"
+          echo "Deployment successful"
