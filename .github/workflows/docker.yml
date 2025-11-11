@@ -36,7 +36,7 @@ jobs:
         id: vars
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
 
-      - name: Build & Push Docker Image
+      - name: Build & Push Docker Image (no cache)
         id: build
         uses: docker/build-push-action@v6
         with:
@@ -44,11 +44,10 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64
           push: true
+          no-cache: true
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest
             ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:sha-${{ steps.vars.outputs.SHORT_SHA }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
           build-args: |
             NEXT_PUBLIC_KAKAO_APP_KEY=${{ secrets.NEXT_PUBLIC_KAKAO_APP_KEY }}
             NEXT_PUBLIC_KAKAO_CLIENT_ID=${{ secrets.NEXT_PUBLIC_KAKAO_CLIENT_ID }}
@@ -57,14 +56,11 @@ jobs:
 
       - name: Show pushed digest
         run: |
-          echo "========================================="
           echo "Docker Image Build Complete"
-          echo "========================================="
           echo "Digest: ${{ steps.build.outputs.digest }}"
           echo "Image Tags:"
           echo " - ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest"
           echo " - ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:sha-${{ steps.vars.outputs.SHORT_SHA }}"
-          echo "========================================="
 
   deploy-prod:
     name: Deploy to PROD (self-hosted)
@@ -90,63 +86,20 @@ jobs:
 
           if [ ! -f "$COMPOSE_FILE" ]; then
             echo "❌ ERROR: Compose file not found at $COMPOSE_FILE"
+            echo "현재 디렉토리:"; pwd
+            echo "파일 목록:"; ls -R "$PROJECT_DIR"
             exit 1
           fi
 
-          echo "========================================="
-          echo "배포 시작"
-          echo "========================================="
-          
-          echo "✅ Compose file found"
-          
-          echo ""
-          echo "🔍 compose.yaml의 이미지 설정:"
-          grep -A 2 "image:" "$COMPOSE_FILE"
-          
-          echo ""
-          echo "🔍 IMAGE 환경변수 설정: ${IMAGE}"
-          
-          echo ""
-          echo "🛑 기존 컨테이너 중지 및 삭제..."
-          docker compose -f "$COMPOSE_FILE" down || true
-          
-          echo ""
-          echo "🧹 이미지 캐시 삭제..."
-          docker image rm -f "$IMAGE_NAME" || true
-          docker image rm -f "${IMAGE_REPO}:sha-"* || true
-          
-          echo ""
-          echo "📥 최신 이미지 명시적 Pull..."
-          docker pull "$IMAGE_NAME"
-          
-          echo ""
-          echo "🔍 Pull 후 이미지:"
-          docker images "$IMAGE_NAME" --format "table {{.Repository}}:{{.Tag}}\t{{.ID}}\t{{.CreatedAt}}"
-          
-          echo ""
-          echo "🚀 컨테이너 시작 (IMAGE=${IMAGE})..."
-          export IMAGE="${IMAGE}"
-          docker compose -f "$COMPOSE_FILE" up -d web
-          
-          echo ""
-          echo "✅ 배포 완료. 현재 상태:"
-          docker ps --filter "name=web" --format "table {{.Names}}\t{{.Image}}\t{{.CreatedAt}}\t{{.Status}}"
-          
-          echo ""
-          echo "🔍 검증: 실제 사용 중인 이미지 확인"
-          RUNNING_IMAGE=$(docker inspect deploy-web-1 --format='{{.Config.Image}}')
-          RUNNING_IMAGE_ID=$(docker inspect deploy-web-1 --format='{{.Image}}' | cut -d':' -f2 | cut -c1-12)
-          LATEST_IMAGE_ID=$(docker images "$IMAGE_NAME" --format "{{.ID}}")
-          
-          echo "설정된 이미지명: ${RUNNING_IMAGE}"
-          echo "실행 중 이미지 ID: ${RUNNING_IMAGE_ID}"
-          echo "latest 이미지 ID: ${LATEST_IMAGE_ID}"
-          
-          if [ "${RUNNING_IMAGE_ID}" = "${LATEST_IMAGE_ID}" ]; then
-            echo "✅ 최신 이미지로 실행 중입니다!"
-          else
-            echo "❌ 경고: 예전 이미지로 실행 중입니다!"
-            exit 1
-          fi
-          
-          echo "========================================="
+          echo "✅ Found compose.yaml at $COMPOSE_FILE"
+
+          echo "🧹 Removing old image cache..."
+          docker image rm -f journey1019/depromeet-team3:latest || true
+
+          echo "📦 Pulling latest Docker image..."
+          docker compose -f "$COMPOSE_FILE" pull web
+
+          echo "🚀 Restarting container with --force-recreate..."
+          docker compose -f "$COMPOSE_FILE" up -d --force-recreate web
+
+          echo "✅ Deployment successful"
