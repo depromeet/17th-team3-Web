@@ -55,7 +55,6 @@ export default PersonaCardSurveyModal;
 const PersonaCardSurveyContent = ({ participant }: { participant: MeetingParticipant }) => {
   const { categories, isLoading } = useSurveyCategories();
 
-  console.log(participant);
   if (isLoading) return <CuisineSkeleton />;
 
   // '다 괜찮아요' branch 제외
