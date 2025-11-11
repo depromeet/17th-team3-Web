@@ -72,6 +72,8 @@ jobs:
     env:
       PROJECT_DIR: ${{ secrets.PROD_PROJECT_DIR }}
       REGISTRY: ${{ vars.REGISTRY || 'docker.io' }}
+      IMAGE_REPO: ${{ vars.IMAGE_REPO || 'journey1019/depromeet-team3' }}
+      IMAGE: ${{ vars.IMAGE_REPO || 'journey1019/depromeet-team3' }}:latest
 
     steps:
       - name: Docker Login
@@ -80,6 +82,7 @@ jobs:
       - name: Deploy latest image
         run: |
           COMPOSE_FILE="$PROJECT_DIR/module-infrastructure/nextjs/compose.yaml"
+          IMAGE_NAME="${IMAGE_REPO}:latest"
 
           if [ ! -f "$COMPOSE_FILE" ]; then
             echo "❌ ERROR: Compose file not found at $COMPOSE_FILE"

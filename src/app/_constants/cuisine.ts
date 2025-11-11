@@ -4,6 +4,7 @@ export const CUISINE_MAP = {
   5: `양식`,
   6: `일식`,
   7: `동남아`,
+  3: `다 괜찮아요`,
 } as const;
 
 export type CuisineId = keyof typeof CUISINE_MAP;
