@@ -77,6 +77,7 @@ jobs:
       PROJECT_DIR: ${{ secrets.PROD_PROJECT_DIR }}
       REGISTRY: ${{ vars.REGISTRY || 'docker.io' }}
       IMAGE_REPO: ${{ vars.IMAGE_REPO || 'journey1019/depromeet-team3' }}
+      IMAGE: ${{ vars.IMAGE_REPO || 'journey1019/depromeet-team3' }}:latest
 
     steps:
       - name: Docker Login
@@ -85,7 +86,7 @@ jobs:
       - name: Deploy latest image
         run: |
           COMPOSE_FILE="$PROJECT_DIR/module-infrastructure/nextjs/compose.yaml"
-          IMAGE_NAME="$IMAGE_REPO:latest"
+          IMAGE_NAME="${IMAGE_REPO}:latest"
 
           if [ ! -f "$COMPOSE_FILE" ]; then
             echo "❌ ERROR: Compose file not found at $COMPOSE_FILE"
@@ -103,12 +104,16 @@ jobs:
           grep -A 2 "image:" "$COMPOSE_FILE"
           
           echo ""
+          echo "🔍 IMAGE 환경변수 설정: ${IMAGE}"
+          
+          echo ""
           echo "🛑 기존 컨테이너 중지 및 삭제..."
           docker compose -f "$COMPOSE_FILE" down || true
           
           echo ""
           echo "🧹 이미지 캐시 삭제..."
           docker image rm -f "$IMAGE_NAME" || true
+          docker image rm -f "${IMAGE_REPO}:sha-"* || true
           
           echo ""
           echo "📥 최신 이미지 명시적 Pull..."
@@ -116,14 +121,32 @@ jobs:
           
           echo ""
           echo "🔍 Pull 후 이미지:"
-          docker images "$IMAGE_NAME"
+          docker images "$IMAGE_NAME" --format "table {{.Repository}}:{{.Tag}}\t{{.ID}}\t{{.CreatedAt}}"
           
           echo ""
-          echo "🚀 컨테이너 시작..."
+          echo "🚀 컨테이너 시작 (IMAGE=${IMAGE})..."
+          export IMAGE="${IMAGE}"
           docker compose -f "$COMPOSE_FILE" up -d web
           
           echo ""
           echo "✅ 배포 완료. 현재 상태:"
           docker ps --filter "name=web" --format "table {{.Names}}\t{{.Image}}\t{{.CreatedAt}}\t{{.Status}}"
+          
+          echo ""
+          echo "🔍 검증: 실제 사용 중인 이미지 확인"
+          RUNNING_IMAGE=$(docker inspect deploy-web-1 --format='{{.Config.Image}}')
+          RUNNING_IMAGE_ID=$(docker inspect deploy-web-1 --format='{{.Image}}' | cut -d':' -f2 | cut -c1-12)
+          LATEST_IMAGE_ID=$(docker images "$IMAGE_NAME" --format "{{.ID}}")
+          
+          echo "설정된 이미지명: ${RUNNING_IMAGE}"
+          echo "실행 중 이미지 ID: ${RUNNING_IMAGE_ID}"
+          echo "latest 이미지 ID: ${LATEST_IMAGE_ID}"
+          
+          if [ "${RUNNING_IMAGE_ID}" = "${LATEST_IMAGE_ID}" ]; then
+            echo "✅ 최신 이미지로 실행 중입니다!"
+          else
+            echo "❌ 경고: 예전 이미지로 실행 중입니다!"
+            exit 1
+          fi
           
           echo "========================================="
