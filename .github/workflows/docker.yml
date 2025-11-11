@@ -36,7 +36,7 @@ jobs:
         id: vars
         run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
 
-      - name: Build & Push Docker Image (no cache)
+      - name: Build & Push Docker Image
         id: build
         uses: docker/build-push-action@v6
         with:
@@ -44,25 +44,27 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64
           push: true
-          no-cache: true
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest
             ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:sha-${{ steps.vars.outputs.SHORT_SHA }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           build-args: |
             NEXT_PUBLIC_KAKAO_APP_KEY=${{ secrets.NEXT_PUBLIC_KAKAO_APP_KEY }}
             NEXT_PUBLIC_KAKAO_CLIENT_ID=${{ secrets.NEXT_PUBLIC_KAKAO_CLIENT_ID }}
             NEXT_PUBLIC_KAKAO_REDIRECT_URL=${{ secrets.NEXT_PUBLIC_KAKAO_REDIRECT_URL }}
             NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
 
-      - name: Show pushed digest and image info
+      - name: Show pushed digest
         run: |
+          echo "========================================="
           echo "Docker Image Build Complete"
+          echo "========================================="
           echo "Digest: ${{ steps.build.outputs.digest }}"
           echo "Image Tags:"
           echo " - ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:latest"
           echo " - ${{ env.REGISTRY }}/${{ env.IMAGE_REPO }}:sha-${{ steps.vars.outputs.SHORT_SHA }}"
-          echo "Verify image on Docker Hub:"
-          echo "   https://hub.docker.com/r/journey1019/depromeet-team3/tags"
+          echo "========================================="
 
   deploy-prod:
     name: Deploy to PROD (self-hosted)
@@ -74,47 +76,54 @@ jobs:
     env:
       PROJECT_DIR: ${{ secrets.PROD_PROJECT_DIR }}
       REGISTRY: ${{ vars.REGISTRY || 'docker.io' }}
-      IMAGE_REPO: journey1019/depromeet-team3
+      IMAGE_REPO: ${{ vars.IMAGE_REPO || 'journey1019/depromeet-team3' }}
 
     steps:
       - name: Docker Login
         run: echo '${{ secrets.REGISTRY_PASSWORD }}' | docker login "$REGISTRY" -u '${{ secrets.REGISTRY_USER }}' --password-stdin
 
-      - name: Deploy latest image by digest
+      - name: Deploy latest image
         run: |
           COMPOSE_FILE="$PROJECT_DIR/module-infrastructure/nextjs/compose.yaml"
-          IMAGE_SHA_TAG="sha-${{ needs.docker.outputs.SHORT_SHA || github.sha::7 }}"
+          IMAGE_NAME="$IMAGE_REPO:latest"
 
           if [ ! -f "$COMPOSE_FILE" ]; then
             echo "❌ ERROR: Compose file not found at $COMPOSE_FILE"
-            echo "현재 디렉토리:"; pwd
-            echo "파일 목록:"; ls -R "$PROJECT_DIR"
             exit 1
           fi
 
-          echo "✅ Found compose.yaml at $COMPOSE_FILE"
-
-          echo "🧾 Updating compose.yaml to use specific digest tag..."
-          sed -i "s|journey1019/depromeet-team3:.*|journey1019/depromeet-team3:${IMAGE_SHA_TAG}|" "$COMPOSE_FILE"
-
-          echo "🧹 Removing old containers and images..."
-          docker rm -f deploy-web-1 || true
+          echo "========================================="
+          echo "배포 시작"
+          echo "========================================="
+          
+          echo "✅ Compose file found"
+          
+          echo ""
+          echo "🔍 compose.yaml의 이미지 설정:"
+          grep -A 2 "image:" "$COMPOSE_FILE"
+          
+          echo ""
+          echo "🛑 기존 컨테이너 중지 및 삭제..."
           docker compose -f "$COMPOSE_FILE" down || true
-          docker image rm -f journey1019/depromeet-team3:latest || true
-
-          echo "📦 Pulling latest image by tag..."
-          docker compose -f "$COMPOSE_FILE" pull --ignore-pull-failures web
-
-          echo "🚀 Recreating container with latest digest..."
-          docker compose -f "$COMPOSE_FILE" up -d --force-recreate web
-
-          echo "🧠 Current Docker image versions:"
-          docker images | grep journey1019/depromeet-team3 || echo "(no image found)"
+          
           echo ""
-          echo "🔎 Running containers info:"
-          docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}'
+          echo "🧹 이미지 캐시 삭제..."
+          docker image rm -f "$IMAGE_NAME" || true
+          
           echo ""
-          echo "🔍 Active image digest:"
-          docker inspect deploy-web-1 --format '{{.Image}}' || true
-
-          echo "✅ Deployment completed successfully 🚀"
+          echo "📥 최신 이미지 명시적 Pull..."
+          docker pull "$IMAGE_NAME"
+          
+          echo ""
+          echo "🔍 Pull 후 이미지:"
+          docker images "$IMAGE_NAME"
+          
+          echo ""
+          echo "🚀 컨테이너 시작..."
+          docker compose -f "$COMPOSE_FILE" up -d web
+          
+          echo ""
+          echo "✅ 배포 완료. 현재 상태:"
+          docker ps --filter "name=web" --format "table {{.Names}}\t{{.Image}}\t{{.CreatedAt}}\t{{.Status}}"
+          
+          echo "========================================="
