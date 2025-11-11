@@ -82,7 +82,7 @@ jobs:
           COMPOSE_FILE="$PROJECT_DIR/module-infrastructure/nextjs/compose.yaml"
 
           if [ ! -f "$COMPOSE_FILE" ]; then
-            echo "ERROR: Compose file not found at $COMPOSE_FILE"
+            echo "❌ ERROR: Compose file not found at $COMPOSE_FILE"
             echo "현재 디렉토리:"; pwd
             echo "파일 목록:"; ls -R "$PROJECT_DIR"
             exit 1
@@ -90,19 +90,13 @@ jobs:
 
           echo "✅ Found compose.yaml at $COMPOSE_FILE"
 
-          echo "🔍 Current image in compose.yaml:"
-          grep "image:" "$COMPOSE_FILE" || echo "(image line not found)"
-
           echo "🧹 Removing old image cache..."
           docker image rm -f journey1019/depromeet-team3:latest || true
 
           echo "📦 Pulling latest Docker image..."
           docker compose -f "$COMPOSE_FILE" pull web
 
-          echo "🧾 Image version after pull:"
-          docker images | grep journey1019/depromeet-team3 || echo "(no matching image found)"
-
-          echo "🚀 Restarting container..."
-          docker compose -f "$COMPOSE_FILE" up -d web
+          echo "🚀 Restarting container with --force-recreate..."
+          docker compose -f "$COMPOSE_FILE" up -d --force-recreate web
 
           echo "✅ Deployment successful"
