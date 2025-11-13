@@ -38,7 +38,6 @@ const AnalysisPage = async ({ params }: AnalysisPageProps) => {
   );
 
   const { mainCountsArr } = buildPreferenceSummary(overview?.participantList || []);
-  console.log('mainCountsArr', mainCountsArr);
 
   const cuisinesChartData = mainCountsArr.map((main) => ({
     name: main.name,
@@ -80,7 +79,7 @@ const AnalysisPage = async ({ params }: AnalysisPageProps) => {
         </div>
       </div>
 
-      <MorePicksButton />
+      <MorePicksButton showHomeButton />
     </div>
   );
 };
