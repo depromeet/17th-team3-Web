@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useTransition } from 'react';
 
 import { useParams, useRouter } from 'next/navigation';
 
 import Button from '@/app/_components/ui/Button';
+import Loading from '@/app/_components/ui/Loading';
 import { useCountdownDisplay } from '@/app/_hooks/useCountdownDisplay';
 import { MeetingOverview } from '@/app/_services/overview';
 import useOverviewState from '@/app/events/[eventId]/overview/_hooks/useOverviewState';
@@ -12,6 +13,7 @@ import useOverviewState from '@/app/events/[eventId]/overview/_hooks/useOverview
 const SurveyActionButton = ({ overview }: { overview: MeetingOverview }) => {
   const router = useRouter();
   const { eventId } = useParams();
+  const [isPending, startTransition] = useTransition();
 
   const { hasParticipated } = useOverviewState(overview);
   const isSurveyClosed = overview.meetingInfo.isClosed;
@@ -34,7 +36,11 @@ const SurveyActionButton = ({ overview }: { overview: MeetingOverview }) => {
   }, [hasParticipated, isSurveyClosed, countdown, eventId, isEveryoneCompleted]);
 
   const handleClick = () => {
-    if (buttonState.path) router.push(buttonState.path);
+    if (buttonState.path) {
+      startTransition(() => {
+        router.push(buttonState.path);
+      });
+    }
   };
 
   useEffect(() => {
@@ -44,11 +50,15 @@ const SurveyActionButton = ({ overview }: { overview: MeetingOverview }) => {
   }, [isSurveyClosed, eventId, router]); // 설문 마감 후 추천 결과 페이지 미리 로드
 
   return (
-    <div className="sticky bottom-0 px-5 pt-3 pb-6">
-      <Button onClick={handleClick}>
-        <span className="body-3 font-semibold text-white">{buttonState.label}</span>
-      </Button>
-    </div>
+    <>
+      {isPending && <Loading />}
+
+      <div className="sticky bottom-0 px-5 pt-3 pb-6">
+        <Button onClick={handleClick} disabled={isPending}>
+          <span className="body-3 font-semibold text-white">{buttonState.label}</span>
+        </Button>
+      </div>
+    </>
   );
 };
 
