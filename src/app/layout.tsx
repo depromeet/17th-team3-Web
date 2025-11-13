@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   title: APP_TITLE,
   description: APP_DESCRIPTION,
   keywords: ['식당', '추천', '설문', '맛집', '음식'],
-  authors: [{ name: 'Depromeet_T3' }],
+  authors: [{ name: 'depromeet-momuzzi' }],
   icons: {
     icon: '/favicon.png',
     apple: '/favicon.png',
