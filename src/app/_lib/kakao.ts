@@ -33,6 +33,8 @@ export const shareKakaoLink = (shareUrl?: string) => {
       title: '식당 추천을 위한 설문이 시작됐어요!',
       description: '모무찌에서 먹고 싶은 메뉴를 어필해보세요.',
       imageUrl: `${window.location.origin}/images/momuzzi-kakao.png`,
+      imageWidth: 1200,
+      imageHeight: 604,
       link: {
         mobileWebUrl: url,
         webUrl: url,
@@ -62,6 +64,8 @@ declare global {
             title: string;
             description: string;
             imageUrl: string;
+            imageWidth?: number;
+            imageHeight?: number;
             link: {
               mobileWebUrl: string;
               webUrl: string;

@@ -16,7 +16,7 @@ const APP_NAME = '모무찌';
 const APP_TITLE = '모두의 취향을 모아 식당 추천 - 모무찌';
 const APP_DESCRIPTION = '오늘의 메뉴 고민, 모무찌가 대신 해드릴게요!';
 const APP_URL = 'https://www.momuzzi.site';
-const OG_IMAGE_URL = `${APP_URL}/images/og-image.png`;
+const OG_IMAGE_URL = `${APP_URL}/og-image.png`;
 
 export const metadata: Metadata = {
   title: APP_TITLE,
@@ -25,9 +25,16 @@ export const metadata: Metadata = {
   authors: [{ name: 'depromeet-momuzzi' }],
   icons: {
     icon: '/favicon.png',
-    apple: '/favicon.png',
+    apple: '/favicon-180x180.png',
   },
   manifest: '/manifest.json',
+  metadataBase: new URL(APP_URL),
+  other: {
+    'apple-mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-status-bar-style': 'black-translucent',
+    'apple-mobile-web-app-title': APP_NAME,
+    'theme-color': '#e03900',
+  },
   openGraph: {
     type: 'website',
     locale: 'ko_KR',
