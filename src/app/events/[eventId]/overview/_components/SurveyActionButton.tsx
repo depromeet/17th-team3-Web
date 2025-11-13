@@ -16,15 +16,19 @@ const SurveyActionButton = ({ overview }: { overview: MeetingOverview }) => {
   const [isPending, startTransition] = useTransition();
 
   const { hasParticipated } = useOverviewState(overview);
-  const isSurveyClosed = overview.meetingInfo.isClosed;
-  const isEveryoneCompleted =
-    overview.participantList.length === overview.meetingInfo.totalParticipantCnt;
-  const countdown = useCountdownDisplay(new Date(overview.meetingInfo.endAt));
+  const { isClosed: isSurveyClosed, totalParticipantCnt, endAt } = overview.meetingInfo;
+  const isEveryoneCompleted = overview.participantList.length === totalParticipantCnt;
+  const countdown = useCountdownDisplay(new Date(endAt));
 
   const buttonState = useMemo(() => {
-    if (!hasParticipated) return { label: '설문 참여하기', path: `/meetings/${eventId}/survey` };
-    if (isSurveyClosed || isEveryoneCompleted)
+    if (!hasParticipated) {
+      return { label: '설문 참여하기', path: `/meetings/${eventId}/survey` };
+    }
+
+    if (isSurveyClosed || isEveryoneCompleted) {
       return { label: '추천 결과 보기', path: `/events/${eventId}/analysis` };
+    }
+
     return {
       label: (
         <>
@@ -33,13 +37,17 @@ const SurveyActionButton = ({ overview }: { overview: MeetingOverview }) => {
       ),
       path: null,
     };
-  }, [hasParticipated, isSurveyClosed, countdown, eventId, isEveryoneCompleted]);
+  }, [hasParticipated, isSurveyClosed, isEveryoneCompleted, countdown, eventId]);
 
   const handleClick = () => {
-    if (buttonState.path) {
+    if (!buttonState.path) return;
+
+    if (buttonState.path === `/events/${eventId}/analysis`) {
       startTransition(() => {
-        router.push(buttonState.path);
+        router.push(`/events/${eventId}/analysis`);
       });
+    } else {
+      router.push(buttonState.path);
     }
   };
 
@@ -47,7 +55,7 @@ const SurveyActionButton = ({ overview }: { overview: MeetingOverview }) => {
     if (isSurveyClosed) {
       router.prefetch(`/events/${eventId}/analysis`);
     }
-  }, [isSurveyClosed, eventId, router]); // 설문 마감 후 추천 결과 페이지 미리 로드
+  }, [isSurveyClosed, eventId, router]);
 
   return (
     <>
