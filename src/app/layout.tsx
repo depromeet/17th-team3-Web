@@ -12,9 +12,53 @@ import '@mantine/core/styles.layer.css';
 import '@mantine/dates/styles.css';
 import './globals.css';
 
+const APP_NAME = '모무찌';
+const APP_TITLE = '모두의 취향을 모아 식당 추천 - 모무찌';
+const APP_DESCRIPTION = '오늘의 메뉴 고민, 모무찌가 대신 해드릴게요!';
+const APP_URL = 'https://www.momuzzi.site';
+const OG_IMAGE_URL = `${APP_URL}/images/og-image.png`;
+
 export const metadata: Metadata = {
-  title: 'App',
-  description: 'Height-fit 375×668 (CSS-only)',
+  title: APP_TITLE,
+  description: APP_DESCRIPTION,
+  keywords: ['식당', '추천', '설문', '맛집', '음식'],
+  authors: [{ name: 'depromeet-momuzzi' }],
+  icons: {
+    icon: '/favicon.png',
+    apple: '/favicon.png',
+  },
+  manifest: '/manifest.json',
+  openGraph: {
+    type: 'website',
+    locale: 'ko_KR',
+    url: APP_URL,
+    siteName: APP_NAME,
+    title: APP_TITLE,
+    description: APP_DESCRIPTION,
+    images: [
+      {
+        url: OG_IMAGE_URL,
+        width: 1200,
+        height: 604,
+        alt: APP_NAME,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: APP_TITLE,
+    description: APP_DESCRIPTION,
+    images: [OG_IMAGE_URL],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: APP_NAME,
+  },
 };
 
 export const viewport: Viewport = {
