@@ -9,27 +9,35 @@ import { useDisclosure } from '@/app/_hooks/useDisclosure';
 
 interface HomeMenuProps {
   isOpen: boolean;
-  onToggle: (open: boolean) => void;
+  onClose: () => void;
+  onToggle: () => void;
 }
 
-const HomeMenu = ({ isOpen, onToggle }: HomeMenuProps) => {
+const HomeMenu = ({ isOpen, onClose, onToggle }: HomeMenuProps) => {
   const { isOpen: showComingSoonMadal, handler: comingSoonModalHandler } = useDisclosure();
 
   const router = useRouter();
 
   const handleCreateMeeting = () => {
     router.push('/meetings/create');
-    onToggle(false);
+    onClose();
   };
 
   const handleComingSoon = () => {
-    onToggle(false);
+    onClose();
     comingSoonModalHandler.open();
   };
 
   return (
     <>
-      {isOpen && <div className="fixed inset-0 z-9 bg-black/70" aria-hidden="true" />}
+      {isOpen && (
+        <div
+          role="presentation"
+          onClick={onClose}
+          className="fixed inset-0 z-9 bg-black/70"
+          aria-hidden="true"
+        />
+      )}
       {isOpen && (
         <div className="fixed right-5 bottom-30 z-99 flex flex-col items-end gap-4">
           <ActionButton
@@ -49,7 +57,7 @@ const HomeMenu = ({ isOpen, onToggle }: HomeMenuProps) => {
           />
         </div>
       )}
-      <FloatingActionButton isOpen={isOpen} onClick={() => onToggle(!isOpen)} />
+      <FloatingActionButton isOpen={isOpen} onClick={onToggle} />
       <ComingSoonModal isOpen={showComingSoonMadal} onClose={comingSoonModalHandler.close} />
     </>
   );

@@ -1,22 +1,16 @@
+name: deploy
+
 services:
   web:
-    image: ${IMAGE}            # Actions에서 IMAGE='레포:태그'로 주입됨
+    image: docker.io/journey1019/depromeet-team3:latest
     ports:
-      - "3000:3000"            # dev와 충돌나면 "3001:3000" 등으로 조정
+      - '3000:3000'
     environment:
       NODE_ENV: production
-      NEXT_PUBLIC_KAKAO_CLIENT_ID: ${NEXT_PUBLIC_KAKAO_CLIENT_ID}
-      NEXT_PUBLIC_KAKAO_REDIRECT_URL: ${NEXT_PUBLIC_KAKAO_REDIRECT_URL}
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
-      NEXT_PUBLIC_KAKAO_APP_KEY: ${NEXT_PUBLIC_KAKAO_APP_KEY}
-      # HOSTNAME/PORT는 Dockerfile에서 이미 기본값 지정(0.0.0.0 / 3000)
-      # 필요 시 여기서 덮어써도 됨
     restart: unless-stopped
     healthcheck:
-      # Alpine busybox wget 사용. curl 선호면 curl -f http://127.0.0.1:3000 || exit 1
-      test: [ "CMD-SHELL", "wget -qO- http://127.0.0.1:3000/ >/dev/null 2>&1 || exit 1" ]
+      test: ['CMD-SHELL', 'wget -qO- http://127.0.0.1:3000/ >/dev/null 2>&1 || exit 1']
       interval: 10s
       timeout: 3s
       retries: 5
-      start_period: 10s        # (옵션) 기동 초기 유예
-
+      start_period: 10s

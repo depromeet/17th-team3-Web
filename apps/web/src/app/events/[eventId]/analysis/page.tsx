@@ -2,11 +2,14 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 import Image from 'next/image';
 
 import { Heading } from '@/app/_components/typography';
+import { getOverviewQueryOptions } from '@/app/_queries/overviewQueries';
 import { getPlacesQueryOptions } from '@/app/_queries/placeQueries';
-import { getMockAnalysis } from '@/app/_services/analysis';
+import { MeetingOverview } from '@/app/_services/overview';
 import MorePicksButton from '@/app/events/[eventId]/_components/MorePicksButton';
+import MenuPreferenceList from '@/app/events/[eventId]/analysis/_components/MenuPreferenceList';
 import PieChart from '@/app/events/[eventId]/analysis/_components/PieChart';
 import RestaurantCardSwiper from '@/app/events/[eventId]/analysis/_components/RestaurantCardSwiper';
+import { buildPreferenceSummary } from '@/app/events/[eventId]/analysis/_utils';
 
 interface AnalysisPageProps {
   params: Promise<{
@@ -19,24 +22,32 @@ const AnalysisPage = async ({ params }: AnalysisPageProps) => {
 
   const queryClient = new QueryClient();
 
-  const [analysisData] = await Promise.all([
-    getMockAnalysis(eventId), // 나중에 getAnalysis(eventId)로 변경
+  await Promise.all([
     queryClient.prefetchQuery({
       ...getPlacesQueryOptions('강남역 한식 맛집'),
+    }),
+    queryClient.prefetchQuery({
+      ...getOverviewQueryOptions(Number(eventId)),
     }),
   ]);
 
   const dehydratedState = dehydrate(queryClient);
 
-  const preferredCuisinesChartData = analysisData.preferredCuisines.map((cuisine) => ({
-    name: cuisine.name,
-    value: cuisine.value,
+  const overview = queryClient.getQueryData<MeetingOverview>(
+    getOverviewQueryOptions(Number(eventId)).queryKey
+  );
+
+  const { mainCountsArr } = buildPreferenceSummary(overview?.participantList || []);
+
+  const cuisinesChartData = mainCountsArr.map((main) => ({
+    name: main.name,
+    value: main.count,
   }));
 
   return (
     <div className="flex flex-1 flex-col">
       <Heading level="h2" as="h1" className="px-5 py-2 whitespace-pre-line text-white">
-        {analysisData.summary}
+        {overview?.meetingInfo.title}
       </Heading>
       <HydrationBoundary state={dehydratedState}>
         <RestaurantCardSwiper />
@@ -54,7 +65,7 @@ const AnalysisPage = async ({ params }: AnalysisPageProps) => {
             <Image src="/images/avatar/orange.svg" alt="orange" width={24} height={24} />
             <span className="body-3 font-semibold text-neutral-400">선호하는 음식</span>
           </div>
-          <PieChart data={preferredCuisinesChartData} />
+          <PieChart data={cuisinesChartData} />
         </div>
 
         <div className="flex flex-col gap-4">
@@ -62,6 +73,9 @@ const AnalysisPage = async ({ params }: AnalysisPageProps) => {
             <Image src="/images/avatar/default.svg" alt="default" width={24} height={24} />
             <span className="body-3 font-semibold text-neutral-400">선호하는 메뉴</span>
           </div>
+          <HydrationBoundary state={dehydratedState}>
+            <MenuPreferenceList />
+          </HydrationBoundary>
         </div>
       </div>
 

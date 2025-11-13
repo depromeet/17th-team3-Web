@@ -10,13 +10,20 @@ interface SurveyLayoutProps {
   /** 전체 스텝 수 */
   totalSteps: number;
   /** 상단 뒤로가기 핸들러 */
-  onBack: () => void;
+  onBack?: () => void;
   /** 상단 타이틀(옵션) */
   title?: string;
   /** 본문 */
   children: React.ReactNode;
   /** 레이이웃 className 커스텀(옵션) */
   className?: string;
+
+  /** 상단 오른쪽 버튼 (선택적) */
+  showNextButton?: boolean;
+  /** 상단 다음 핸들러 */
+  onRightClick?: () => void;
+  /** 텍스트 버튼 (ex. '건너뛰기') */
+  rightLabel?: string;
 }
 
 /**
@@ -31,10 +38,23 @@ const SurveyLayout = ({
   title = '',
   children,
   className,
+  showNextButton = false,
+  onRightClick,
+  rightLabel,
 }: SurveyLayoutProps) => {
   return (
-    <div className={cn('relative flex min-h-dvh flex-col background-1', className)}>
-      <TopNavigation title={title} showBackButton onLeftClick={onBack} />
+    <div
+      id="survey-layout-root"
+      className={cn('relative flex min-h-dvh flex-col background-1', className)}
+    >
+      <TopNavigation
+        title={title}
+        showBackButton={false}
+        showNextButton={showNextButton}
+        onLeftClick={onBack}
+        onRightClick={onRightClick}
+        rightLabel={rightLabel}
+      />
       <div className="flex items-center justify-center px-4 py-1.5">
         <StepIndicator value={stepValue} total={totalSteps} />
       </div>

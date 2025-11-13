@@ -4,15 +4,22 @@ import { getProgressPercent } from '@/app/_utils/ui';
 interface StepIndicatorProps {
   value: number;
   total: number;
+  progressColor?: string;
+  progressBgColor?: string;
 }
 
-const StepIndicator = ({ value, total }: StepIndicatorProps) => {
+const StepIndicator = ({
+  value,
+  total,
+  progressColor = 'bg-gradient-to-r from-orange-300 to-orange-500',
+  progressBgColor = 'bg-orange-100',
+}: StepIndicatorProps) => {
   const percent = getProgressPercent(value, total);
 
   return (
-    <div className={cn('h-1 w-full overflow-hidden rounded-full bg-orange-100')}>
+    <div className={cn('h-1 w-full overflow-hidden rounded-full', progressBgColor)}>
       <div
-        className="h-full bg-gradient-to-r from-orange-300 to-orange-500 transition-all"
+        className={cn('h-full transition-all', progressColor)}
         style={{ width: `${percent}%` }}
       ></div>
     </div>

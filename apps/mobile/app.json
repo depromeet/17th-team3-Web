@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "mommuzzi",
+    "name": "모무찌",
     "slug": "momuzzi-mobile",
     "scheme": "momuzzi-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/momuzzi-mobile-icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
-    "description": "Momuzzi - 식당 추천 서비스",
+    "description": "모두의 취향을 모아, 바로 추천받는 우리 모임의 식당",
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/momuzzi-splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -20,7 +20,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/momuzzi-mobile-icon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
@@ -28,7 +28,7 @@
       "package": "com.momuzzi.app"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/momuzzi-mobile-icon.png"
     },
     "plugins": ["expo-web-browser"]
   }

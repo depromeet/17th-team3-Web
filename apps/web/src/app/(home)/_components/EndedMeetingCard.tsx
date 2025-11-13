@@ -9,17 +9,8 @@ interface EndedMeetingCardProps {
   onClick?: () => void;
 }
 
-// TODO: API 연동 후 실제 아바타 데이터로 교체
-const MOCK_AVATARS = [
-  '/images/avatar/chocolate.svg',
-  '/images/avatar/grape.svg',
-  '/images/avatar/orange.svg',
-  '/images/avatar/milk.svg',
-];
-
 const EndedMeetingCard = ({ meeting, onClick }: EndedMeetingCardProps) => {
-  const { title, stationName, totalParticipantCnt, endAt } = meeting;
-
+  const { title, stationName, endAt, participantList } = meeting;
   return (
     <div
       role="button"
@@ -46,7 +37,11 @@ const EndedMeetingCard = ({ meeting, onClick }: EndedMeetingCardProps) => {
         </div>
       </div>
 
-      <AvatarList avatars={MOCK_AVATARS} additionalCount={totalParticipantCnt} />
+      {participantList.length > 0 ? (
+        <AvatarList surveyParticipantList={participantList} />
+      ) : (
+        <p className="label-2 font-medium text-neutral-500">설문 참여자 없음</p>
+      )}
     </div>
   );
 };

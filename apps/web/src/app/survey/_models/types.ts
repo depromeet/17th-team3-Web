@@ -27,6 +27,7 @@ export type StepKey = (typeof STEP_KEYS)[number];
 export interface CommonCtx {
   role: RoleLabel;
   name: string;
+  profileKey: string;
 
   /** 선택은 id 배열로 관리 */
   preferCuisineIds: string[];
@@ -47,3 +48,55 @@ export interface CommonCtx {
 export type FunnelCtxMap = Record<StepKey, CommonCtx>;
 
 export type SurveyResult = CommonCtx;
+
+export interface FoodCategory {
+  id: number;
+  level: 'BRANCH' | 'LEAF'; // 분기(하위 존재) or 리프(말단)
+  name: string; // 음식 이름
+  sortOrder: number; // 정렬 순서
+  children: FoodCategory[]; // 하위 항목 (재귀 구조)
+}
+
+export interface FoodCategoryResponse {
+  data: FoodCategory[];
+  error: null | string;
+}
+
+export interface UpdateAttendeeProfileRequest {
+  attendeeNickname: string;
+  color: string;
+}
+
+export interface FunnelHistory<T> {
+  replace: (step: string, updater: (prev: T) => T) => void;
+}
+
+/** 모임 상세 정보 조회 */
+export interface Participant {
+  userId: number;
+  nickname: string;
+  profileColor: string;
+  selectedCategories: {
+    id: number;
+    name: string;
+    leafCategoryList: { id: number; name: string }[];
+  }[];
+}
+
+export interface MeetingInfo {
+  id: number;
+  title: string;
+  hostUserId: number;
+  totalParticipantCnt: number;
+  isClosed: boolean;
+  stationName: string;
+  endAt: string;
+  createdAt: string;
+  updatedAt: string | null;
+}
+
+export interface MeetingDetailResponse {
+  currentUserId: number;
+  meetingInfo: MeetingInfo;
+  participantList: Participant[];
+}

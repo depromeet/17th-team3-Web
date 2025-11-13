@@ -13,7 +13,7 @@ const ComingSoonModal = ({ isOpen, onClose }: ComingSoonModalProps) => {
     <BaseModal isOpen={isOpen} onClose={onClose}>
       <div className="flex flex-col items-center gap-4">
         <Image
-          src="/images/momuzzi-coming-soon.png"
+          src="/images/momuzzi-coming-soon.svg"
           alt="모무찌 커밍순 아이콘"
           width={80}
           height={60}

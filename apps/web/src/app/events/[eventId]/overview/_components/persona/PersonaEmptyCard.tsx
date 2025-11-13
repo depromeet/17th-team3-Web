@@ -2,30 +2,18 @@
 
 import { Copy } from 'lucide-react';
 import Image from 'next/image';
+import { useParams } from 'next/navigation';
 
-import { useToast } from '@/app/_features/toast';
 import { cn } from '@/app/_lib/cn';
+import useCopyClipBoard from '@/app/events/[eventId]/_hooks/useCopyClipBoard';
 
 interface PersonaEmptyCardProps {
   className?: string;
 }
 
 const PersonaEmptyCard = ({ className }: PersonaEmptyCardProps) => {
-  const { success: successToast } = useToast();
-
-  const handleKakaoShare = () => {
-    successToast('카카오톡 공유 준비중!', {
-      preventDuplicate: true,
-    });
-  };
-
-  const handleCopyUrl = () => {
-    const url = window.location.href;
-    navigator.clipboard.writeText(url);
-    successToast('URL이 복사되었습니다.', {
-      preventDuplicate: true,
-    });
-  };
+  const { eventId } = useParams();
+  const { handleCopyUrl, handleShareKakao } = useCopyClipBoard({ meetingId: Number(eventId) || 0 });
 
   return (
     <div
@@ -55,7 +43,7 @@ const PersonaEmptyCard = ({ className }: PersonaEmptyCardProps) => {
         <button
           type="button"
           className="flex w-23 cursor-pointer flex-col items-center gap-3 py-3"
-          onClick={handleKakaoShare}
+          onClick={handleShareKakao}
         >
           <div className="flex h-13 w-13 items-center justify-center rounded-full bg-[#FEE500]">
             <Image src={'/icons/kakao-icon.svg'} alt="kakao-icon" width={28} height={28} />
