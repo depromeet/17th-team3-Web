@@ -1,8 +1,13 @@
 'use client';
-import { Heart, MapPin, Send, Star } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
+import { AnimatePresence, motion } from 'framer-motion';
+import { Heart, MapPin, Send, Star } from 'lucide-react';
+import { useParams, useRouter } from 'next/navigation';
+
+import { useToast } from '@/app/_features/toast';
 import { cn } from '@/app/_lib/cn';
+import { usePlaceLikeMutation } from '@/app/_queries/placeQueries';
 import { RecommendedPlace } from '@/app/_services/place';
 import { CARD_UI } from '@/app/events/[eventId]/_components/RestaurantCardContent/restaurantCardThemes';
 import RestaurantImageGallery from '@/app/events/[eventId]/_components/RestaurantCardContent/RestaurantImageGallery';
@@ -25,8 +30,32 @@ const RestaurantCardContent = ({
   className,
 }: RestaurantCardContentProps) => {
   const router = useRouter();
+  const params = useParams();
+  const { eventId: meetingId } = params;
 
+  const { success: successToast } = useToast();
+
+  const placeLikeMutation = usePlaceLikeMutation();
+  const [showHeartAnimation, setShowHeartAnimation] = useState(false);
   const ui = CARD_UI[theme]; //ui는 CARD_UI에 정의된 테마 클래스 이름들을 가져옴
+
+  const handleLikeClick = () => {
+    placeLikeMutation.mutate({
+      meetingId: Number(meetingId),
+      placeId: place.placeId,
+    });
+
+    // 좋아요를 누를 때만 애니메이션 실행
+    if (!place.isLiked) {
+      setShowHeartAnimation(true);
+      setTimeout(() => setShowHeartAnimation(false), 600);
+    }
+  };
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(place.link);
+    successToast('링크가 복사되었습니다.');
+  };
 
   return (
     <div className={cn('flex flex-col', ui.root, className)}>
@@ -41,7 +70,7 @@ const RestaurantCardContent = ({
       )}
       <div className="mb-1 flex w-full items-center justify-between gap-4">
         <span className={ui.title}>{place.name}</span>
-        <button type="button" className="pl-2">
+        <button type="button" className="cursor-pointer pl-2" onClick={handleCopyLink}>
           <Send className={ui.sendIcon} />
         </button>
       </div>
@@ -87,7 +116,7 @@ const RestaurantCardContent = ({
         <button
           type="button"
           className={cn(
-            'h-12 items-center justify-center rounded-[0.625rem] px-5 label-1 font-semibold',
+            'h-12 cursor-pointer items-center justify-center rounded-[0.625rem] px-5 label-1 font-semibold',
             ui.addrButton
           )}
           onClick={() => {
@@ -99,16 +128,52 @@ const RestaurantCardContent = ({
         <button
           type="button"
           className={cn(
-            'flex h-12 flex-1 shrink-0 items-center justify-center gap-3 rounded-[0.625rem] font-semibold',
-            ui.wishButton
+            'relative flex h-12 flex-1 shrink-0 cursor-pointer items-center justify-center gap-3 rounded-[0.625rem] font-semibold transition-opacity',
+            ui.wishButton,
+            placeLikeMutation.isPending && 'opacity-70'
           )}
-          onClick={() => {
-            // TODO: 구현 필요 - 장소 공유 기능
-          }}
+          onClick={handleLikeClick}
+          disabled={placeLikeMutation.isPending}
         >
           <span className={cn('label-1 font-bold', ui.wishCount)}>{place.likeCount}</span>
           <span className="label-1 font-semibold text-white">가고 싶어요</span>
-          <Heart size={24} strokeWidth={1.5} absoluteStrokeWidth className="text-white" />
+          <div className="relative">
+            <Heart
+              size={24}
+              strokeWidth={1.5}
+              absoluteStrokeWidth
+              className={cn(
+                'text-white transition-all duration-300',
+                place.isLiked && 'fill-[#FF4F14] text-[#FF4F14]'
+              )}
+            />
+
+            <AnimatePresence>
+              {showHeartAnimation && (
+                <motion.div
+                  initial={{ opacity: 1, y: 0, scale: 1 }}
+                  animate={{
+                    opacity: 0,
+                    y: -50,
+                    scale: 1.3,
+                  }}
+                  exit={{ opacity: 0 }}
+                  transition={{
+                    duration: 0.6,
+                    ease: 'easeOut',
+                  }}
+                  className="pointer-events-none absolute top-0"
+                >
+                  <Heart
+                    size={24}
+                    strokeWidth={1.5}
+                    absoluteStrokeWidth
+                    className="fill-[#FF4F14] text-[#FF4F14]"
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </button>
       </div>
     </div>
