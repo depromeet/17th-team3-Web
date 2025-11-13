@@ -13,15 +13,13 @@ import '@mantine/dates/styles.css';
 import './globals.css';
 
 const APP_NAME = '모무찌';
-const APP_DESCRIPTION = '식당 추천을 위한 설문 플랫폼';
+const APP_TITLE = '모두의 취향을 모아 식당 추천 - 모무찌';
+const APP_DESCRIPTION = '오늘의 메뉴 고민, 모무찌가 대신 해드릴게요!';
 const APP_URL = 'https://www.momuzzi.site';
 const OG_IMAGE_URL = `${APP_URL}/images/og-image.png`;
 
 export const metadata: Metadata = {
-  title: {
-    default: APP_NAME,
-    template: `%s | ${APP_NAME}`,
-  },
+  title: APP_TITLE,
   description: APP_DESCRIPTION,
   keywords: ['식당', '추천', '설문', '맛집', '음식'],
   authors: [{ name: 'Depromeet_T3' }],
@@ -29,12 +27,13 @@ export const metadata: Metadata = {
     icon: '/favicon.png',
     apple: '/favicon.png',
   },
+  manifest: '/manifest.json',
   openGraph: {
     type: 'website',
     locale: 'ko_KR',
     url: APP_URL,
     siteName: APP_NAME,
-    title: APP_NAME,
+    title: APP_TITLE,
     description: APP_DESCRIPTION,
     images: [
       {
@@ -47,7 +46,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: APP_NAME,
+    title: APP_TITLE,
     description: APP_DESCRIPTION,
     images: [OG_IMAGE_URL],
   },
