@@ -15,7 +15,7 @@ import './globals.css';
 const APP_NAME = '모무찌';
 const APP_DESCRIPTION = '식당 추천을 위한 설문 플랫폼';
 const APP_URL = 'https://www.momuzzi.site';
-const OG_IMAGE_URL = `${APP_URL}/images/momuzzi-kakao.png`;
+const OG_IMAGE_URL = `${APP_URL}/images/og-image.png`;
 
 export const metadata: Metadata = {
   title: {
@@ -25,6 +25,10 @@ export const metadata: Metadata = {
   description: APP_DESCRIPTION,
   keywords: ['식당', '추천', '설문', '맛집', '음식'],
   authors: [{ name: 'Depromeet_T3' }],
+  icons: {
+    icon: '/favicon.png',
+    apple: '/favicon.png',
+  },
   openGraph: {
     type: 'website',
     locale: 'ko_KR',
