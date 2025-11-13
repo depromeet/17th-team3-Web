@@ -32,7 +32,7 @@ const RestaurantCardContent = ({
     <div className={cn('flex flex-col', ui.root, className)}>
       {theme === 'lightCompact' && (
         <RestaurantImageGallery
-          images={place.photos}
+          images={place.photos || []}
           containerClassName={ui.gallery}
           imageClassName={ui.galleryImage}
           isScrollable={true}
@@ -74,7 +74,7 @@ const RestaurantCardContent = ({
       </div>
       {theme === 'heroDark' && (
         <RestaurantImageGallery
-          images={place.photos}
+          images={place.photos || []}
           activeIndex={imageIndex || 0}
           onImageChange={handleImageChange}
           containerClassName={ui.gallery}
