@@ -23,18 +23,12 @@ export const metadata: Metadata = {
   description: APP_DESCRIPTION,
   keywords: ['식당', '추천', '설문', '맛집', '음식'],
   authors: [{ name: 'depromeet-momuzzi' }],
+
   icons: {
     icon: '/favicon.png',
     apple: '/favicon-180x180.png',
   },
-  manifest: '/manifest.json',
-  metadataBase: new URL(APP_URL),
-  other: {
-    'apple-mobile-web-app-capable': 'yes',
-    'apple-mobile-web-app-status-bar-style': 'black-translucent',
-    'apple-mobile-web-app-title': APP_NAME,
-    'theme-color': '#e03900',
-  },
+
   openGraph: {
     type: 'website',
     locale: 'ko_KR',
@@ -51,20 +45,12 @@ export const metadata: Metadata = {
       },
     ],
   },
+
   twitter: {
     card: 'summary_large_image',
     title: APP_TITLE,
     description: APP_DESCRIPTION,
     images: [OG_IMAGE_URL],
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'black-translucent',
-    title: APP_NAME,
   },
 };
 
@@ -77,6 +63,12 @@ export const viewport: Viewport = {
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="ko" suppressHydrationWarning>
+      <meta name="apple-mobile-web-app-capable" content="yes" />
+      <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+      <meta name="apple-mobile-web-app-title" content="모무찌" />
+      <meta name="theme-color" content="#e03900" />
+      <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180x180.png" />
+      <link rel="manifest" href="/manifest.json" />
       <body className="antialiased">
         <ScaledStage
           mode="production"
