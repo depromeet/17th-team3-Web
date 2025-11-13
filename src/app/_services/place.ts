@@ -26,12 +26,7 @@ export interface RecommendedPlaceResponse {
   items: RecommendedPlace[];
 }
 
-export const getPlaces = async (keyword: string) => {
-  const params = {
-    query: keyword,
-  };
-  const response = await api.get<RecommendedPlaceResponse>('/places', {
-    params,
-  });
+export const getPlaces = async (meetingId: number) => {
+  const response = await api.get<RecommendedPlaceResponse>(`/places?meetingId=${meetingId}`);
   return response;
 };

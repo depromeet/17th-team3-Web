@@ -24,7 +24,7 @@ const AnalysisPage = async ({ params }: AnalysisPageProps) => {
 
   await Promise.all([
     queryClient.prefetchQuery({
-      ...getPlacesQueryOptions('강남역 한식 맛집'),
+      ...getPlacesQueryOptions(Number(eventId)),
     }),
     queryClient.prefetchQuery({
       ...getOverviewQueryOptions(Number(eventId)),
@@ -38,6 +38,7 @@ const AnalysisPage = async ({ params }: AnalysisPageProps) => {
   );
 
   const { mainCountsArr } = buildPreferenceSummary(overview?.participantList || []);
+  console.log('mainCountsArr', mainCountsArr);
 
   const cuisinesChartData = mainCountsArr.map((main) => ({
     name: main.name,
