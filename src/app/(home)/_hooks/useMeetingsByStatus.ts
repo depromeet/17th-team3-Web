@@ -41,7 +41,9 @@ export const useMeetingsByStatus = (meetings: Meeting[]): MeetingsByStatusResult
       if (isStillActive(meeting)) {
         active.push(meeting);
       } else {
-        ended.push(meeting);
+        if (meeting.participantList.length > 0) {
+          ended.push(meeting);
+        }
       }
     });
 
