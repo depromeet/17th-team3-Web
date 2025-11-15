@@ -40,7 +40,13 @@ const ScaledStage = ({
       <Backdrop backdrop={backdrop} />
 
       {/* 모바일 프레임 */}
-      <main className="min-h-screen-safe mx-auto flex max-w-[475px] flex-1 flex-col bg-white">
+      <main
+        className="min-h-screen-safe mx-auto flex max-w-[475px] flex-1 flex-col bg-white"
+        style={{
+          paddingTop: 'env(safe-area-inset-top)',
+          paddingBottom: 'env(safe-area-inset-bottom)',
+        }}
+      >
         {/* iOS safe-area 여백(필요하면) */}
         {children}
       </main>
