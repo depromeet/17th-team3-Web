@@ -58,7 +58,7 @@ const RestaurantImageGallery = ({
               sizes="100px"
               alt={`사진 ${index + 1}`}
               priority={imagePriority}
-              blurDataURL={'/images/backgroundImage.png'}
+              blurDataURL={'/images/image-loading.png'}
               placeholder="blur"
             />
           </button>

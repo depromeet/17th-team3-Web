@@ -34,6 +34,8 @@ const DateTimePicker = ({ date, time, onDateChange, onTimeChange }: DateTimePick
     setShowCalendar(false);
   }, [tempDate, onDateChange]);
 
+  console.log('zxcvxcz', isValidDateTime(tempDate, time));
+
   return (
     <>
       <div className="flex items-center">
@@ -111,12 +113,15 @@ const DateTimePicker = ({ date, time, onDateChange, onTimeChange }: DateTimePick
                 현재 시간으로부터 2시간 이후 시간을 선택해주세요
               </p>
             )}
-            <Button
-              onClick={handleConfirmDate}
-              status={isValidDateTime(tempDate, time) ? 'normal' : 'disabled'}
-            >
-              선택
-            </Button>
+
+            <footer className="sticky bottom-0 w-full">
+              <Button
+                onClick={handleConfirmDate}
+                status={isValidDateTime(tempDate, time) ? 'normal' : 'disabled'}
+              >
+                선택
+              </Button>
+            </footer>
           </div>
         </BottomSheet>
       )}
