@@ -1,6 +1,6 @@
-'use client';
+﻿'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import Input from '@/app/_components/ui/Input';
 import Loading from '@/app/_components/ui/Loading';
@@ -35,39 +35,15 @@ const SurveyProfileStep = ({
 }: SurveyProfileStepProps) => {
   const [name, setName] = useState(initialValue);
   const [profileKey, setProfileKey] = useState(initialProfileKey);
-  const [usedNicknames, setUsedNicknames] = useState<string[]>([]);
-  const [lockedProfileKeys, setLockedProfileKeys] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { error, setError, validateNickname, validateColor, handleApiError } = useProfileValidation(
-    {
-      usedNicknames,
-      lockedProfileKeys,
-    }
-  );
-
-  /** 모임 참가자 데이터 로드 (닉네임/색상 중복검사용) */
-  useEffect(() => {
-    if (!meetingId) return;
-    (async () => {
-      try {
-        const res = await surveyApi.getMeetingDetail(meetingId);
-        const others = res.participantList.filter((p) => p.userId !== res.currentUserId);
-        setUsedNicknames(others.map((p) => p.nickname));
-        setLockedProfileKeys(others.map((p) => p.profileColor.toLowerCase()));
-      } catch (err) {
-        console.error('모임 상세 조회(getMeetingDetail) 실패:', err);
-      }
-    })();
-  }, [meetingId]);
+  // NOTE: 닉네임/색상 중복 검사를 임시로 비활성화한 상태입니다.
+  const { error, setError, validateNickname, handleApiError } = useProfileValidation();
 
   /** 프로필 저장 + 다음 단계 이동 */
   const handleNext = async () => {
     const nicknameError = validateNickname(name);
     if (nicknameError) return setError(nicknameError);
-
-    const colorError = validateColor(profileKey);
-    if (colorError) return setError(colorError);
 
     try {
       setIsSubmitting(true);
@@ -77,7 +53,7 @@ const SurveyProfileStep = ({
       });
       onNext({ name, profileKey });
     } catch (e) {
-      handleApiError(e);
+      handleApiError();
     } finally {
       setIsSubmitting(false);
     }
@@ -93,11 +69,7 @@ const SurveyProfileStep = ({
         isNextDisabled={!name.trim() || !!error || isSubmitting}
         nextButtonText="다음 단계로"
       >
-        <ProfileSelector
-          value={profileKey}
-          onChange={setProfileKey}
-          lockedKeys={lockedProfileKeys}
-        />
+        <ProfileSelector value={profileKey} onChange={setProfileKey} />
         <Input
           value={name}
           onChange={(e) => {
