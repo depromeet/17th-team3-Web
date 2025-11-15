@@ -66,6 +66,7 @@ const RestaurantCardContent = ({
           imageClassName={ui.galleryImage}
           isScrollable={true}
           imagePriority={imagePriority}
+          imageSkeleton={ui.imageSkeleton}
         />
       )}
       <div className="mb-1 flex w-full items-center justify-between gap-4">
@@ -109,6 +110,7 @@ const RestaurantCardContent = ({
           containerClassName={ui.gallery}
           imageClassName={ui.galleryImage}
           imagePriority={imagePriority}
+          imageSkeleton={ui.imageSkeleton}
         />
       )}
 
