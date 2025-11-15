@@ -2,16 +2,32 @@
 
 import { validateText } from '@/app/meetings/_utils/validation';
 
-export const useProfileValidation = () => {
+interface ProfileValidationOptions {
+  usedNicknames: string[];
+}
+
+export const useProfileValidation = ({ usedNicknames }: ProfileValidationOptions) => {
   const [error, setError] = useState<string>('');
 
-  const validateNickname = useCallback((value: string) => {
-    const { isValid, error: textError } = validateText(value.trim());
-    if (!isValid) return textError;
-    return '';
-  }, []);
+  const validateNickname = useCallback(
+    (value: string) => {
+      const { isValid, error: textError } = validateText(value.trim());
+      if (!isValid) return textError;
+      if (usedNicknames.includes(value.trim())) return '이미 사용 중인 닉네임입니다.';
+      return '';
+    },
+    [usedNicknames]
+  );
 
-  const handleApiError = useCallback(() => {
+  const handleApiError = useCallback((error: unknown) => {
+    if (typeof error === 'object' && error !== null) {
+      const errObj = error as { status?: number; message?: string; detail?: any; name?: string };
+      if (errObj.status === 409) {
+        setError('이미 사용 중인 이름입니다.');
+        return;
+      }
+    }
+
     setError('프로필 저장 중 오류가 발생했습니다.');
   }, []);
 
