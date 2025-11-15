@@ -101,11 +101,10 @@ const CreatePageClient = () => {
       <footer className="sticky bottom-0 pb-6">
         <Button
           onClick={handleSubmit}
-          disabled={isDisabled}
           theme={isDisabled ? 'orange' : 'cta-gradient'}
           status={isDisabled ? 'disabled' : 'normal'}
         >
-          {isLoading ? '생성 중...' : '모임 생성하기'}
+          {isLoading ? '모임 생성 중...' : '모임 생성하기'}
         </Button>
       </footer>
 
