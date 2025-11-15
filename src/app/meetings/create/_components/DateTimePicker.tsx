@@ -9,7 +9,7 @@ import BottomSheet from '@/app/_components/ui/BottomSheet';
 import Button from '@/app/_components/ui/Button';
 import { cn } from '@/app/_lib/cn';
 import TimePickerScroll from '@/app/meetings/create/_components/TimePickerScroll';
-import { formatTimeDisplay } from '@/app/meetings/create/_utils/timeFormat';
+import { formatTimeDisplay, isValidDateTime } from '@/app/meetings/create/_utils/timeFormat';
 
 import 'dayjs/locale/ko';
 
@@ -106,7 +106,15 @@ const DateTimePicker = ({ date, time, onDateChange, onTimeChange }: DateTimePick
               </p>
             </div>
             <TimePickerScroll onTimeChange={onTimeChange} defaultTime={time} />
-            <Button onClick={handleConfirmDate} status={tempDate ? 'normal' : 'disabled'}>
+            {!isValidDateTime(tempDate, time) && tempDate && time && (
+              <p className="text-xs text-red-500">
+                현재 시간으로부터 2시간 이후 시간을 선택해주세요
+              </p>
+            )}
+            <Button
+              onClick={handleConfirmDate}
+              status={isValidDateTime(tempDate, time) ? 'normal' : 'disabled'}
+            >
               선택
             </Button>
           </div>
