@@ -50,17 +50,18 @@ const AVATAR_VARIANTS: Record<AvatarVariantKey, AvatarVariantMeta> = {
   },
 } as const;
 
-type AvatarIconProps = {
+interface AvatarIconProps {
   variant?: AvatarVariantKey | string | null;
   className?: string;
-};
+}
 
 const DEFAULT_VARIANT: AvatarVariantKey = 'default';
 
 const resolveVariant = (variant?: AvatarIconProps['variant']): AvatarVariantKey => {
   if (!variant) return DEFAULT_VARIANT;
 
-  const normalized = variant.toString().toLowerCase() as AvatarVariantKey;
+  const key = variant.toString().trim().toUpperCase(); // 입력은 대문자로 통일
+  const normalized = key.toLowerCase() as AvatarVariantKey; // 내부는 소문자 키
   return AVATAR_VARIANTS[normalized] ? normalized : DEFAULT_VARIANT;
 };
 
