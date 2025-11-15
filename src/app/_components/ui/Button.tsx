@@ -71,7 +71,7 @@ const Button = ({ className, theme, status, children, ...props }: ButtonProps) =
   const isDisabled = status === 'disabled';
   return (
     <button
-      className={cn(buttonVariants({ theme, status }), className)}
+      className={cn(buttonVariants({ theme: isDisabled ? 'orange' : theme, status }), className)}
       disabled={isDisabled}
       {...props}
     >

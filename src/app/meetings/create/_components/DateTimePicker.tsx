@@ -117,7 +117,6 @@ const DateTimePicker = ({ date, time, onDateChange, onTimeChange }: DateTimePick
             <footer className="sticky bottom-0 w-full">
               <Button
                 onClick={handleConfirmDate}
-                theme={isValidDateTime(tempDate, time) ? 'cta-gradient' : 'orange'}
                 status={isValidDateTime(tempDate, time) ? 'normal' : 'disabled'}
               >
                 선택

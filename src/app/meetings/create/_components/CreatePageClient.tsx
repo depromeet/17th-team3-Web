@@ -99,11 +99,7 @@ const CreatePageClient = () => {
       </FormSection>
 
       <footer className="sticky bottom-0 pb-6">
-        <Button
-          onClick={handleSubmit}
-          theme={isDisabled ? 'orange' : 'cta-gradient'}
-          status={isDisabled ? 'disabled' : 'normal'}
-        >
+        <Button onClick={handleSubmit} status={isDisabled ? 'disabled' : 'normal'}>
           {isLoading ? '모임 생성 중...' : '모임 생성하기'}
         </Button>
       </footer>
