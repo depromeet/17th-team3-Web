@@ -70,9 +70,10 @@ const SurveyProfileStep = ({
         <ProfileSelector value={profileKey} onChange={setProfileKey} />
         <Input
           value={name}
-          onChange={(e) => {
-            setName(e.target.value);
-            setError(validateNickname(e.target.value));
+          onChange={(event) => {
+            const { value } = event.target;
+            setName(value);
+            setError(validateNickname(value));
           }}
           onClear={() => setName('')}
           hasError={!!error}

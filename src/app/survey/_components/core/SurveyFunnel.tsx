@@ -4,7 +4,6 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import Loading from '@/app/_components/ui/Loading';
 import { surveyApi } from '@/app/_services/survey/api';
 import SurveyLayout from '@/app/survey/_components/core/SurveyLayout';
 import SurveyCuisineStep from '@/app/survey/_components/step/SurveyCuisineStep';
@@ -32,7 +31,6 @@ interface SurveyFunnelProps {
  *
  * State:
  * - isSkipModalOpen: 건너뛰기/나가기 모달 표시
- * - isLoading: API 호출 중 로딩 표시
  */
 
 const SurveyFunnel = ({ role, meetingId, initial, onComplete: _onComplete }: SurveyFunnelProps) => {
@@ -40,7 +38,6 @@ const SurveyFunnel = ({ role, meetingId, initial, onComplete: _onComplete }: Sur
   const router = useRouter();
 
   const [activeModal, setActiveModal] = useState<'exit' | 'skip' | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   const closeModal = () => setActiveModal(null);
 
@@ -64,7 +61,7 @@ const SurveyFunnel = ({ role, meetingId, initial, onComplete: _onComplete }: Sur
           <SurveyCuisineStep
             title={`좋아하는 음식을\n최대 5개까지 선택해 주세요`}
             defaultSelectedIds={context.preferCuisineIds}
-            onCancel={handleBack}
+            onCancel={() => setActiveModal('exit')}
             context={context}
             history={history}
             onComplete={({ categoryIds }) => {
@@ -77,7 +74,7 @@ const SurveyFunnel = ({ role, meetingId, initial, onComplete: _onComplete }: Sur
 
           <ConfirmModal
             open={activeModal === 'exit'}
-            title="설문을 종료할까요?"
+            title="설문을 그만둘까요?"
             description="지금 나가면 입력된 내용이 저장되지 않아요."
             cancelText="계속하기"
             confirmText="나가기"
@@ -95,20 +92,17 @@ const SurveyFunnel = ({ role, meetingId, initial, onComplete: _onComplete }: Sur
             cancelText="취소"
             confirmText="건너뛰기"
             onCancel={closeModal}
-            onConfirm={async () => {
+            onConfirm={() => {
               closeModal();
-              setIsLoading(true);
-              try {
-                await surveyApi.postSurveyResult(meetingId, [3]); // '다 괜찮아요'
-                router.push(
-                  `/events/${meetingId}/overview?selected=${encodeURIComponent('다 괜찮아요')}`
-                );
-              } finally {
-                setIsLoading(false);
-              }
+              history.push('Name', (prev) => ({
+                ...prev,
+                name: '',
+                profileKey: 'default',
+                preferCuisineIds: [],
+                preferCategoryIds: [3],
+              }));
             }}
           />
-          {isLoading && <Loading />}
         </SurveyLayout>
       );
 
@@ -136,7 +130,7 @@ const SurveyFunnel = ({ role, meetingId, initial, onComplete: _onComplete }: Sur
               await surveyApi.postSurveyResult(meetingId, categoryIds);
               router.push(`/events/${meetingId}/overview`);
             }}
-            onCancel={() => setActiveModal('exit')}
+            onCancel={handleBack}
             meetingId={meetingId}
           />
 
