@@ -52,10 +52,10 @@ const SurveyActionButton = ({ overview }: { overview: MeetingOverview }) => {
   };
 
   useEffect(() => {
-    if (isSurveyClosed) {
+    if (isSurveyClosed || isEveryoneCompleted) {
       router.prefetch(`/events/${eventId}/analysis`);
     }
-  }, [isSurveyClosed, eventId, router]);
+  }, [isSurveyClosed, isEveryoneCompleted, eventId, router]);
 
   return (
     <>
