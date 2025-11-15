@@ -96,11 +96,12 @@ const CreatePageClient = () => {
         </div>
       </FormSection>
 
-      <footer className="pt-3">
+      <footer className="sticky bottom-0 pb-10">
         <Button
           onClick={handleSubmit}
           disabled={!meetingForm.isFormValid || isLoading}
           status={meetingForm.isFormValid && !isLoading ? 'normal' : 'disabled'}
+          className="w-full"
         >
           {isLoading ? '생성 중...' : '모임 생성하기'}
         </Button>
